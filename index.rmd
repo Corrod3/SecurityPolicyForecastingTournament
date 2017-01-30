@@ -7,7 +7,11 @@ output: html_document
 
 # Introduction
 
-Welcome to the online glossary of the Security Policy Forecasting Tournament. On this site you find further information which should help you to get a better grasp of the tournament. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org). 
+Welcome to the online glossary of the Security Policy Forecasting Tournament. On this site you find further information which should help you to get a better grasp of the tournament. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org).
+
+# Purpose and aim
+Forecasting tournaments are a relatively new way to approach uncertainty in international politics. They received a major push by the IAPRA tournaments initiated by the U.S. Intelligence Community, but 
+
 
 # Methodology
 
