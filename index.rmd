@@ -5,7 +5,11 @@ author: ""
 output: html_document
 ---
 
-## Introduction
+# Introduction
+
+Welcome to the online glossary of the Security Policy Forecasting Tournament. On this site you find further information which should help you to get a better grasp of the tournament. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org). 
+
+# Methodology
 
 ## Brier Score
 
@@ -14,3 +18,11 @@ The Brier score was originally proposed to quantify the accuracy of weather fore
 The Brier score is the squared error of a probabilistic forecast. To calculate it, we divide your forecast by 100 so that your probabilities range between 0 (0%) and 1 (100%). Then, we code reality as either 0 (if the event did not happen) or 1 (if the event did happen). For each answer option, we take the difference between your forecast and the correct answer, square the differences, and add them all together. For a yes/no question where you forecasted 70% and the event happened, your score would be (1 – 0.7)2 + (0 – 0.3)2 = 0.18. The best (lowest) possible Brier score is 0, and the worst (highest) possible Brier score is 2.
 
 For further information see [Wikipedia](https://en.wikipedia.org/wiki/Brier_score) or [The Good Judgement Open](https://www.gjopen.com/faq).
+
+## Forecasting questions
+
+### Terminology
+
+Casualty: "A person killed or injured in a war or accident" (Source: Oxford Dictionary)
+
+Issue a statement / announce: "Stated in an official document (e.g. press release) or public speech"
