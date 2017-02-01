@@ -7,11 +7,10 @@ output: html_document
 
 # Introduction
 
-Welcome to the online glossary of the Security Policy Forecasting Tournament. On this site you find further information which should help you to get a better grasp of the tournament. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org).
+Welcome to the online glossary of the Security Policy Forecasting Tournament. On this site you find further information which should help you to get a better grasp of the tournament. After the tournament the results and background information regarding the questions will be published on this site. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org).
 
 # Purpose and aim
-Forecasting tournaments are a relatively new way to approach uncertainty in international politics. They received a major push by the IAPRA tournaments initiated by the U.S. Intelligence Community, but 
-
+Forecasting tournaments are a useful tool to better understand and improve forecasting. They have been extensively used in many future-oriented fields like weather predictions and financial markets. However, only recently they have been introduced to forecasting in international politics. (e.g. [The Good Judgement Project](www.gjopen.com)). The Security Policy Forecasting Tournament is continuing this effort. Its particular goals are to increase awareness of crowd-based forecasting in Europe and to gain further understanding in the relevance of successful forecasting for policy makers. 
 
 # Methodology
 
@@ -27,6 +26,7 @@ For further information see [Wikipedia](https://en.wikipedia.org/wiki/Brier_scor
 
 ### Terminology
 
+Question 
 Casualty: "A person killed or injured in a war or accident" (Source: Oxford Dictionary)
 
 Issue a statement / announce: "Stated in an official document (e.g. press release) or public speech"
