@@ -1,6 +1,6 @@
 ---
 title: "Security Policy Forecasting Tournament"
-subtitle: "Forecasting questions"
+subtitle: "Forecasting questions background"
 author: ""
 output: html_document
 ---
