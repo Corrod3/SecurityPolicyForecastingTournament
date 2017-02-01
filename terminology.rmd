@@ -11,7 +11,28 @@ Welcome to the online glossary of the Security Policy Forecasting Tournament. On
 
 # Terminology
 
-Question 
+1. Question:
+"Sanctions against Russia" refer to executive orders (13660, 13661, 13662, 13685) of the U.S. president implemented after the 2014 annexation of Crimea by Russia and the hostilities in Eastern Ukraine. "lift or loosen" refers to changes or terminations of these orders which effectly reduce the scope of the sanctions.
+
+2. Question: 
+"nuclear weapons test" refers to an event which is mostlikely due to a intented explosion using radioactive explosives.  The resulting quake is usually recorded by non-North Korean geological services (e.g. Federal Institute for Geosciences and Natural Resources, Germany).
+
+3. Question:
+"International court or arbitration" is any judicial procedure which is not under national jurisdiction (e.g. International Tribunal for the Law of the Sea (ITLOS)) and usually based on an international treaty (e.g. United Nations Convention on the Law of the Sea (UNCLOS)).
+
+4. Question:
+“High-level official representative” refers to the prime-minister, president and minister. For the event to occur an actual face-to-face meeting has to take place in the given time frame. However, it is not required to be a bilateral meeting.
+
+5. Question:
+“Operating out of Pakistan” refers to the operational headquarters of the attack. The involvement of individuals from Pakistan has to be reported by international media or outside governments. "Attack" refers to the use of physical violence which has the potential to kill people.
+
+6. Question:
+"announce" referes to a statement in an official document (e.g. press release) or public speech. The NATO deployments plans in Eastern Europe are part of the NATO operation Atlantic Resolve.
+
+7. Question:
+o	In the Iran Nuclear Deal (Officially Joint Comprehensive Plan of Action (JCPOA)) the U.S. government agreed to lift sanctions against Iran. “Reintroducing” refers to making these sanctions legal binding again.
+
+
 Casualty: "A person killed or injured in a war or accident" (Source: Oxford Dictionary)
 
 Issue a statement / announce: "Stated in an official document (e.g. press release) or public speech"
