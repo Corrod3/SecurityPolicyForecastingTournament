@@ -30,9 +30,52 @@ Welcome to the online glossary of the Security Policy Forecasting Tournament. On
 "announce" referes to a statement in an official document (e.g. press release) or public speech. The NATO deployments plans in Eastern Europe are part of the NATO operation Atlantic Resolve.
 
 7. Question:
-o	In the Iran Nuclear Deal (Officially Joint Comprehensive Plan of Action (JCPOA)) the U.S. government agreed to lift sanctions against Iran. “Reintroducing” refers to making these sanctions legal binding again.
+In the Iran Nuclear Deal (Officially Joint Comprehensive Plan of Action (JCPOA)) the U.S. government agreed to lift sanctions against Iran. “Reintroducing” refers to making these sanctions legal binding again or implementing new sanctions aiming at Iran's Nuclear Program.
 
+8. Question:
+"administrative control" referes to the capacity to enforce rules and legislation
 
-Casualty: "A person killed or injured in a war or accident" (Source: Oxford Dictionary)
+9. Question:
+"administrative control" referes to the capacity to enforce rules and legislation
 
-Issue a statement / announce: "Stated in an official document (e.g. press release) or public speech"
+10. Question:
+The assessment of the Special Inspector General for Afghanistan Reconstruction (SIGAR) will serve as reference.
+
+11. Question:
+"FARC splinter group" refers to any group which has or had a relationship with FARC and which split away from FARC in the light of the peace deal.
+
+12. Question:
+As reference for the number of deaths serve the statistics published by the International Crisis Group.
+
+13. Question:
+All protest before and after the selection of the Hong Kong Chief Executive which takes reference to it is considered. If different counting estimations about the number of participants exist, they are averaged.
+
+14. Question: 
+"Claims responsibility" refers to any statement from the organization or a high ranking member attributing the attack them. "Attack" refers to the use of physical violence which has the potential to kill people.
+
+15. Question:
+Number of deaths according to official statistics or international media reports.
+
+16. Question: 
+Bombing attack refers to any air-to-ground use of force by the Government of Saudi-Arabia.
+
+17. Question:
+"announce" referes to a statement in an official document (e.g. press release) or public speech. "No-flight zone" refers to a distinct area were flight are only allowed with permitance of the U.S. government and any violation entails the risk to be shot done. 
+
+18. Question: 
+"Hold" means that the involved parties publically endorse the cease-fire.
+
+19. Question: 
+"Peace deal"" refers to an agreement which goes beyond a cease-fire and regulates the long-term relation between the involved party and the Syrian government. "Some armed group" refers to any group which was actively fighting in the Syrian Civil War.
+
+20.  Question: 
+"deployed U.S. troops" refers to the U.S. non-combar mission with currently 5200 military members advising and assisting local forces.
+
+21. Question: "Casualty" refers to a person killed or injured in a war or accident (Source: Oxford Dictionary). The OHCHR Ukraine report is published [here](http://www.ohchr.org/EN/Countries/ENACARegion/Pages/UAReports.aspx).
+
+22. Question: "Single event" refers to everything which is connect through the same point of time or the source of death. 
+
+23. Question: "Claims responsibility" refers to any statement from the organization or a high ranking member attributing the attack them. "Attack" refers to the use of physical violence which has the potential to kill people.
+
+24. Question: "Suicide attacks" include all attacks where the attacker purposely killed him/herself, attempted to do so or acted as if she/he had the intention to die.
+
