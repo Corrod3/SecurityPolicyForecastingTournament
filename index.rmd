@@ -97,3 +97,7 @@ Bombing attack refers to any air-to-ground use of force by the Government of Sau
 23. Question: "Claims responsibility" refers to any statement from the organization or a high ranking member attributing the attack them. "Attack" refers to the use of physical violence which has the potential to kill people.
 
 24. Question: "Suicide attacks" include all attacks where the attacker purposely killed him/herself, attempted to do so or acted as if she/he had the intention to die.
+
+### Disclaimer
+
+The Security Policy Forecasting Tournament is part of an independent research project at Hertie School of Governance Berlin. The research project is conducted as part of a master thesis and is not funded by a third-party. 
