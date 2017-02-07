@@ -51,15 +51,14 @@ FQ <- read_excel("raw/SPFT-questions-test.xlsx")
 
 # import MTurk batch results
 MTurk.batch <- read.csv2("raw/Batch_2677782_batch_results.csv", sep = ",")
-MTurk.batch <- MTurk.batch %>% select(id.mturk = WorkerId, WorkTimeInSeconds, Answer.surveycode)
+MTurk.batch <- MTurk.batch %>% select(WorkerId, WorkTimeInSeconds, Answer.surveycode)
 
 ###############################################
 # 2. Clean Data
 ###############################################
 
 # Merge SPFT and SPFT Turk
-SPFT <- dplyr::bind_rows(SPFT.Main, SPFT.MTurk[-(1:2),])
-
+SPFT <- dplyr::bind_rows(SPFT.Main, SPFT.MTurk[-(1:2),], .id = "OriginRespond")
 
 # Remove unfinished surveys
 SPFT <- SPFT %>% dplyr::filter(Finished == "True")
@@ -81,13 +80,13 @@ SPFT <- SPFT %>% filter(time.sec2_First.Click != "")
 SPFT <- SPFT %>% select(-Status, -IPAddress, -Progress, -Finished,
                         -RecipientLastName, -RecipientFirstName, 
                         -RecipientEmail, -LocationLatitude, -LocationLongitude,
-                        -DistributionChannel, -StartDate, ExternalReference,
+                        -DistributionChannel, -StartDate, -ExternalReference,
                         -further.info...Topics, -contains("Click") )
 # delete raw files
 rm(SPFT.Main, SPFT.MTurk)
 
 ####################################################
-# Identify problematic MTurk users 
+# 3. Identify problematic MTurk users 
 ###################################################
 
 # only MTurk
@@ -108,9 +107,15 @@ MTurk <- MTurk %>% mutate(c3 = ifelse(Duration..in.seconds. < 600, 1, 0))
 
 MTurk.Prob <- MTurk %>% select(ResponseId, id.mturk, CompletionCode, c1, c2, c3) %>% filter(c1 == 1 & c2 == 1 & c3 == 1)
 
-# merge dataframe
-MTurk <- merge(MTurk, MTurk.batch, by = "id.mturk", all = TRUE)
+# Criterion 4: Doublication in unique identifiers (IP, email, MTurk ID)
 
+# merge dataframe by completion code
+MTurk <- merge(MTurk, MTurk.batch, by.x = "CompletionCode", by.y = "Answer.surveycode", all = TRUE)
+
+# check WorkerID code
+MTurk$WorkerId <- trimws(as.character(MTurk$WorkerId))
+MTurk$id.mturk <- trimws(as.character(MTurk$id.mturk))
+MTurk$compWorkID <- ifelse(MTurk$WorkerId == MTurk$id.mturk, 1, 0)
 
 
 ################################################
@@ -122,27 +127,29 @@ FQ[,4] <- 0
 FQ[FQ[,3] == "yes", 4] <- 1
 colnames(FQ) <- c(colnames(FQ)[1:3], "out")
 
-# score board data
-SB <- SPFT %>% select(ResponseId, id.hertie, id.other, starts_with("fq"))
+# score board data (MTurk resondents excluded)
+SB <- SPFT  %>% filter(OriginRespond != 2) %>% 
+        select(ResponseId, id.hertie, id.other, id.mturk, starts_with("fq")) 
+
 SB <- SB[-(1:2),]
 # transform responses to percentages
-SB[,-(1:3)] <- sapply(sapply(SB[,-(1:2)],as.character),as.numeric)
-SB[,-(1:3)] <- SB[,-(1:3)]/100
+SB[,-(1:4)] <- sapply(sapply(SB[,-(1:4)],as.character),as.numeric)
+SB[,-(1:4)] <- SB[,-(1:4)]/100
 
 ## calculate brier scores for each question/respondent
 
-#number of questions
+# number of questions
 q.num <- 24
 
-# i <- 1
+#i <- 1
 for(i in 1:q.num){
 tmp <- paste("fq", i, sep = "")
-# add outcome in new brier score column
+# add outcome in new brier score column (from question xlsx)
 SB[,paste(tmp,"bs", sep = ".")] <- as.numeric(FQ[FQ[,1] == tmp, 4])
-# compute difference outcome and quess
-SB[,paste(tmp,"tmp1", sep = ".")] <- select(SB, i+2+q.num) - select(SB, i+2)
+# compute difference outcome and quess 
+SB[,paste(tmp,"tmp1", sep = ".")] <- select(SB, i+4+q.num) - select(SB, i+4)
 # compute difference outcome  and counterfactual
-SB[,paste(tmp,"tmp2", sep = ".")] <- select(SB, i+2+q.num) - (1- select(SB, i+2))
+SB[,paste(tmp,"tmp2", sep = ".")] <- (1 - select(SB, i+4+q.num)) - (1- select(SB, i+4))
 # Square differences and sum them
 SB[,paste(tmp,"bs", sep = ".")] <- SB[,paste(tmp,"tmp1", sep = ".")]*SB[,paste(tmp,"tmp1", sep = ".")] +
                                    SB[,paste(tmp,"tmp2", sep = ".")]* SB[,paste(tmp,"tmp2", sep = ".")]
@@ -150,4 +157,11 @@ SB[,paste(tmp,"bs", sep = ".")] <- SB[,paste(tmp,"tmp1", sep = ".")]*SB[,paste(t
 SB <- SB %>% select(-contains("tmp"))
 rm(tmp)
 }
+
+# Compute average brier score for each respondent
+SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
+
+# Sort by brier score 
+SB <- SB %>% arrange(brier.avg)
+
 
