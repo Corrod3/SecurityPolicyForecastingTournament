@@ -42,10 +42,35 @@ rm(p, packages)
 ################################################
 
 # Import responses
-SPFT <- read.csv2("raw/SPFT-20170118.csv", sep = ",")
+SPFT <- read.csv2("raw/SPFT-20170207-backup.csv", sep = ",")
+SPFT.MTurk <- read.csv2("raw/SPFT_MTurk_20170207.csv", sep = ",")
+
 
 # Import realized outcomes
-FQ <- read_excel("raw/SPFT-questions.xlsx")
+FQ <- read_excel("raw/SPFT-questions-test.xlsx")
+
+###############################################
+# 2. Clean Data
+###############################################
+
+# Merge SPFT and SPFT Turk
+
+# Remove unfinished surveys
+SPFT <- SPFT %>% dplyr::filter(Finished == "True")
+SPFT.MTurk <- SPFT.MTurk %>% dplyr::filter(Finished == "True")
+
+# Change variable types ########################
+
+# Dates
+SPFT$StartDate <- as.Date(as.character(SPFT$StartDate))
+SPFT$EndDate <- as.Date(as.character(SPFT$EndDate))
+
+SPFT.MTurk$StartDate <- as.Date(as.character(SPFT.MTurk$StartDate))
+SPFT.MTurk$EndDate <- as.Date(as.character(SPFT.MTurk$EndDate))
+
+# Remove test surveys
+SPFT.
+
 
 ################################################
 # 2. Score board
@@ -57,16 +82,16 @@ FQ[FQ[,3] == "yes", 4] <- 1
 colnames(FQ) <- c(colnames(FQ)[1:3], "out")
 
 # score board data
-SB <- SPFT %>% select(ResponseId, ID.Hertie, starts_with("fq"), -contains(".c"))
+SB <- SPFT %>% select(ResponseId, id.hertie, id.other, starts_with("fq"))
 SB <- SB[-(1:2),]
 # transform responses to percentages
-SB[,-(1:2)] <- sapply(sapply(SB[,-(1:2)],as.character),as.numeric)
-SB[,-(1:2)] <- SB[,-(1:2)]/100
+SB[,-(1:3)] <- sapply(sapply(SB[,-(1:2)],as.character),as.numeric)
+SB[,-(1:3)] <- SB[,-(1:3)]/100
 
 ## calculate brier scores for each question/respondent
 
 #number of questions
-q.num <- 19
+q.num <- 24
 
 # i <- 1
 for(i in 1:q.num){
@@ -84,6 +109,4 @@ SB[,paste(tmp,"bs", sep = ".")] <- SB[,paste(tmp,"tmp1", sep = ".")]*SB[,paste(t
 SB <- SB %>% select(-contains("tmp"))
 rm(tmp)
 }
-
-
 
