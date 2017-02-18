@@ -15,17 +15,18 @@
 
 ###############################################################################
 # ToDo
-# 1. Exclude Mturk rejects from sample  DONE
-# 2. Restrict sample to Feb. 12 DONE
-# 3. Export MTurk script NOT NEEDED
-# 4. Hertie Response summary
-# 5. Compute MCT and BNT scores
-# 6. Upload aggregates forecasting responses 
-#    a. Compute group means Hertie, Volunteers, MTurks
-# 7. add group identifiers (hertie, other, mturk) DONE
+# 1. Hertie Response summary
+#    a. list of all participating students (IDs)
+#    b. Table of mean Hertie estimates
+#    c. density plots of hertie responses
+#    d. Overview sheets/slides: 3x8 or 4x6 or 6x4
+# 2. Compute MCT and BNT scores
+#    What to do about blanks?
+# 3. Upload aggregates forecasting responses 
+#    a. graphical representation: Question in plot, choice of density plot
+#    b. List of questions
+#  
 ###############################################################################
-
-
 
 ###############################################################################
 # 0. Preparations
@@ -38,10 +39,12 @@ rm(list=ls())
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
 
 # Collect packages/libraries we need:
-packages <- c("readxl", "dplyr")
+packages <- c("readxl", "dplyr", "ggplot2", "reshape2")
 # package and why it is needed
 # readxl: import excel files
 # dyplyr: data manipulation
+# ggplot: plots (e.g. density)
+# reshape2: melt function
 
 # install packages if not installed before
 for (p in packages) {
@@ -193,7 +196,7 @@ rm(IP.double, email.double, MTurk, MTurk.batch)
 ###############################################################################
 
 # Create data frame for aggregated forecasts
-F <- FQ[,(1:2)]
+FO <- FQ[,(1:2)]
 
 # compute means for each question
 fore.means <- t(aggregate(SPFT[,fq], list(part.group = SPFT$part.group), mean))
@@ -202,12 +205,13 @@ fore.means <- t(aggregate(SPFT[,fq], list(part.group = SPFT$part.group), mean))
 colnames(fore.means) =  paste(fore.means[1,], "mean", sep = ".")
 fore.means = fore.means[-1, ]
 
-# compute average of all (careful: how to ensure the proper order?)
+# compute average of all
 fore.means <- cbind(fore.means, all.mean = colMeans(SPFT[,fq]))
-fore.means <- data.frame(fq.id = gsub("_.*$","",row.names(fore.means)), fore.means, row.names = NULL)
+fore.means <- data.frame(fq.id = gsub("_1","",row.names(fore.means)),
+                         fore.means, row.names = NULL)
 
 # combine forecasting means with questions
-F <- merge(F,fore.means, by = "fq.id")
+FO <- merge(FO,fore.means, by = "fq.id")
 rm (fore.means)
 
 # compute standard deviations and add to data frame
@@ -215,16 +219,65 @@ fore.sd <- t(aggregate(SPFT[,fq], list(Part = SPFT$part.group), sd))
 colnames(fore.sd) =  paste(fore.sd[1,], "sd", sep = ".")
 fore.sd = fore.sd[-1, ]
 
-# add column with standard deviations (could be in a different order?!)
+# add column with standard deviations
 fore.sd <- cbind(fore.sd, all.sd = apply(SPFT[,fq],2,sd))
 
-fore.sd <- data.frame(fq.id = gsub("_.*$","",row.names(fore.sd)), fore.sd, row.names = NULL)
-F <- merge(F,fore.sd, by = "fq.id")
+# merge to data frame
+fore.sd <- data.frame(fq.id = gsub("_1","",row.names(fore.sd)),
+                      fore.sd, row.names = NULL)
+FO <- merge(FO,fore.sd, by = "fq.id")
+rm(fore.sd)
 
-# Compute histograms for each question
+# plotting distribution #######################################################
+# idea: http://www.cookbook-r.com/Graphs/Plotting_distributions_(ggplot2)/
+# colors for 3 qualitative categories (colorbrewer2.org): #1b9e77 #d95f02 #7570b3
+
+# prepare data for ploting
+FO.plot <- SPFT[,c("ResponseId", "part.group", fq)]
+FO.plot2 <- melt(select(FO,-contains(".sd"), -question), id.vars = "fq.id")
+colnames(FO.plot2) <- c("fq.id", "part.group", "mean")
+FO.plot2$part.group <- gsub(".mean","",FO.plot2$part.group)
+FO.plot2$mean <- as.numeric(FO.plot2$mean)
+
+# selection question for printing
+q <- 7
+
+# Different plot versions: 
+ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  geom_histogram(binwidth=.1, alpha=.5, position="identity")
+
+ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  geom_histogram(binwidth=.05, alpha=.5, position="identity")
+
+# this one seems to be the most clear one
+ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  geom_histogram(binwidth=.1, position="dodge") + # bar type
+  geom_vline(data=filter(FO.plot2, 
+                         fq.id == paste("fq",as.character(q), sep = "") & 
+                           part.group != "all"),
+             aes(xintercept=mean,  colour=part.group), 
+             linetype="dashed", size=3) + # group average
+  labs(title = as.character(FQ[q,2]),
+       x = "What is the probability of this event to happen?",
+       y = "Number of estimates") # labels
 
 
-# create graphs
+ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  geom_histogram(binwidth=.05, position="dodge")
+
+# this one is also informative
+ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  geom_density(alpha=.3) +
+  geom_vline(data=filter(FO.plot2, 
+                         fq.id == paste("fq",as.character(q), sep = "") & 
+                           part.group != "all"),
+             aes(xintercept=mean,  colour=part.group), 
+             linetype="dashed", size=2) + # group average
+  labs(title = as.character(FQ[q,2]),
+       x = "What is the probability of this event to happen?",
+       y = "Distribution of estimates") # labels
+
+
 
 ###############################################################################
 # 5. Score board
