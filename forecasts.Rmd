@@ -19,8 +19,12 @@ source("main.R")
 
 ## Security Policy Forecasting Tournament
 
-53 Hertie students participated
+- 53 Hertie students participated
 (48 on time, 5 late)
+
+- 24 forecasting questions 
+
+- time horizon: February 12 to April 24, 2017
 
 
 ## Different representations forecasts
