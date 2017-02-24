@@ -1,0 +1,51 @@
+---
+title: "Security Policy Forecasts"
+author: "SPFT"
+date: "24 Februar 2017"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Clear Global environment
+rm(list=ls())
+
+## Setting Working directory
+try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
+
+source("main.R")
+```
+
+## Security Policy Forecasting Tournament
+
+53 Hertie students participated
+(48 on time, 5 late)
+
+
+## Different representations forecasts
+```{r, echo = FALSE, fig.width=4, fig.height=2.6}
+response.hertie(1)
+
+response.hertie2(1)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6}
+response.all(1)
+
+response.all2(1)
+```
+
+## Question 1-4
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6}
+response.hertie(1)
+
+response.hertie(2)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6}
+response.hertie(3)
+
+response.hertie(4)
+```

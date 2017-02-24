@@ -1,0 +1,121 @@
+---
+title: "Security Policy Forecasts"
+author: "SPFT"
+date: "24 Februar 2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Clear Global environment
+rm(list=ls())
+
+## Setting Working directory
+try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
+
+source("main.R")
+```
+
+## Security Policy Forecasting Tournament
+
+53 Hertie students participated
+(48 on time, 5 late)
+
+
+## Different representations forecasts
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(1)
+
+response.hertie2(1)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.all(1)
+
+response.all2(1)
+```
+
+## Question 1-4
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(1)
+
+response.hertie(2)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(3)
+
+response.hertie(4)
+```
+
+## Question 5-8
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(5)
+
+response.hertie(6)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(7)
+
+response.hertie(8)
+```
+
+## Question 9-12
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(9)
+
+response.hertie(10)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(11)
+
+response.hertie(12)
+```
+
+## Question 13-16
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(13)
+
+response.hertie(14)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(15)
+
+response.hertie(16)
+```
+
+## Question 17-20
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(17)
+
+response.hertie(18)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(19)
+
+response.hertie(20)
+```
+
+## Question 21-24
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(21)
+
+response.hertie(22)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.hertie(23)
+
+response.hertie(24)
+```

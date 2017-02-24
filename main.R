@@ -16,7 +16,7 @@
 ###############################################################################
 # ToDo
 # 1. Hertie Response summary
-#    a. list of all participating students (IDs)
+#    a. list of all participating students (IDs) DONE
 #    b. Table of mean Hertie estimates
 #    c. density plots of hertie responses
 #    d. Overview sheets/slides: 3x8 or 4x6 or 6x4
@@ -39,12 +39,13 @@ rm(list=ls())
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
 
 # Collect packages/libraries we need:
-packages <- c("readxl", "dplyr", "ggplot2", "reshape2")
+packages <- c("readxl", "dplyr", "ggplot2", "reshape2", "scales")
 # package and why it is needed
 # readxl: import excel files
 # dyplyr: data manipulation
 # ggplot: plots (e.g. density)
 # reshape2: melt function
+# scales: label transformation in ggplot
 
 # install packages if not installed before
 for (p in packages) {
@@ -195,6 +196,13 @@ rm(IP.double, email.double, MTurk, MTurk.batch)
 # 4. Forecasting summaries
 ###############################################################################
 
+# List of Hertie Students
+hertie <- SPFT %>% filter(part.group == "hertie") %>% select(id.hertie)
+
+# export list
+# write.table(hertie, "D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament/hertiepart.txt", sep="\t") 
+write.csv(hertie, "hertiepart.csv", row.names=FALSE) 
+
 # Create data frame for aggregated forecasts
 FO <- FQ[,(1:2)]
 
@@ -240,44 +248,86 @@ FO.plot2$part.group <- gsub(".mean","",FO.plot2$part.group)
 FO.plot2$mean <- as.numeric(FO.plot2$mean)
 
 # selection question for printing
-q <- 7
+q <- 3
 
 # Different plot versions: 
-ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
-  geom_histogram(binwidth=.1, alpha=.5, position="identity")
+# ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+#  geom_histogram(binwidth=.1, alpha=.5, position="identity")
 
-ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
-  geom_histogram(binwidth=.05, alpha=.5, position="identity")
+# ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+#  geom_histogram(binwidth=.05, alpha=.5, position="identity")
 
 # this one seems to be the most clear one
+response.all2 <- function(q){
 ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
   geom_histogram(binwidth=.1, position="dodge") + # bar type
   geom_vline(data=filter(FO.plot2, 
                          fq.id == paste("fq",as.character(q), sep = "") & 
                            part.group != "all"),
              aes(xintercept=mean,  colour=part.group), 
-             linetype="dashed", size=3) + # group average
-  labs(title = as.character(FQ[q,2]),
+             linetype="dashed", size=1.5) + # group average
+  labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
        x = "What is the probability of this event to happen?",
        y = "Number of estimates") # labels
-
+}
 
 ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
   geom_histogram(binwidth=.05, position="dodge")
 
 # this one is also informative
+
+response.all <- function(q){
 ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
   geom_density(alpha=.3) +
   geom_vline(data=filter(FO.plot2, 
                          fq.id == paste("fq",as.character(q), sep = "") & 
                            part.group != "all"),
              aes(xintercept=mean,  colour=part.group), 
-             linetype="dashed", size=2) + # group average
-  labs(title = as.character(FQ[q,2]),
+             linetype="dashed", size=1.5) + # group average
+  labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
        x = "What is the probability of this event to happen?",
-       y = "Distribution of estimates") # labels
+       y = "Distribution of estimates") + # labels
+  expand_limits(x=c(0,1)) + # set range of x-axis
+  scale_x_continuous(labels=percent) # percentages
+}
+response.all(6)
 
+# density plot for html presentation  
+response.hertie <- function(q){
+  ggplot(filter(FO.plot, part.group == "hertie"), aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+    geom_density(alpha=.3) +
+    geom_vline(data=filter(FO.plot2, 
+                           fq.id == paste("fq",as.character(q), sep = "") & 
+                             part.group == "hertie"),
+               aes(xintercept=mean,  colour=part.group), 
+               linetype="dashed", size=1.5) + # group average
+    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+         x = "What is the probability of this event to happen?",
+         y = "Distribution of estimates") + # labels
+    guides(fill=guide_legend(title="Participants")) + # legend title
+    scale_color_manual("Mean", values = c("red")) + # legend mean vline
+    expand_limits(x=c(0,1)) + # set range of x-axis
+    scale_x_continuous(labels=percent) # percentages
+}
+response.hertie(2)
 
+response.hertie2 <- function(q){
+  ggplot(filter(FO.plot, part.group == "hertie"), aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+    geom_histogram(binwidth=.10, position="dodge") + # bar type
+    geom_vline(data=filter(FO.plot2, 
+                           fq.id == paste("fq",as.character(q), sep = "") & 
+                             part.group == "hertie"),
+               aes(xintercept=mean,  colour=part.group), 
+               linetype="dashed", size=1.5) + # group average
+    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+         x = "What is the probability of this event to happen?",
+         y = "# of estimates") + # labels
+    expand_limits(x=c(0,1)) + # set range of x-axis
+    guides(fill=guide_legend(title="Participants")) + # legend title
+    scale_color_manual("Mean", values = c("red")) + # legend mean vline
+    scale_x_continuous(labels=percent) # percentages
+}
+response.hertie2(2)
 
 ###############################################################################
 # 5. Score board
@@ -332,4 +382,6 @@ SB <- SB %>% arrange(brier.avg)
 ###############################################################################
 
 # remove late submissions
-SPFT <- SPFT %>% filter( StartDate < "2017-02-13")
+SPFT <- SPFT %>% filter( EndDate < "2017-02-13")
+
+str(filter(SPFT, part.group == "hertie"))
