@@ -1,6 +1,6 @@
 ---
 title: "Security Policy Forecasting Tournament"
-subtitle: "Frequently Asked Questions"
+subtitle: ""
 author: ""
 output: html_document
 ---
@@ -20,17 +20,45 @@ source("illustration.R")
 
 # Introduction
 
-Welcome to the online glossary of the Security Policy Forecasting Tournament. On this site you find further information which should help you to get a better grasp of the tournament. After the tournament the results and background information regarding the questions will be published on this site. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org).
+Welcome to the online website of the Security Policy Forecasting Tournament. On this site you find background information which should help you to get a better grasp of the tournament. Eventually, this page will contain the forecasts, the scoreboard, the research results and the methodology. If anything remains unclear, don't hesitate to write an [email](a.sacharow@mpp.hertie-school.org).
 
 # Purpose and aim
 Forecasting tournaments are a useful tool to better understand and improve forecasting. They have been extensively used in many future-oriented fields like weather predictions and financial markets. However, only recently they have been introduced to forecasting in international politics. (e.g. [The Good Judgement Project](www.gjopen.com)). The Security Policy Forecasting Tournament is continuing this effort. Its particular goals are to increase awareness of crowd-based forecasting in Europe and to gain further understanding in the relevance of successful forecasting for policy makers. 
 
 # Forecasting questions and answers
 
-```{r}
-response.web(12)
+The forecasting tournament took place between February 6th and 12th. During this time the participants were asked about the probability of 24 geopolitical events happening before April 24th, 2017. The results can be found below. The graphs illustrate how the different estimates of the 223 participants were distributed. The dashed lines indicates the average estimate.
 
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(1)  
+response.web2(2)
+response.web2(3)
+response.web2(4)  
+response.web2(5)
+response.web2(6)
+response.web2(7)  
+response.web2(8)
+response.web2(9)
+response.web2(10)  
+response.web2(11)
+response.web2(12)
+response.web2(13)  
+response.web2(14)  
+response.web2(15)
+response.web2(16)
+response.web2(17)  
+response.web2(18)
+response.web2(19)
+response.web2(20)  
+response.web2(21)
+response.web2(22)
+response.web2(23)
+response.web2(24)
 ```
+
+# Score Board
+
+The score board will be published after the 24th of April 2017, when it is clear which events materialized and which did not.
 
 # Methodology
 
@@ -44,9 +72,7 @@ For further information see [Wikipedia](https://en.wikipedia.org/wiki/Brier_scor
 
 ## Score Board
 
-The Scoring Board is computed by averaging the brier scores of each participants and ranking them from the lowest to the highes Brier score. As all participants are required to give judgements to all question no gambling by not answering questions is possible.
-
-# Forecasting questions
+The score board is computed by averaging the Brier scores of each participants and ranking them from the lowest to the highes Brier score. As all participants are required to give judgements to all question, no gambling by not answering questions is possible.
 
 ## Terminology
 

@@ -249,6 +249,9 @@ fore.sd <- cbind(fore.sd, all.sd = apply(SPFT[,fq],2,sd))
 fore.sd <- data.frame(fq.id = gsub("_1","",row.names(fore.sd)),
                       fore.sd, row.names = NULL)
 FO <- merge(FO,fore.sd, by = "fq.id")
+
+# make content numeric and delete unneeded variable
+FO[,-(1:2)] = apply(FO[,-(1:2)], 2, function(x) as.numeric(as.character(x)))
 rm(fore.sd)
 
 # plotting distribution #######################################################
