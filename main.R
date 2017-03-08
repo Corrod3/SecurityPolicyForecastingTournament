@@ -21,7 +21,9 @@
 #    c. density plots of hertie responses
 #    d. Overview sheets/slides: 3x8 or 4x6 or 6x4
 # 2. Compute MCT and BNT scores
-#    What to do about blanks?
+#    a. BNT Done!
+#    b. MCT 
+#    c. What to do about blanks?
 # 3. Upload aggregates forecasting responses 
 #    a. graphical representation: Question in plot, choice of density plot
 #    b. List of questions
@@ -104,6 +106,19 @@ SPFT[,fq] = apply(SPFT[,fq], 2, function(x) as.numeric(as.character(x)))
 
 # transform estimates to percentage
 SPFT[,fq] <- SPFT[,fq]/100
+
+# bnt responses to numeric
+bnt.col <- colnames(select(SPFT, contains("bnt")))
+SPFT[,bnt.col] = apply(SPFT[,bnt.col], 2, function(x) as.numeric(as.character(x)))
+
+# mct responses to numeric
+mct.col <- colnames(select(SPFT, contains("mct.")))
+SPFT[,mct.col] = apply(SPFT[,mct.col], 2, function(x) as.numeric(as.character(x)))
+
+# column names only pro + con arguments
+mct.col.pc <- mct.col[-c(1,14)]
+names(SPFT)[names(SPFT)=="mct.w_1"] <- "mct.w"
+names(SPFT)[names(SPFT)=="mct.d_1"] <- "mct.d"
 
 # Remove not needed data ######################################################
 
@@ -248,7 +263,7 @@ FO.plot2$part.group <- gsub(".mean","",FO.plot2$part.group)
 FO.plot2$mean <- as.numeric(FO.plot2$mean)
 
 # selection question for printing
-q <- 3
+# q <- 3
 
 # Different plot versions: 
 # ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
@@ -256,6 +271,9 @@ q <- 3
 
 # ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
 #  geom_histogram(binwidth=.05, alpha=.5, position="identity")
+
+# ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+#  geom_histogram(binwidth=.05, position="dodge")
 
 # this one seems to be the most clear one
 response.all2 <- function(q){
@@ -271,8 +289,7 @@ ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
        y = "Number of estimates") # labels
 }
 
-ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
-  geom_histogram(binwidth=.05, position="dodge")
+
 
 # this one is also informative
 
@@ -290,7 +307,8 @@ ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
   expand_limits(x=c(0,1)) + # set range of x-axis
   scale_x_continuous(labels=percent) # percentages
 }
-response.all(6)
+# test plot
+# response.all(6)
 
 # density plot for html presentation  
 response.hertie <- function(q){
@@ -309,7 +327,8 @@ response.hertie <- function(q){
     expand_limits(x=c(0,1)) + # set range of x-axis
     scale_x_continuous(labels=percent) # percentages
 }
-response.hertie(2)
+# test plot
+# response.hertie(2)
 
 response.hertie2 <- function(q){
   ggplot(filter(FO.plot, part.group == "hertie"), aes(x=eval(parse(text = fq[q])), fill=part.group)) +
@@ -327,7 +346,30 @@ response.hertie2 <- function(q){
     scale_color_manual("Mean", values = c("red")) + # legend mean vline
     scale_x_continuous(labels=percent) # percentages
 }
-response.hertie2(2)
+# test plot
+# response.hertie2(2)
+
+# Ploting for website ########################################################
+
+# density plot for github page  
+response.web <- function(q){
+  ggplot(FO.plot, aes(x=eval(parse(text = fq[q])))) +
+    geom_density(alpha=.3, fill="blue") +
+    geom_vline(data=filter(FO.plot2, 
+                           fq.id == paste("fq",as.character(q), sep = "") & 
+                             part.group == "all"),
+               aes(xintercept=mean,  colour=part.group), 
+               linetype="dashed", size=1.5) + # group average
+    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+         x = "What is the probability of this event to happen?",
+         y = "Distribution of estimates") + # labels
+    guides(fill=guide_legend(title="Participants")) + # legend title
+    scale_color_manual("Mean", values = c("red")) + # legend mean vline
+    expand_limits(x=c(0,1)) + # set range of x-axis
+    scale_x_continuous(labels=percent) # percentages
+}
+
+response.web(12)
 
 ###############################################################################
 # 5. Score board
@@ -384,4 +426,63 @@ SB <- SB %>% arrange(brier.avg)
 # remove late submissions
 SPFT <- SPFT %>% filter( EndDate < "2017-02-13")
 
+# merge brier scores in
+SPFT <- merge(SPFT, SB[, c("ResponseId", "brier.avg")], by = "ResponseId")
+
+# compute BNT score ###########################################################
+# add column for bnt score
+SPFT$bnt.s <- 0
+
+# replace NA with wrong answer / place holder
+# justification: Most likely missing answer is due to lack of knowledge
+SPFT$bnt1[is.na(SPFT$bnt1)] <- -1
+SPFT$bnt2[is.na(SPFT$bnt2)] <- -1
+SPFT$bnt3[is.na(SPFT$bnt3)] <- -1
+SPFT$bnt4[is.na(SPFT$bnt4)] <- -1
+
+# compute bnt score stepwise
+SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt1 == 30, bnt.s + 1, bnt.s))
+SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt2 == 25, bnt.s + 1, bnt.s))
+SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt3 == 20, bnt.s + 1, bnt.s))
+# note: in question it was not specified to reply in percentage
+SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt4 == 50 | bnt4 == 0.5, bnt.s + 1, bnt.s))
+
+# plot scatterplot to illustrate correlation between bnt and brier scores
+plot(SPFT$bnt.s, SPFT$brier.avg, main="Scatterplot BNT Score & Brier Scores",
+     xlab="BNT Score", ylab="Brier Scores")
+abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red") 
+
+# T Test
+# comparing means
+# t.test(y1,y2)
+
+# MCT Scores ##################################################################
+# instructions are available here:
+# http://www.uni-konstanz.de/ag-moral/mut/mjt-intro.htm
+
+# checking number of missing values
+# sum(select(SPFT, contains("mct")) == "")
+
+# calculating total sum (3)
+SPFT$mct.ts <- rowSums(SPFT[, mct.col.pc])
+
+# calculate ss_m (6)
+SPFT$mct.ss.m <- SPFT$mct.ts*SPFT$mct.ts/24
+
+# calculate sums of squares (5)
+SPFT$mct.tss <- rowSums((SPFT[, mct.col.pc])^2)
+
+# sums of stage squares (2)
+SPFT$mct.sss <- 0
+
+for(i in 1:6) {
+SPFT$mct.sss <- SPFT$mct.sss +  
+                rowSums(SPFT[, grep(paste("mct.*._",i,sep = ""), names(SPFT))]) *
+                rowSums(SPFT[, grep(paste("mct.*._",i,sep = ""), names(SPFT))])  
+}
+
+# calculate competency score
+SPFT$mct.c <- (SPFT$mct.sss/4 - SPFT$mct.ss.m)/(SPFT$mct.tss - SPFT$mct.ss.m)
+
+summary(SPFT$mct.c)
 str(filter(SPFT, part.group == "hertie"))
