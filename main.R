@@ -27,7 +27,7 @@
 # 3. Upload aggregates forecasting responses 
 #    a. graphical representation: Question in plot, choice of density plot
 #    b. List of questions
-#  
+# 4. Send Mark Kayser update!!! 
 ###############################################################################
 
 ###############################################################################
@@ -432,7 +432,16 @@ SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt4 == 50 | bnt4 == 0.5, bnt.s + 1, bnt.
 # plot scatterplot to illustrate correlation between bnt and brier scores
 plot(SPFT$bnt.s, SPFT$brier.avg, main="Scatterplot BNT Score & Brier Scores",
      xlab="BNT Score", ylab="Brier Scores")
-abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red") 
+abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red")
+
+# Distribution of bnt scores
+bnt.plot <- ggplot(SPFT, aes(x = bnt.s)) + 
+  geom_bar() +
+  theme_bw() + 
+  labs(title = "Distribution of results Berlin Numeracy Test (BNT)",
+       x = "BNT Score (# of correct answers)",
+       y = "# of respondents") # labels
+
 
 # T Test
 # comparing means
@@ -465,6 +474,16 @@ SPFT$mct.sss <- SPFT$mct.sss +
 
 # calculate competency score
 SPFT$mct.c <- (SPFT$mct.sss/4 - SPFT$mct.ss.m)/(SPFT$mct.tss - SPFT$mct.ss.m)
+
+# Distribution of moral competency score
+mct.plot <- ggplot(SPFT, aes(x = mct.c)) +
+  geom_histogram(binwidth=.10, position="dodge") + # bar type
+  labs(title = "MCT scores",
+     x = "MCT Score",
+     y = "Deciples") + # labels
+  expand_limits(x=c(0,1)) # set range of x-axis
+mct.plot
+
 
 summary(SPFT$mct.c)
 str(filter(SPFT, part.group == "hertie"))
