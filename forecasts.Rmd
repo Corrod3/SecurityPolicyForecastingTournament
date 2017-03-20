@@ -172,3 +172,12 @@ exp.plot
 pop.plot
 edu.plot
 ```
+
+## Further Descriptive Stats
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+intu.anal.plot
+selfassessment.plot
+exp.sp.plot 
+team.plot
+```

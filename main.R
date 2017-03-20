@@ -520,6 +520,7 @@ summary(SPFT$team)
 
 team.plot <- ggplot(SPFT, aes(x = team)) +
                 geom_bar() +
+                coord_flip() +
                 labs(title = "Individual vs team-work (self-selected)",
                      x = "# of individuals making forecast",
                      y = "# of respondents") # labels
@@ -582,11 +583,8 @@ SPFT.Demo.Plot$age.gr<-c( "<14", "15-19", "20-24", "25-29", "30-34",
                                                        49.5, 54.5, 59.5, 64.5, 
                                                        Inf))]
 
-# SPFT.Demo.Plot$occ <- 0
+# counting the age group / gender occurances
 SPFT.Demo.Plot <- SPFT.Demo.Plot %>% group_by(age.gr, sex) %>% dplyr::count()
-#  aggregate(, FUN = count, SPFT.Demo.Plot)
-# <- SPFT.Demo.Plot %>% group_by(age.gr, sex) %>% dplyr::count()
-
 
 # plot population pyramid
 pop.plot <- ggplot(data = SPFT.Demo.Plot, aes(x = age.gr, y = n, fill = sex)) +
@@ -614,6 +612,7 @@ SPFT$intu.anal <- factor(SPFT$intu.anal,
 # plot object
 intu.anal.plot <- ggplot(SPFT, aes(x = intu.anal)) +
   geom_bar() +
+  coord_flip() +
   labs(title = "Intuition vs. Analysis",
        x = "Approach",
        y = "# of respondents") # labels
@@ -630,6 +629,7 @@ levels(as.factor(SPFT$selfassessment))
 
 selfassessment.plot <- ggplot(SPFT, aes(x = selfassessment)) +
   geom_bar() +
+  coord_flip() +
   labs(title = "Self-assessment",
        x = "Assessment",
        y = "# of respondents") # labels
@@ -663,6 +663,7 @@ SPFT$exp.sp <- factor(SPFT$exp.sp,
 
 exp.sp.plot <- ggplot(SPFT, aes(x = exp.sp)) +
   geom_bar() +
+  coord_flip() +
   labs(title = "Security policy experience",
        x = "Assessment",
        y = "# of respondents") # labels
