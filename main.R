@@ -41,9 +41,10 @@ rm(list=ls())
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
 
 # Collect packages/libraries we need:
-packages <- c("readxl", "dplyr", "ggplot2", "reshape2", "scales")
+packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales")
 # package and why it is needed
 # readxl: import excel files
+# plyr: mapvalues function
 # dyplyr: data manipulation
 # ggplot: plots (e.g. density)
 # reshape2: melt function
@@ -95,10 +96,11 @@ SPFT[!is.na(SPFT$id.hertie) & SPFT$id.hertie != "",][,"part.group"] <- "hertie"
 
 # Change variable types #######################################################
 
-# Dates
+# Dates + times
 SPFT$StartDate <- as.Date(as.character(SPFT$StartDate))
 SPFT$EndDate <- as.Date(as.character(SPFT$EndDate))
 SPFT$Duration..in.seconds. <- as.numeric(SPFT$Duration..in.seconds.)
+SPFT$time.sec2_Page.Submit <- as.numeric(SPFT$time.sec2_Page.Submit)
 
 # make estimates numeric
 fq <- colnames(select(SPFT, contains("fq")))
@@ -487,3 +489,22 @@ mct.plot
 
 summary(SPFT$mct.c)
 str(filter(SPFT, part.group == "hertie"))
+
+# timeing #####################################################################
+
+# code to minutes
+SPFT$Duration.min <- SPFT$Duration..in.seconds./60
+SPFT$time.fq.sec <- SPFT$time.sec2_Page.Submit/60
+
+levels(as.factor(SPFT$time))
+SPFT$time.min <- as.numeric(mapvalues(SPFT$time,
+                                      levels(as.factor(SPFT$time)),
+                                      c(90,20,180,45,5)))
+
+# Basic Scatterplot Matrix
+pairs(~Duration.min+time.fq.sec+time.min,data=SPFT,
+      main="Simple Scatterplot Matrix")
+
+###(What to do about outliers)
+
+str(SPFT$time.sec2_Page.Submit)
