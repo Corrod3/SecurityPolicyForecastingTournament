@@ -478,17 +478,16 @@ SPFT$mct.sss <- SPFT$mct.sss +
 SPFT$mct.c <- (SPFT$mct.sss/4 - SPFT$mct.ss.m)/(SPFT$mct.tss - SPFT$mct.ss.m)
 
 # Distribution of moral competency score
-mct.plot <- ggplot(SPFT, aes(x = mct.c)) +
+mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
   geom_histogram(binwidth=.10, position="dodge") + # bar type
-  labs(title = "MCT scores",
+  labs(title = "Moral Competency Test (MCT)",
      x = "MCT Score",
-     y = "Deciples") + # labels
+     y = "# of respondents") + # labels
   expand_limits(x=c(0,1)) # set range of x-axis
 mct.plot
 
-
-summary(SPFT$mct.c)
-str(filter(SPFT, part.group == "hertie"))
+# summary(SPFT$mct.c)
+# str(filter(SPFT, part.group == "hertie"))
 
 # timeing #####################################################################
 
@@ -501,10 +500,187 @@ SPFT$time.min <- as.numeric(mapvalues(SPFT$time,
                                       levels(as.factor(SPFT$time)),
                                       c(90,20,180,45,5)))
 
-# Basic Scatterplot Matrix
-pairs(~Duration.min+time.fq.sec+time.min,data=SPFT,
+# Basic Scatterplot Matrix for time (to compare correlation)
+# extreme outliers are eliminated
+# actual time one forecasting question should be used as 
+# full duration and self reported data captures time spend on other sections
+pairs(~Duration.min+time.fq.sec+time.min,data=filter(SPFT, time.fq.sec < 1000),
       main="Simple Scatterplot Matrix")
 
-###(What to do about outliers)
+time.plot <- ggplot(filter(SPFT, time.fq.sec < 1000), 
+                    aes(x = time.fq.sec, fill = part.group)) +
+                geom_density(alpha=.3) +
+                labs(title = "Distribution time spend on forecasting questions",
+                     x = "Time in min",
+                     y = "Share of respondents") # labels
 
-str(SPFT$time.sec2_Page.Submit)
+# team ########################################################################
+
+summary(SPFT$team)
+
+team.plot <- ggplot(SPFT, aes(x = team)) +
+                geom_bar() +
+                labs(title = "Individual vs team-work (self-selected)",
+                     x = "# of individuals making forecast",
+                     y = "# of respondents") # labels
+
+# comment: should probably be dropped
+
+# intervention / treatment ####################################################
+
+group.plot <- ggplot(SPFT, aes(x = Group)) +
+                geom_bar() +
+                labs(title = "Treatments and active checking",
+                     x = "Group",
+                     y = "# of respondents") # labels
+
+# variety of information ######################################################
+
+SPFT$source.var <- unlist(lapply(strsplit(SPFT$source, 
+                                          split = ",",
+                                          fixed = TRUE),
+                                 length))
+
+source.var.plot <- ggplot(SPFT, aes(x = source.var)) +
+                      geom_bar() +
+                      labs(title = "Variety of sources used for forecast",
+                           x = "Number of Sources",
+                           y = "# of respondents") # labels
+
+source.plot.data <- as.data.frame(table(unlist(strsplit(SPFT$source, 
+                                                        split = ",",
+                                                        fixed = TRUE)
+                                               )))
+source.plot <- ggplot(source.plot.data, aes(x = Var1)) +
+                  geom_bar(aes(y = Freq), stat = "identity") +
+                  coord_flip() + # flip sides
+                  labs(title = "Sources used for forecast",
+                       x = "Sources",
+                       y = "# of respondents") # labels
+
+###############################################################################
+# 7. demographic data - descriptives
+###############################################################################
+
+SPFT.Demo.Plot <- SPFT %>% select(year, sex)
+
+# correct typos
+filter(SPFT.Demo.Plot, year < 1900 | year > 2017)
+SPFT.Demo.Plot$year[SPFT.Demo.Plot$year=="19.061990"] <- 1990
+SPFT.Demo.Plot$year[SPFT.Demo.Plot$year=="23"] <- 1994
+SPFT.Demo.Plot$year[SPFT.Demo.Plot$year=="66"] <- 1966
+
+# compute age
+SPFT.Demo.Plot$age = 2017 - as.integer(SPFT.Demo.Plot$year)
+SPFT.Demo.Plot <- SPFT.Demo.Plot %>% select(-year)
+
+# compute age groups
+SPFT.Demo.Plot$age.gr<-c( "<14", "15-19", "20-24", "25-29", "30-34",
+                 "35-39","40-44", "45-49", "50-54", "55-59", "60-64", "65+")[
+                   findInterval(SPFT.Demo.Plot$age , c(-Inf, 14.5, 19.5, 24.5,
+                                                        29.5, 34.5, 39.5, 44.5,
+                                                       49.5, 54.5, 59.5, 64.5, 
+                                                       Inf))]
+
+# SPFT.Demo.Plot$occ <- 0
+SPFT.Demo.Plot <- SPFT.Demo.Plot %>% group_by(age.gr, sex) %>% dplyr::count()
+#  aggregate(, FUN = count, SPFT.Demo.Plot)
+# <- SPFT.Demo.Plot %>% group_by(age.gr, sex) %>% dplyr::count()
+
+
+# plot population pyramid
+pop.plot <- ggplot(data = SPFT.Demo.Plot, aes(x = age.gr, y = n, fill = sex)) +
+                geom_bar(data = subset(SPFT.Demo.Plot, sex == "Female"), stat = "identity") +
+                geom_bar(data = subset(SPFT.Demo.Plot, sex == "Male"),
+                         stat = "identity",
+                         position = "identity",
+                         mapping = aes(y = -n)) +
+                scale_y_continuous(labels = abs) +
+                labs(title = "Age and gender of participants",
+                     x = "Age groups",
+                     y = "# of respondents") + # labels
+                coord_flip()
+
+
+# intuition vs. analysis ######################################################
+
+# order replies
+SPFT$intu.anal <- factor(SPFT$intu.anal, 
+                         levels =  c("Only intuition", 
+                                     "Mostly intuition, some analysis",
+                                     "About evenly intuition and analysis",
+                                     "Mostly analysis, some intuition", 
+                                     "Only analysis"))
+# plot object
+intu.anal.plot <- ggplot(SPFT, aes(x = intu.anal)) +
+  geom_bar() +
+  labs(title = "Intuition vs. Analysis",
+       x = "Approach",
+       y = "# of respondents") # labels
+
+# self-assessment ############################################################
+# order 
+SPFT$selfassessment <- factor(SPFT$selfassessment, 
+                         levels =  c("Extremely bad", "Moderately bad",
+                                     "Slightly bad", "Neither good nor bad", 
+                                     "Slightly good", "Moderately good",
+                                     "Extremely good"))
+
+levels(as.factor(SPFT$selfassessment))
+
+selfassessment.plot <- ggplot(SPFT, aes(x = selfassessment)) +
+  geom_bar() +
+  labs(title = "Self-assessment",
+       x = "Assessment",
+       y = "# of respondents") # labels
+
+# experience ##################################################################
+# order
+SPFT$exp <- factor(SPFT$exp, 
+                   levels =  c("No, I never participated in any forecasting of events",
+                               "Yes, I have tried forecasting events a few times",
+                               "Yes, I sometimes forecast events",
+                               "Yes, I regularly forecast events"))                      
+                            
+# levels(as.factor(SPFT$exp))
+
+exp.plot <- ggplot(SPFT, aes(x = exp)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Forecasting experience",
+       x = "Assessment",
+       y = "# of respondents") # labels
+
+# experience security policy ##################################################
+# order
+SPFT$exp.sp <- factor(SPFT$exp.sp, 
+                   levels =  c("None",                                                                                             
+                               "Yes, but less than six months", 
+                               "Yes, between six months and two years", 
+                               "Yes, more than two years"))
+
+# levels(as.factor(SPFT$exp.sp))
+
+exp.sp.plot <- ggplot(SPFT, aes(x = exp.sp)) +
+  geom_bar() +
+  labs(title = "Security policy experience",
+       x = "Assessment",
+       y = "# of respondents") # labels
+
+# education ###################################################################
+
+edu.plot <- ggplot(SPFT, aes(x = edu)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Education",
+       x = "Education",
+       y = "# of respondents") # labels
+
+# employment ##################################################################
+
+emp.plot <- ggplot(SPFT, aes(x = emp)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = "Employment / occupation",
+       x = "Occupation",
+       y = "# of respondents") # labels
