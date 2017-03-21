@@ -139,7 +139,7 @@ mct.plot
 
 ## Control Variables: H2
 
-Hypothesis 2: The more time forecasters use for forecasting the more accurate their forecast become
+Hypothesis 2: The marginal added value of spending more time on forecasting decreases as more time is used for forecasting
 
 ```{r, echo = FALSE, fig.width=7, fig.height=4, out.extra='style="float:left"'}
 time.plot
