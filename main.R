@@ -11,6 +11,9 @@
 # 3. MTurk
 # 4. Forecast summary
 # 5. Scoreboard
+# 6. control variables
+# 7. demographics
+# 8. testing
 ###############################################################################
 
 ###############################################################################
@@ -392,10 +395,8 @@ SB[,paste(tmp,"tmp1", sep = ".")] <- select(SB, i+4+q.num) - select(SB, i+4)
 # compute difference outcome  and counterfactual
 SB[,paste(tmp,"tmp2", sep = ".")] <- (1 - select(SB, i+4+q.num)) - (1- select(SB, i+4))
 # Square differences and sum them
-SB[,paste(tmp,"bs", sep = ".")] <- SB[,paste(tmp,"tmp1", sep = ".")] *
-                                   SB[,paste(tmp,"tmp1", sep = ".")] +
-                                   SB[,paste(tmp,"tmp2", sep = ".")] * 
-                                   SB[,paste(tmp,"tmp2", sep = ".")]
+SB[,paste(tmp,"bs", sep = ".")] <- (SB[,paste(tmp,"tmp1", sep = ".")])^2 +
+                                   (SB[,paste(tmp,"tmp2", sep = ".")])^2 
 # delete unneccessary columns
 SB <- SB %>% select(-contains("tmp"))
 rm(tmp)
@@ -406,6 +407,7 @@ SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
 
 # Sort by brier score 
 SB <- SB %>% arrange(brier.avg)
+
 
 
 ###############################################################################
@@ -709,4 +711,38 @@ stargazer(select(SPFT, bnt.s, mct.c, time.fq.sec, Duration.min, age),
 ###############################################################################
 
 # Skill vs. Luck ##############################################################
+
+# all possible combinations of 0,1 in a matrix
+# for 24 events there are more than 16 Mio: 2^24
+ 
+# idea: take expected value of each question to calculate random distribution
+# brier score
+
+# score board for randum distributed events
+SB.R <- SPFT  %>% select(ResponseId,
+                       starts_with("fq")) 
+
+## calculate brier scores for each question/respondent
+
+i <- 1
+for(i in 1:q.num){
+  tmp <- paste("fq", i, sep = "")
+  # add expected value in new brier score column and compute Brier score
+  SB.R[,paste(tmp,"bs", sep = ".")] <- 2*(0.5 - select(SB.R, i+1))^2
+  rm(tmp)
+}
+
+# Compute average brier score for each respondent
+SB.R[,"brier.avg"] <- rowMeans(select(SB.R, contains("bs")))
+
+hist(SB.R$brier.avg)
+
+# T-Statistik (root(n*m/(n+m)*(x_m-y_m)/sd(S)))
+# https://de.wikipedia.org/wiki/Zweistichproben-t-Test
+(nrow(SB.R)*nrow(SB)/(nrow(SB.R)+nrow(SB)))^(1/2)*(mean(SB.R$brier.avg) - mean(SB$brier.avg))/
+  ((((nrow(SB)-1)*sd(SB$brier.avg)^2 + (nrow(SB.R)-1)*sd(SB.R$brier.avg)^2)/(nrow(SB)+nrow(SB.R)-2)))^(1/2)
+
+# T-Test One-sided: Whether brier score for true events is smaller than for random events
+# http://statistics.berkeley.edu/computing/r-t-tests
+t.test(SB$brier.avg, y=SB.R$brier.avg, mu = 0, alternative = "less",  paired=F, conf.level=0.95)
 
