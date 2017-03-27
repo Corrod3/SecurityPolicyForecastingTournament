@@ -43,15 +43,31 @@ response.web2(10)
 response.web2(11)
 response.web2(12)
 response.web2(13)  
-response.web2(14)  
+response.web2(14) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
+```
+Answer 14: YES
+
+On March 22, 2017, a SUV attacked pedestrians on Westerminster Bridge. The Islamic State [claimed responsibility](http://www.euronews.com/2017/03/23/amaq-news-agency-islamic-state-group-claims-responsibility-for-attack-on-parliament-in-london) for this attack. 
+
+```{r, fig.width = 4.5, fig.height = 3}
 response.web2(15)
 response.web2(16)
 response.web2(17)  
 response.web2(18)
 response.web2(19)
 response.web2(20)  
-response.web2(21)
-response.web2(22)
+response.web2(21) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(22) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
+```
+Answer 21: NO
+
+On March 15th, 2017, the OHCHR published its [report](http://www.ohchr.org/Documents/Countries/UA/UAReport17th_EN.pdf) stating that there were 130 civilian casualties in the respective time period.
+
+Answer 22: YES
+
+On March 12th, 2017, Damascus was hit by a twin bombings causing the death of atleast 74 individuals as reported by [international media](https://www.theguardian.com/world/2017/mar/12/dead-damascus-bombings-syria-rights-monitor).
+
+```{r, fig.width = 4.5, fig.height = 3}
 response.web2(23)
 response.web2(24)
 ```

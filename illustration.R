@@ -64,4 +64,4 @@ response.web2 <- function(q){
     scale_x_continuous(labels=percent) # percentages
 }
 
-response.web2(12)
+response.web2(12)  + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
