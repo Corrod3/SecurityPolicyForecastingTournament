@@ -1,0 +1,7 @@
+      age            sex          emp                edu           
+ Min.   :19.00         :  0   Length:214         Length:214        
+ 1st Qu.:25.00   Female: 97   Class :character   Class :character  
+ Median :28.00   Male  :116   Mode  :character   Mode  :character  
+ Mean   :31.44   Other :  1                                        
+ 3rd Qu.:34.00                                                     
+ Max.   :68.00                                                     

@@ -1,0 +1,7 @@
+
+<table style="text-align:center"><tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Statistic</td><td>N</td><td>Mean</td><td>St. Dev.</td><td>Min</td><td>Max</td></tr>
+<tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">bnt.s</td><td>214</td><td>2.056</td><td>1.393</td><td>0</td><td>4</td></tr>
+<tr><td style="text-align:left">mct.c</td><td>185</td><td>0.163</td><td>0.099</td><td>0.000</td><td>0.558</td></tr>
+<tr><td style="text-align:left">time.fq.sec</td><td>212</td><td>12.221</td><td>19.965</td><td>0.708</td><td>184.908</td></tr>
+<tr><td style="text-align:left">age</td><td>214</td><td>31.439</td><td>9.170</td><td>19</td><td>68</td></tr>
+<tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr></table>

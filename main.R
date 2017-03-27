@@ -27,7 +27,7 @@
 # 3. Upload aggregates forecasting responses 
 #    a. graphical representation: Question in plot, choice of density plot
 #    b. List of questions
-# 4. Send Mark Kayser update!!! 
+# 4. Send Mark Kayser update!!!  DONE
 ###############################################################################
 
 ###############################################################################
@@ -41,7 +41,7 @@ rm(list=ls())
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
 
 # Collect packages/libraries we need:
-packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales")
+packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales", "stargazer")
 # package and why it is needed
 # readxl: import excel files
 # plyr: mapvalues function
@@ -49,6 +49,7 @@ packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales")
 # ggplot: plots (e.g. density)
 # reshape2: melt function
 # scales: label transformation in ggplot
+
 
 # install packages if not installed before
 for (p in packages) {
@@ -121,6 +122,10 @@ SPFT[,mct.col] = apply(SPFT[,mct.col], 2, function(x) as.numeric(as.character(x)
 mct.col.pc <- mct.col[-c(1,14)]
 names(SPFT)[names(SPFT)=="mct.w_1"] <- "mct.w"
 names(SPFT)[names(SPFT)=="mct.d_1"] <- "mct.d"
+
+# demographic variables to factor
+
+SPFT$sex <- as.factor(SPFT$sex)
 
 # Remove not needed data ######################################################
 
@@ -375,7 +380,7 @@ SB <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
 ## calculate brier scores for each question/respondent
 
 # number of questions
-q.num <- 24
+q.num <- ncol(SB) -4
 
 #i <- 1
 for(i in 1:q.num){
@@ -513,6 +518,10 @@ time.plot <- ggplot(filter(SPFT, time.fq.sec < 1000),
                      x = "Time in min",
                      y = "Share of respondents") # labels
 
+# make extreme time as missing data
+SPFT$time.fq.sec[SPFT$time.fq.sec > 1000] <- NA
+
+
 # team ########################################################################
 
 summary(SPFT$team)
@@ -562,28 +571,29 @@ source.plot <- ggplot(source.plot.data, aes(x = Var1)) +
 # 7. demographic data - descriptives
 ###############################################################################
 
-SPFT.Demo.Plot <- SPFT %>% select(year, sex)
+# SPFT.Demo.Plot <- SPFT %>% select(year, sex)
 
 # correct typos
-filter(SPFT.Demo.Plot, year < 1900 | year > 2017)
-SPFT.Demo.Plot$year[SPFT.Demo.Plot$year=="19.061990"] <- 1990
-SPFT.Demo.Plot$year[SPFT.Demo.Plot$year=="23"] <- 1994
-SPFT.Demo.Plot$year[SPFT.Demo.Plot$year=="66"] <- 1966
+filter(SPFT, year < 1900 | year > 2017)
+SPFT$year[SPFT$year=="19.061990"] <- 1990
+SPFT$year[SPFT$year=="23"] <- 1994
+SPFT$year[SPFT$year=="66"] <- 1966
 
 # compute age
-SPFT.Demo.Plot$age = 2017 - as.integer(SPFT.Demo.Plot$year)
-SPFT.Demo.Plot <- SPFT.Demo.Plot %>% select(-year)
+SPFT$age = 2017 - as.integer(SPFT$year)
+SPFT <- SPFT %>% select(-year)
 
 # compute age groups
-SPFT.Demo.Plot$age.gr<-c( "<14", "15-19", "20-24", "25-29", "30-34",
+SPFT$age.gr<-c( "<14", "15-19", "20-24", "25-29", "30-34",
                  "35-39","40-44", "45-49", "50-54", "55-59", "60-64", "65+")[
-                   findInterval(SPFT.Demo.Plot$age , c(-Inf, 14.5, 19.5, 24.5,
+                   findInterval(SPFT$age , c(-Inf, 14.5, 19.5, 24.5,
                                                         29.5, 34.5, 39.5, 44.5,
                                                        49.5, 54.5, 59.5, 64.5, 
                                                        Inf))]
 
 # counting the age group / gender occurances
-SPFT.Demo.Plot <- SPFT.Demo.Plot %>% group_by(age.gr, sex) %>% dplyr::count()
+SPFT.Demo.Plot <- SPFT %>% select(age.gr,sex) %>% group_by(age.gr, sex) %>% 
+                    dplyr::count()
 
 # plot population pyramid
 pop.plot <- ggplot(data = SPFT.Demo.Plot, aes(x = age.gr, y = n, fill = sex)) +
@@ -597,6 +607,11 @@ pop.plot <- ggplot(data = SPFT.Demo.Plot, aes(x = age.gr, y = n, fill = sex)) +
                      x = "Age groups",
                      y = "# of respondents") + # labels
                 coord_flip()
+
+# just gender
+gender.plot <- ggplot(data = SPFT, aes(x = sex)) +
+  geom_bar(aes(y = (..count..)/sum(..count..))) +
+  scale_y_continuous(labels = percent)
 
 
 # intuition vs. analysis ######################################################
@@ -684,3 +699,14 @@ emp.plot <- ggplot(SPFT, aes(x = emp)) +
   labs(title = "Employment / occupation",
        x = "Occupation",
        y = "# of respondents") # labels
+
+# summary table for all numerical variables ###################################
+stargazer(select(SPFT, bnt.s, mct.c, time.fq.sec, Duration.min, age),
+          type="html", out = "DescStat.html")
+
+###############################################################################
+# 8. Testing
+###############################################################################
+
+# Skill vs. Luck ##############################################################
+
