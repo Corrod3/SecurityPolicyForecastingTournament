@@ -18,19 +18,7 @@
 
 ###############################################################################
 # ToDo
-# 1. Hertie Response summary
-#    a. list of all participating students (IDs) DONE
-#    b. Table of mean Hertie estimates
-#    c. density plots of hertie responses
-#    d. Overview sheets/slides: 3x8 or 4x6 or 6x4
-# 2. Compute MCT and BNT scores
-#    a. BNT Done!
-#    b. MCT 
-#    c. What to do about blanks?
-# 3. Upload aggregates forecasting responses 
-#    a. graphical representation: Question in plot, choice of density plot
-#    b. List of questions
-# 4. Send Mark Kayser update!!!  DONE
+# 1.
 ###############################################################################
 
 ###############################################################################
@@ -52,7 +40,6 @@ packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales", "starg
 # ggplot: plots (e.g. density)
 # reshape2: melt function
 # scales: label transformation in ggplot
-
 
 # install packages if not installed before
 for (p in packages) {
@@ -88,7 +75,7 @@ MTurk.batch <- MTurk.batch %>% select(WorkerId, WorkTimeInSeconds,
 ###############################################################################
 
 # Merge SPFT and SPFT Turk (identify Hertie later)
-SPFT <- dplyr::bind_rows(SPFT.Main, SPFT.MTurk[-(1:2),], .id = "part.group")
+SPFT <- dplyr::bind_rows(SPFT.Main[-(1:2),], SPFT.MTurk[-(1:2),], .id = "part.group")
 SPFT[SPFT$part.group == 1,]["part.group"] <- "other"
 SPFT[SPFT$part.group == 2,]["part.group"] <- "mturk"
 
@@ -408,14 +395,25 @@ SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
 # Sort by brier score 
 SB <- SB %>% arrange(brier.avg)
 
+brier.plot <- ggplot(SB, aes(x = brier.avg)) +
+     geom_histogram(binwidth=.05, position="dodge") + # bar type
+     theme_bw() +
+     labs(title = "Brier score distribution",
+          x = "Brier score",
+          y = "Frequency") # labels))
 
+# Hertie score board
+SB.Hertie <- SB %>% filter(!is.na(id.hertie) & id.hertie != "")
+
+# remove late replies from score board (for testing)
+SB <- SB[!SB$ResponseId %in% SPFT$ResponseId[SPFT$EndDate >= "2017-02-13"],]
 
 ###############################################################################
 # 6. Computing control variables and testing
 ###############################################################################
 
 # remove late submissions
-SPFT <- SPFT %>% filter( EndDate < "2017-02-13")
+SPFT <- SPFT %>% filter(EndDate < "2017-02-13")
 
 # merge brier scores in
 SPFT <- merge(SPFT, SB[, c("ResponseId", "brier.avg")], by = "ResponseId")
@@ -724,7 +722,6 @@ SB.R <- SPFT  %>% select(ResponseId,
 
 ## calculate brier scores for each question/respondent
 
-i <- 1
 for(i in 1:q.num){
   tmp <- paste("fq", i, sep = "")
   # add expected value in new brier score column and compute Brier score
@@ -739,10 +736,40 @@ hist(SB.R$brier.avg)
 
 # T-Statistik (root(n*m/(n+m)*(x_m-y_m)/sd(S)))
 # https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-(nrow(SB.R)*nrow(SB)/(nrow(SB.R)+nrow(SB)))^(1/2)*(mean(SB.R$brier.avg) - mean(SB$brier.avg))/
-  ((((nrow(SB)-1)*sd(SB$brier.avg)^2 + (nrow(SB.R)-1)*sd(SB.R$brier.avg)^2)/(nrow(SB)+nrow(SB.R)-2)))^(1/2)
+(nrow(SB.R)*nrow(SPFT)/(nrow(SB.R)+nrow(SPFT)))^(1/2)*(mean(SB.R$brier.avg) - mean(SPFT$brier.avg))/
+  ((((nrow(SPFT)-1)*sd(SPFT$brier.avg)^2 + (nrow(SB.R)-1)*sd(SB.R$brier.avg)^2)/(nrow(SPFT)+nrow(SB.R)-2)))^(1/2)
 
 # T-Test One-sided: Whether brier score for true events is smaller than for random events
 # http://statistics.berkeley.edu/computing/r-t-tests
-t.test(SB$brier.avg, y=SB.R$brier.avg, mu = 0, alternative = "less",  paired=F, conf.level=0.95)
+t.test(SPFT$brier.avg, y=SB.R$brier.avg, mu = 0, alternative = "less",  paired=F, conf.level=0.95)
+
+# or should the test in this case be paired? 
+t.test(SPFT$brier.avg, y=SB.R$brier.avg, mu = 0, alternative = "less",  paired=T, conf.level=0.95)
+
+# alternative skills vs. luck test: correct side of 50% #######################
+
+# recode FQ to binary
+
+# score board for correct side
+SB.CS <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
+                       starts_with("fq")) 
+
+## calculate correct side scores for each question/respondent
+# i <- 1
+ for(i in 1:q.num){
+  tmp <- paste("fq", i, sep = "")
+  # add outcome with 1 of on correct side of 50% and 0 if not 
+  SB.CS[,paste(tmp,"cs", sep = ".")] <- 
+    ifelse(abs(as.numeric(FQ[FQ[,1] == tmp, 4]) - select(SB.CS, i+4)) > 0.5,0,1)
+  rm(tmp)
+}
+# individual share of being on the correct side with the forecast
+SB.CS[,"cs.avg"] <- rowMeans(select(SB.CS, contains("cs")))
+
+# One-sided T-Testing correct side measure
+t.test(SB.CS$cs.avg, mu=0.5, alternative = "greater", conf.level = 0.95)
+
+
+
+
 
