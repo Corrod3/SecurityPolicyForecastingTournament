@@ -10,7 +10,7 @@ A summary of the forecasting tournament and its results are available on the [pr
 
 File      | Content   
 ----------|------------------------------------------------------------------ 
-thesis    | Thesis text (Draft) 
+thesis    | thesis text (draft) 
 forecasts | presentation with plots of forcasts, control and demographic variables
-main      | Script for data cleaning, plot generation and testing
-literature| BibTex for litature (Citavi Export)
+main      | script for data cleaning, plot generation and testing
+literature| BibTex for references (Citavi Export)
