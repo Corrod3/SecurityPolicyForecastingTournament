@@ -1,5 +1,5 @@
 ---
-title: "Improving Forecasting for Foreign Policy ^[A summary of the forecasting tournament and its results are available on the [project website](https://corrod3.github.io/SecurityPolicyForecastingTournament/). Additional background information and methodlogical details can be access via the online appendix[LINK]. The script files are available on the author's [Github account](https://github.com/Corrod3/SecurityPolicyForecastingTournament) for replication. For the data please contact the author.]"
+title: "Improving Forecasting for Foreign Policy ^[A summary of the forecasting tournament and its results are available on the [project website](https://corrod3.github.io/SecurityPolicyForecastingTournament/). Additional background information and methodlogical details can be access via the [online appendix](https://corrod3.github.io/SecurityPolicyForecastingTournament/appendix.html). The script files are available on the author's [Github account](https://github.com/Corrod3/SecurityPolicyForecastingTournament) for replication. For the data please contact the author.]"
 subtitle: "Identifying drivers of forecasting accuracy in a forecasting tournament"
 author: "Alexander Sacharow^[Hertie School of Governance, corresponding email: a.sacharow@mpp.hertie-school.org]"
 header-includes:
@@ -209,7 +209,7 @@ However, for the forecasting tournament in this paper the focus will be rather o
 
 **Hypothesis 3: Mild interventions encouraging the use of an analytical approach increase the accuracy of forecasting**
 
-In order to test this, all participants are assigned randomly, in about equal shares, to a treatment or control group. The treatment group is provided with a short (ca. 150 words) information about the way many successful forecasters would approach the forecasting question. The guide is encouraging the forecasters to think in terms of inside and outside view [@Lovallo.2012], to find appropriate reference classes for the question and illustrated with an example.^[The full text of the guide is available in the [online appendix](https://corrod3.github.io/SecurityPolicyForecastingTournament/)]  At the end of the guide, they were asked to fill out a small check box on whether they have read the guide.
+In order to test this, all participants are assigned randomly, in about equal shares, to a treatment or control group. The treatment group is provided with a short (ca. 150 words) information about the way many successful forecasters would approach the forecasting question. The guide is encouraging the forecasters to think in terms of inside and outside view [@Lovallo.2012], to find appropriate reference classes for the question and illustrated with an example.^[The full text of the guide is available in the [online appendix](https://corrod3.github.io/SecurityPolicyForecastingTournament/appendix.html)]  At the end of the guide, they were asked to fill out a small check box on whether they have read the guide.
 
 # The Forecasting Tournament
 
