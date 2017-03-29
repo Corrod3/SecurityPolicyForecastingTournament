@@ -106,6 +106,251 @@ Bombing attack refers to any air-to-ground use of force by the Government of Sau
 
 24. Question: "Suicide attacks" include all attacks where the attacker purposely killed him/herself, attempted to do so or acted as if she/he had the intention to die.
 
+## The full survey
+
+*intro.spft* Welcome to the Security Policy Forecasting Tournament! this is a chance to test your skills in political forecasting. You will be asked forecasting questions  related to security policy. They will cover possible events in the next three months. Somebody will probably have asked you before about the likelihood of a geopolitical event. However, too often such forecasts are never looked at again. In the Security Policy Forecasting Tournament your replies will be tracked and evaluated at the end of the forecasting horizon. Keeping track of your forecasts is essential if you want to improve your forecasting skills.In a forecasting tournament participants are asked to provide their best judgements about the likelihood of possible future events. The scores in the tournament are not assigned on guessing question A or B correctly but on the average performance over a range of forecasting questions. Still unclear? Just start and give it a try.
+
+### Section 1: Control variables
+
+*intro.cv* Preliminary questions  Before the tournament starts, please answer the questions below. Your answers in this section will be used for research on geopolitical forecasting decisions. The research is looking at how forecasting judgements are linked to decisions in other areas.  All answers in this section will be treated confidentially and not be used for any other purpose than research.
+
+*bnt1* Imagine we are throwing a five-sided die 50 times. On average, out of these 50 throws how many times would this five-sided die show an odd number (1, 3 or 5)? ________ out of 50 throws.
+
+*bnt2* Out of 1,000 people in a small town 500 are members of a choir. Out of these 500 members in a choir 100 are men. Out of the 500 inhabitants that are not in a choir 300 are men. What is the probability that a randomly drawn man is a member of the choir? Please indicate the probability in percent.
+
+*bnt3* Imagine we are throwing a loaded die (6 sides). The probability that the die shows a 6 is twice as high as the probability of each of the other numbers. On average, out of these 70 throws how many times would the die show the number 6?_________ out of 70 throws
+
+*bnt4* In a forest 20% of mushrooms are red, 50% brown and 30% white. A red mushroom is poisonous with a probability of 20%. A mushroom that is not red is poisonous with a probability of 5%. What is the probability that a poisonous mushroom in the forest is red?
+
+*time.bnt* Timing
+First Click (1)
+Last Click (2)
+Page Submit (3)
+Click Count (4)
+
+Here were the questions of the Moral Competency Test. The copy right for the test belongs to Georg Lind and it is free for research purposes. Further information on the test can be found on the respective [website](http://www.uni-konstanz.de/ag-moral/mut/mjt-intro.htm). 
+
+*time.mct* Timing
+First Click (1)
+Last Click (2)
+Page Submit (3)
+Click Count (4)
+
+*info.fq* Forecasting questions  Thanks for filling out the prior section. Now you will be presented with the forecasting questions. All of them describe possible geopolitical events in the next three months. You can indicate your own judgement on how likely the event is with the slides. The possible answers you can give range from 0% to 100%.  HOW WILL THE FORECASTING SCORE BE MEASURED Your likelihood judgement will be measured according to the Brier score method. You get a good score if you assign high probabilities to events which then actually occur and low probability to events which do not occur. Roughly speaking, the score measures how far you were away from the truth. If you are interested in the details, check this link: Brier Score  WHAT CAN BE USED TO ANSWER THE QUESTIONS You are free to use whatever you need to give an answer to the question.  All relevant sources are eligible to inform your decision. If you are unclear about the interpretation of a particular question, terminology is stated more explicitly here.
+
+Display This Question:
+If  Group Is Equal to  Treatment
+*treat* TIP  Research has shown that many successful forecasters use the following procedure:  1. Outside view Start with finding a base rate. For example, if the question is about the likelihood of a president to be impeached next year, they start with looking how often presidents where impeached in the respective country or region and divide it by the number of years.  2. Inside view In a second step, the base rate is incrementally adjusted to include all the available information. For example, if a party has already publically announced its intention to impeach the president, the probability should be increased. Similarly, if the impeachment has extremely high institutional hurdles in the particular country, this would be a reason for a successful forecaster to decrease the probability. Good forecasters usually use small percentage changes and procede until all information she or he deems to be relevant is included.
+
+Display This Question:
+If  Group Is Equal to  Treatment
+*treat.check* Have you read the tip mentioned above?
+	Yes (1)
+
+Display This Question:
+If  Mode Is Equal to  hertie
+*id.hertie* Please provide your Hertie student ID. The ID will only be used to see who completed the survey and for the final ranking of the forecasting tournament.
+
+Display This Question:
+If  Mode Is Not Equal to  hertie
+*id.other* Who are you? Please provide your name or - if you want to stay anonymous - a nick name
+
+### Section 2: Forecasting questions
+
+*time.sec2* Timing
+First Click (1)
+Last Click (2)
+Page Submit (3)
+Click Count (4)
+
+*head.b1* Inter-state conflict
+
+*fq1* 1. Will the new US administration lift or loosen its sanctions against Russia before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq2* 2. Will North Korea conduct another nuclear weapon test before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq3* 3. Will Vietnam take its territorial dispute with China in the South Chinese Sea to an international court or arbitration by April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq4* 4. Will the U.S. President meet a high-level official representative of Taiwan before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq5* 5. Will India face an attack by militants operating out of Pakistan before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq6* 6. Will the U.S. government announce a change to its NATO troop deployment plans in Eastern Europe before April 24, 2017
+______ What is the probability of this event to happen? (1)
+
+*fq7* 7. Will the U.S. government reintroduce sanctions against Iran which it lifted in the Iran Nuclear Deal before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*Head.b2* Intra-state conflict
+
+*fq8* 8. Will the Islamic State (IS) still have full administrative control of Ar-Raqqa by April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq9* 9. Will the Islamic State (IS) have lost administrative control of all districts in Mosul by April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq10* 10. Will the Afghan government control less than 60% of the territory of Afghanistan by April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq11* 11. Will a FARC splinter group launch a deadly attack in Colombia despite the peace deal before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq12* 12. Will the conflict between the Turkish government and the PKK cause the dead of more than 100 individuals between February 12 and April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq13* 13. Will the selection of the Hong Kong Chief Executive on March 26, 2017 be accompanied by protest involving more than 10000 people?
+______ What is the probability of this event to happen? (1)
+
+*head.b3* Terrorism
+
+*fq14* 14. Will IS claim responsibility for another attack with a truck inside the European Union by 24. April 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq15* 15. Will Boko Haram claim responsibility for a single attack or day with more than 20 deaths between February 12 and April 27, 2017?
+______ What is the probability of this event to happen? (1)
+
+*head.b4* Intervention
+
+*fq16* 16. Will Saudi-Arabia conduct a bombing attack in Yemen with more than 30 deaths between February 12 and April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq17* 17. Will the U.S. government announce a plan for Syria involving a no-flight zone before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq18* 18. Will the cease-fire agreement sponsored by Russia and Turkey between Syrian conflict parties hold at least until April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq19* 19. Will there be a peace agreement signed between the Syrian government and some armed groups before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq20* 20. Will the new U.S. administration announce an increase of deployed U.S. troops in Iraq before April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*head.b5* Violence against civilians
+
+*fq21* 21. Will the next OHCHR Ukraine report find more than 150 civilian casualties in Ukraine for the reporting period November 2016 to February 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq22* 22. Will there be a single event with more than 50 dead civilians according to international media in Syria between February 12 and April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*head.b6* Spill-over effects
+
+*fq23* 23. Will the Islamic State claim the responsibility for an attack in Myanmar by April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+*fq24* 24. Will Boko Haram commit three or more suicide attacks in Cameroon between February 12 and April 24, 2017?
+______ What is the probability of this event to happen? (1)
+
+### Section 3: Reflection and Demographics
+
+*info.refl* Reflection questions  You are almost finished. All forecasting questions are answered now. But before your forecasts can be submitted, please answer the reflection questions below. Again, all answers in this section are treated confidentially.
+
+*selfassessment* How good are you in forecasting according to your own assessment?
+	Extremely good (1)
+	Moderately good (2)
+	Slightly good (3)
+	Neither good nor bad (4)
+	Slightly bad (5)
+	Moderately bad (6)
+	Extremely bad (7)
+
+*exp* Did you have any prior experience with forecasting events, e.g. by participating in other forecasting competitions, in prediction markets or as part of your work?
+	Yes, I regularly forecast events (1)
+	Yes, I sometimes forecast events (2)
+	Yes, I have tried forecasting events a few times (3)
+	No, I never participated in any forecasting of events (4)
+
+*exp.sp* Do you have any professional experience in the field of security policy, e.g. by working in the area or having done an internship?
+	None (1)
+	Yes, but less than six months (2)
+	Yes, between six months and two years (3)
+	Yes, more than two years (4)
+
+*team* Did you work individually on the questions or did you discuss the questions with others?
+	Individually (1)
+	With one other person (2)
+	With more than one other person (3)
+
+*time* How much time did you spend in total on answering the forecasting questions?
+	Less than 10 min (1)
+	10-30 min (2)
+	30 min to 1 hour (3)
+	1 to 2 hours (4)
+	2 to 4 hours (5)
+	more than 4 hours (6)
+
+*source* What sources of information did you use to make your forecast?
+	News (1)
+	Academic papers (2)
+	Reports of non-government organizations (3)
+	Reports of governments and/or international organizations (4)
+	Online databases / statistics (5)
+	Peers and friends (6)
+	Social media (7)
+	None (8)
+
+*intu.anal* To what extend did you rely on your intuition, to what extend on a thorough analysis?
+	Only intuition (1)
+	Mostly intuition, some analysis (2)
+	About evenly intuition and analysis (3)
+	Mostly analysis, some intuition (4)
+	Only analysis (5)
+
+*method* How did you approach the forecasting questions. Did you use a specific method and if so, could you shortly decribe it.
+
+*time.refl* Timing
+First Click (1)
+Last Click (2)
+Page Submit (3)
+Click Count (4)
+
+*head.demo* Demographics and feedback
+
+*sex* What is your sex?
+	Male (1)
+	Female (2)
+	Other (3)
+
+*year* What is your year of birth?
+
+*edu* What is the highest level of school you have completed or the highest degree you have received? 
+	Less than high school degree (1)
+	High school graduate (high school diploma or equivalent) (2)
+	Some college/university but no degree (3)
+	Bachelor's degree (5)
+	Master's degree (6)
+	Doctoral degree (7)
+	Professional degree (JD, MD) (8)
+
+*emp* Are you currently…?
+	Employed for wages (1)
+	Self-employed (2)
+	Out of work and looking for work (3)
+	Out of work but not currently looking for work (4)
+	A homemaker (5)
+	A student (6)
+	Military (7)
+	Retired (8)
+	Unable to work (9)
+
+Display This Question:
+If  Mode Is Not Equal to  hertie
+*further.info* Would you like to receive further general information on this research and on strategic forecasting? If so, please specify your email below. Your email will not be used for any other purpose.
+
+Display This Question:
+If  Mode Is Not Equal to  hertie
+*personal.report* Would you like to receive a personalized report on your forecasting success? If so, please specify your email address below. The email will not be used for any other purpose.
+
+*feedback* If you have any feedback regarding the forecasting tournament, feel free to share them with us.
+
+
+
 ### Disclaimer
 
 The Security Policy Forecasting Tournament is part of an independent research project at Hertie School of Governance Berlin. The research project is conducted as part of a master thesis and is not funded by a third-party. 
