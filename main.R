@@ -396,7 +396,7 @@ SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
 SB <- SB %>% arrange(brier.avg)
 
 brier.plot <- ggplot(SB, aes(x = brier.avg)) +
-     geom_histogram(binwidth=.05, position="dodge") + # bar type
+     geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
      theme_bw() +
      labs(title = "Brier score distribution",
           x = "Brier score",
@@ -443,7 +443,7 @@ abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red")
 
 # Distribution of bnt scores
 bnt.plot <- ggplot(SPFT, aes(x = bnt.s)) + 
-  geom_bar() +
+  geom_bar(fill = "#C02F39") +
   theme_bw() + 
   labs(title = "Distribution of results Berlin Numeracy Test (BNT)",
        x = "BNT Score (# of correct answers)",
@@ -701,8 +701,10 @@ emp.plot <- ggplot(SPFT, aes(x = emp)) +
        y = "# of respondents") # labels
 
 # summary table for all numerical variables ###################################
-stargazer(select(SPFT, bnt.s, mct.c, time.fq.sec, Duration.min, age),
-          type="html", out = "DescStat.html")
+# move it to the online appendix
+
+# stargazer(select(SPFT, bnt.s, mct.c, time.fq.sec, Duration.min, age),
+#          type="html", out = "DescStat.html")
 
 ###############################################################################
 # 8. Testing
@@ -732,23 +734,30 @@ for(i in 1:q.num){
 # Compute average brier score for each respondent
 SB.R[,"brier.avg"] <- rowMeans(select(SB.R, contains("bs")))
 
-hist(SB.R$brier.avg)
+# hist(SB.R$brier.avg)
 
-# T-Statistik (root(n*m/(n+m)*(x_m-y_m)/sd(S)))
+# Manual T-Statistik (root(n*m/(n+m)*(x_m-y_m)/sd(S)))
 # https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-(nrow(SB.R)*nrow(SPFT)/(nrow(SB.R)+nrow(SPFT)))^(1/2)*(mean(SB.R$brier.avg) - mean(SPFT$brier.avg))/
-  ((((nrow(SPFT)-1)*sd(SPFT$brier.avg)^2 + (nrow(SB.R)-1)*sd(SB.R$brier.avg)^2)/(nrow(SPFT)+nrow(SB.R)-2)))^(1/2)
+(nrow(SB.R)*nrow(SPFT)/(nrow(SB.R)+nrow(SPFT)))^(1/2)*
+  (mean(SB.R$brier.avg) - mean(SPFT$brier.avg))/
+  ((((nrow(SPFT)-1)*sd(SPFT$brier.avg)^2 + (nrow(SB.R)-1)*
+       sd(SB.R$brier.avg)^2)/(nrow(SPFT)+nrow(SB.R)-2)))^(1/2)
 
-# T-Test One-sided: Whether brier score for true events is smaller than for random events
+# T-Test one-sided: Whether bs.score for true is smaller than for random events
 # http://statistics.berkeley.edu/computing/r-t-tests
-t.test(SPFT$brier.avg, y=SB.R$brier.avg, mu = 0, alternative = "less",  paired=F, conf.level=0.95)
+# open questions? assume equal variance? and paired or non paired tesT?
+# should be paired!! -> same individuals, different draws 
+t.test.against.random  <- t.test(SPFT$brier.avg, y=SB.R$brier.avg, mu = 0, 
+                                 alternative = "less",  paired=T, 
+                                 conf.level=0.95, var.equal = T)
 
-# or should the test in this case be paired? 
-t.test(SPFT$brier.avg, y=SB.R$brier.avg, mu = 0, alternative = "less",  paired=T, conf.level=0.95)
+# get text string for the paper
+t.test.against.random  <- paste("t(", t.test.against.random[[2]], ") = ",
+                                round(t.test.against.random[[1]],2),
+                                ", p < ", round(t.test.against.random[[3]],3) 
+                                , sep = "")
 
 # alternative skills vs. luck test: correct side of 50% #######################
-
-# recode FQ to binary
 
 # score board for correct side
 SB.CS <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
@@ -767,9 +776,14 @@ SB.CS <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
 SB.CS[,"cs.avg"] <- rowMeans(select(SB.CS, contains("cs")))
 
 # One-sided T-Testing correct side measure
-t.test(SB.CS$cs.avg, mu=0.5, alternative = "greater", conf.level = 0.95)
+t.test.correct.side <- t.test(SB.CS$cs.avg, mu=0.5, alternative = "greater",
+                              conf.level = 0.95, equal.var = T)
 
-
+# string for paper 
+t.test.correct.side  <- paste("t(", t.test.correct.side[[2]], ") = ",
+                                round(t.test.correct.side[[1]],2),
+                                ", p < ", round(t.test.correct.side[[3]],3) 
+                                , sep = "")
 
 
 
