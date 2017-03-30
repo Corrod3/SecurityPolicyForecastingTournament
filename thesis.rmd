@@ -271,22 +271,30 @@ A second method to test the accuracy of the forecasting crowd is to measure the 
 *b)	Like the first benchmark the alternative measure shows that forecasters perform on average [like / worse] than random guessing.* Ultimately, it is just another measure for the accuracy of the forecasting crowd. 
 
 ```{r results = "asis", echo = FALSE}
-stargazer(select(SPFT, bnt.s, mct.c, time.fq.sec, Duration.min, age), header = FALSE)
+stargazer(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec, Duration.min, age),
+          title = "Descriptive Statistics",
+          covariate.labels = c("Brier score" ,"BNT Score", "MCT Score", 
+                               "Forecasting time in min", "Total time in min", 
+                               "Age"), 
+          header = FALSE)
 ```
 
 <!--	[Evaluation of Hypothesis] -->
-Having established the performance of the crowd, I can now look at factors behind the forecasting success of individual forecasters. Starting with the dispositional factors: How are intelligence and moral competency related in to forecasting accuracy. In general, the forecasters mean score for the Berlin Numeracy Score was 2.05 on a range from 0 to 4, which is slightly above 1.6 average score @Cokely.2012 found for Berlin university students.^[The forecasting tournament used the four item 'paper and pencil' version of the test. In order to compare the score to the general population, it has to be adjusted to the adaptive test format scores.] The test was able to discriminate well between the different participants as they are distributed roughly equally among the possible different scores.
+Having established the performance of the crowd, I can now look at factors behind the forecasting success of individual forecasters. Starting with the dispositional factors. In general, the forecasters mean score for the Berlin Numeracy Score was 2.05 on a range from 0 to 4, which is slightly above 1.6 average score @Cokely.2012 found for Berlin university students.^[The forecasting tournament used the four item 'paper and pencil' version of the test. In order to compare the score to the general population, it has to be adjusted to the adaptive test format scores.] As the distribution of BNT scores illustrates, the test is able to discriminates between the participants and assign them to five groups of roughly equal size depending on the score.
 
 ```{r echo = FALSE, fig.cap="BNT score distribution", out.width=c('200px', '120px'), fig.align='center'}
 bnt.plot
 ```
 
-Here: How did the bnt predict the forecasting accuracy.
+In order to understand the relationship between intelligence and forecasting accuracy the Pearson correlation coefficient is a useful indicator. It gives us the direction of the relation, indicated by the sign (+ or -), and the magnitute of the effect on a range from 0 to 1. The correlation between the BNT score and the Brier score is: `r cor.brier.bnt`. The t-test checks whether the result is significantly different from no relationship between both variables ($r = 0$).
+\footnote{In this case the following t-test statistic is used: $t = r\sqrt{\frac{n-2}{1-r^2}}$. Note that the Pearson correlation test treats the BNT score as a continuous variable, implying that the intelligence difference between the scores is about equal. If we assume different numeracy skills are about equally distributed among university students and the BNT allows to sort them in about equal sized groups this assumption is justifiable.}
+*a. As expected the correlation is negative, which implies that more intelligent individuals tended to be more accurate forecasters. Hence, we can confirm our first hypothesis. b. The correlation is not as expected as a better BNT score is not related to more forecasting accuracy. Hence, we cannot confirm the first hypothesis. But this does not imply, that the hypothesis is wrong as it has already been replicated in several studies. More likely, this indicates a problem with the data sample in this research.*
 
 ```{r results="asis", echo = F}
-stargazer(cor.plot, title="Correlation Matrix", header = F)
+cor.plot
 ```
 
+ 
 Here: discussion of the MCT -> comparison to general results + how it (not) predicted forecasting accuracy
 
 

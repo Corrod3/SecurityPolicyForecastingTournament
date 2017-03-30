@@ -32,7 +32,8 @@ rm(list=ls())
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
 
 # Collect packages/libraries we need:
-packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales", "stargazer")
+packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales", 
+              "stargazer", "Hmisc", "xtable")
 # package and why it is needed
 # readxl: import excel files
 # plyr: mapvalues function
@@ -40,6 +41,8 @@ packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales", "starg
 # ggplot: plots (e.g. density)
 # reshape2: melt function
 # scales: label transformation in ggplot
+# Hmisc: Correlation table 
+# xtable: create latex table
 
 # install packages if not installed before
 for (p in packages) {
@@ -787,10 +790,59 @@ t.test.correct.side  <- paste("t(", t.test.correct.side[[2]], ") = ",
 
 # Hypotheses testing ##########################################################
 
-# Correlation matrix for paper
-cor.plot <- cor(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec), use = "complete.obs")
+# function to generate a correlation matrix
+# Source: http://myowelt.blogspot.de/2008/04/beautiful-correlation-tables-in-r.html
+corstarsl <- function(x){
+  require(Hmisc)
+  x <- as.matrix(x)
+  R <- rcorr(x)$r
+  p <- rcorr(x)$P
+  
+  ## define notions for significance levels; spacing is important.
+  mystars <- ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "* ", " ")))
+  
+  ## trunctuate the matrix that holds the correlations to two decimal
+  R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
+  
+  ## build a new matrix that includes the correlations with their apropriate stars
+  Rnew <- matrix(paste(R, mystars, sep=""), ncol=ncol(x))
+  diag(Rnew) <- paste(diag(R), " ", sep="")
+  rownames(Rnew) <- colnames(x)
+  colnames(Rnew) <- paste(colnames(x), "", sep="")
+  
+  ## remove upper triangle
+  Rnew <- as.matrix(Rnew)
+  Rnew[upper.tri(Rnew, diag = TRUE)] <- ""
+  Rnew <- as.data.frame(Rnew)
+  
+  ## remove last column and return the matrix (which is now a data frame)
+  Rnew <- cbind(Rnew[1:length(Rnew)-1])
+  return(Rnew)
+}
 
-str(SPFT$time.fq.sec)
+# remove comment from xtable
+options(xtable.comment = FALSE)
+
+# correlation table with significant test
+cor.plot <- xtable(corstarsl(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec)), 
+                   caption = "Table with tested correlations")
+
+# Hypothesis 1 ################################################################
+
+# Correlation matrix for paper
+cor.brier.bnt <- round(cor(SPFT$brier.avg, SPFT$bnt.s),2)
+
+# t test manual
+cor(SPFT$brier.avg, SPFT$bnt.s)*
+  ((length(SPFT$bnt.s)-2)/(1 - cor(SPFT$brier.avg, SPFT$bnt.s)^2))^(1/2)
+
+t.test.brier.bnt <- paste("t(", cor.test(SPFT$brier.avg, SPFT$bnt.s)[[2]],
+                          ") = ", round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[1]], 2),
+                          ", p = ", round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[3]], 3),
+                          sep = "")
+cor.brier.bnt <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$bnt.s),2), ", ",
+                       t.test.brier.bnt, sep = "")
+
 
 # Hypothesis 3 ################################################################
 
