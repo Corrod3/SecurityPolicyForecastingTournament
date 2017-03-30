@@ -281,6 +281,17 @@ Having established the performance of the crowd, I can now look at factors behin
 bnt.plot
 ```
 
+Here: How did the bnt predict the forecasting accuracy.
+
+```{r results="asis", echo = F}
+stargazer(cor.plot, title="Correlation Matrix", header = F)
+```
+
+Here: discussion of the MCT -> comparison to general results + how it (not) predicted forecasting accuracy
+
+
+
+
 <!--
 a)	Dispositional
 	Intelligence

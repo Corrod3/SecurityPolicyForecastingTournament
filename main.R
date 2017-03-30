@@ -785,5 +785,19 @@ t.test.correct.side  <- paste("t(", t.test.correct.side[[2]], ") = ",
                                 ", p < ", round(t.test.correct.side[[3]],3) 
                                 , sep = "")
 
+# Hypotheses testing ##########################################################
 
+# Correlation matrix for paper
+cor.plot <- cor(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec), use = "complete.obs")
 
+str(SPFT$time.fq.sec)
+
+# Hypothesis 3 ################################################################
+
+# get rid of empthy factor levels
+SPFT$Group <- as.factor(as.character(SPFT$Group))
+
+t.test(x = select(filter(SPFT, Group == "Treatment"), brier.avg), 
+       y = select(filter(SPFT, Group == "Control"), brier.avg), 
+       alternative = "less", var.equal = T,
+       conf.level = 0.95)
