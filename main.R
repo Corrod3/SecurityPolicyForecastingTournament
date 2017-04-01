@@ -827,21 +827,40 @@ options(xtable.comment = FALSE)
 cor.plot <- xtable(corstarsl(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec)), 
                    caption = "Table with tested correlations")
 
-# Hypothesis 1 ################################################################
-
-# Correlation matrix for paper
-cor.brier.bnt <- round(cor(SPFT$brier.avg, SPFT$bnt.s),2)
+# Hypothesis 1a ################################################################
 
 # t test manual
 cor(SPFT$brier.avg, SPFT$bnt.s)*
   ((length(SPFT$bnt.s)-2)/(1 - cor(SPFT$brier.avg, SPFT$bnt.s)^2))^(1/2)
 
+# T test for Hyppthesis 1a
 t.test.brier.bnt <- paste("t(", cor.test(SPFT$brier.avg, SPFT$bnt.s)[[2]],
                           ") = ", round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[1]], 2),
                           ", p = ", round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[3]], 3),
                           sep = "")
+# Correlation between Brier score and BNT score
 cor.brier.bnt <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$bnt.s),2), ", ",
                        t.test.brier.bnt, sep = "")
+
+# Hypothesis 1b ###############################################################
+
+# T test for Hyppthesis 1a
+t.test.brier.mct <- paste("t(", cor.test(SPFT$brier.avg, SPFT$mct.c)[[2]],
+                          ") = ", round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[1]], 2),
+                          ", p = ", round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[3]], 3),
+                          sep = "")
+# Correlation between Brier score and BNT score
+cor.brier.mct <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$mct.c, use="complete.obs"),2), ", ",
+                       t.test.brier.mct, sep = "")
+
+# Scatterplot for Hypothesis
+
+cor.brier.mct.plot <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.avg)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method=lm, color = "#C02F39") +   # Add linear regression line 
+  theme_bw() +
+  labs(x = "Moral Competency Score",
+       y = "Brier Score") # labels
 
 
 # Hypothesis 3 ################################################################
