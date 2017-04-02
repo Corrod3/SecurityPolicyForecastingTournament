@@ -252,13 +252,13 @@ $N$ stands for the number of events, $R$ is the number of possible classes the e
 # Results
 
 <!-- [Brier score distribution] -->
-The research design aims at identifying different factors for individual forecasting success. For this, measurable differences between the individuals are a prerequisite. In the case of the forecasting tournament, this can be varified by checking the distribution of Brier scores. <!-- Cross reference to the figure --> Since the distribution ranges from `r round(min(SPFT$brier.avg),2)` to `r round(max(SPFT$brier.avg),2)` with a mean score of `r round(mean(SPFT$brier.avg), 2)`this condition is given.
+The research design aims at identifying different factors for individual forecasting success. For this, measurable differences between the individuals are a prerequisite. In the case of the forecasting tournament, this can be varified by looking at the distribution of Brier scores. <!-- Cross reference to the figure --> Since the distribution ranges from `r round(min(SPFT$brier.avg),2)` to `r round(max(SPFT$brier.avg),2)` with a mean score of `r round(mean(SPFT$brier.avg), 2)`this condition is fulfilled
 
 ```{r echo = FALSE, fig.cap="Brier score distribution", out.width=c('300px', '150px'), fig.align='center', fig.pos = 'H'}
 brier.plot
 ```
 <!-- [Pre-Hypotheses]  T Test: One-sided: yes Paired? Not clear. Would require restructuring the script, but is it correct in this context? -->
-Before turning to the hypotheses, it makes sense to see how the participants performed in comparison to a simple statistical benchmark. This gives us a picture of the overall performance of the forecasting crowd. A standard benchmark for this is the comparison of the forecasting scores to a situation with uniformly random distributed  outcomes [@Mellers.2015]. The t-test can be used to compare average brier score with actual outcomes to average brier scores with random outcomes.^[In this context a one-sided paired t-test is used to see whether the forecasters performed better: $H_0: \bar b =b_rand$ and $H_A: \bar b  <b_{rand}$.] The average Brier score with random events is `r round(mean(SB.R$brier.avg),digits=2)`, while the actual average Brier score of the participants was `r round(mean(SPFT$brier.avg),digits=2)` (`r t.test.against.random`).
+Before turning to the hypotheses, it makes sense to see how the participants performed in comparison to a simple statistical benchmark. This gives us a picture of the overall forecasting ability of the participants. A standard benchmark for this is the comparison of the realized forecasting scores to a situation with uniformly random distributed  outcomes [@Mellers.2015]. Whether the participants performed better than a random guess can be evaluated with a t-test.^[In this context a one-sided paired t-test is used to see whether the forecasters performed better: $H_0: \bar b =b_rand$ and $H_A: \bar b  <b_{rand}$.] The average Brier score with random events is `r round(mean(SB.R$brier.avg),digits=2)`, while the actual average Brier score of the participants was `r round(mean(SPFT$brier.avg),digits=2)` (`r t.test.against.random`).
 
 <!--	[evaluation results] -->
 *a. Clearly, the forecasters performed better than just random guessing. This supports the view of forecasting optimists: To some degree forecasting seems possible.*
@@ -281,21 +281,21 @@ stargazer(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec, Duration.min, age),
 ```
 
 <!--	[Evaluation of Hypothesis] -->
-Having established the performance of the crowd, the focus can now put on factors behind the forecasting success of individual forecasters. Starting with the dispositional factors. For intelligence, the forecasters mean score at the Berlin Numeracy Score was 2.05 (at a range from 0 to 4), which is slightly above the 1.6 average score @Cokely.2012 found for Berlin university students.^[The forecasting tournament used the four item 'paper and pencil' version of the test. For this version there is no general population norm score available. However, in principle it would be possible by adjusting the score to the  to the adaptive test format scores.] As the distribution of BNT scores illustrates <!-- cross referenc -->, the test is able to discriminates between the participants. It assigned the forecasters to five score levels, each of which is roughly equal in size.
+Having established the performance of the crowd, the focus can now turn to factors behind the forecasting success of individual forecasters. Starting with the first dispositional factor: intelligence. The forecasters mean score at the Berlin Numeracy Score was 2.05 (at a range from 0 to 4), which is slightly above the 1.6 average score @Cokely.2012 found for Berlin university students.^[The forecasting tournament used the four item 'paper and pencil' version of the test. For this version there is no general population norm score available. However, in principle it would be possible by adjusting the score to the  to the adaptive test format scores.] As the distribution of BNT scores illustrates <!-- cross referenc -->, the test is able to discriminates between the participants. It assigned the forecasters to five score levels, each of which is roughly equal in size.
 
 ```{r echo = FALSE, fig.cap="BNT score distribution", out.width=c('200px', '120px'), fig.align='center', fig.pos = 'H'}
 bnt.plot
 ```
 
-In order to understand the relationship between intelligence and forecasting accuracy the Pearson correlation coefficient is a useful indicator. It gives us the direction of the relation, indicated by the sign (+ or -), and the magnitute of the effect on a range from 0 to 1. The correlation between the BNT score and the Brier score is: `r cor.brier.bnt`. The t-test checks whether the result is significantly different from no relationship between both variables ($r = 0$).
+In order to understand the relationship between intelligence and forecasting accuracy, the Pearson correlation coefficient is a useful indicator. It gives us the direction of the relation, indicated by the sign (+ or -), and the magnitute of the effect on a range from 0 to 1. The correlation between the BNT score and the Brier score is: `r cor.brier.bnt`. The t-test checks whether the result is significantly different from no relationship between both variables ($r = 0$).
 \footnote{In this case the following t-test statistic is used: $t = r\sqrt{\frac{n-2}{1-r^2}}$. Note that the Pearson correlation test treats the BNT score as a continuous variable, implying that the intelligence difference between the scores is about equal.}
-*a. As expected the correlation is negative, which implies that more intelligent individuals tended to be more accurate forecasters. Hence, we can confirm our first hypothesis (1a). b. The correlation is not as expected as a better BNT score is not related to more forecasting accuracy. Hence, we cannot confirm the first hypothesis. There are several possible reasons for this. First, the hypothesed relation could be wrong. This is, however, rather unlikely, as it has been shown before in more sophisticated research designs [@Mellers.2015; @Poore.2014]. Second, the test could be not valid and therefore not measure what it is supposed to. Again, this is rather unlikely as it has been extensively tested [@Cokely.2012] but cannot fully be ruled out. Third and most likely: The forecasting success in this tournament rather a result of luck than skill. Since this was a one-off event where the forecasters had little chances of learning, forecasting skill might not have cristalized in the results and might need a more long-term setting. It does, hwoever, imply that the results for the other hypotheses should also be read with care.* <!-- add comment on significance --> *a. The significance of the finding further underlines the point. b. Since the results are not significance, not final conclusion can be made.*
+*a. As expected the correlation is negative, which implies that more intelligent individuals tended to be more accurate forecasters. Hence, we can confirm our first hypothesis (1a) which is in line with prior findings in the literature. b. The correlation is not as expected as a better BNT score is not related to more forecasting accuracy. Hence, we cannot confirm the first hypothesis (1a). There are several possible reasons for this. First, the hypothesed relation could be wrong. This is, however, rather unlikely, as it has been shown before in more sophisticated research designs [@Mellers.2015; @Poore.2014]. Second, the test could be not valid and therefore not measure what it claims  to. Again, this is rather unlikely as it has been extensively tested [@Cokely.2012] but it cannot fully be ruled out that the risk literacy it measures is not relevant for forecasting. Third and most likely: The forecasting success in this tournament rather a result of luck than skill. Since this was a one-off event where the forecasters had little chances of learning, forecasting skill might not have cristalized in the results and might only be accessable in a more long-term setting. However, it does also imply that the results for the other hypotheses should also be read with care as chance might be the primary driver behind the forecasting scores.* <!-- add comment on significance --> *a. The significance of the finding further underlines the point. b. But due to the lack of significance, not final conclusion can be made.*
 
 ```{r results="asis", echo = F}
 cor.plot
 ```
 
-The second dispositional factor under scrutiny was moral competency. The MCT scores of the participants ranged from `r round(min(SPFT$mct.c),2)` to `r round(max(SPFT$mct.c),2)`. Similar ranges were also found in other groups [@Lind.2008]. Since the completion of the moral competency test questions were not obligatory, for some participants it was not possible to compute a MCT score.^[However, this was not communicated to the participants and the missing values are rather due to forgotten question than due to people categorically not responsing to the moral competency test questions.] Again, we use the Pearson test to look at the relationship between forecasting accuracy and moral competency: `r cor.brier.mct`.
+The second dispositional factor under scrutiny was moral competency. The MCT scores of the participants ranged from `r round(min(SPFT$mct.c),2)` to `r round(max(SPFT$mct.c),2)`. Similar ranges were also found in other groups [@Lind.2008]. Since the completion of the moral competency test questions were not obligatory, for some participants it was not possible to compute a MCT score.^[However, this was not communicated to the participants and the missing values are rather due to a missing responses to single questions than due to people categorically not responsing to the moral competency test questions.] Again, we use the Pearson test to look at the relationship between forecasting accuracy and moral competency: `r cor.brier.mct`.
 
 ```{r echo=FALSE, fig.cap="Scatterplot Moral Competency and Brier Score", out.width=c('300px', '150px'), fig.align='center', fig.pos = 'H'}
 cor.brier.mct.plot
@@ -304,30 +304,20 @@ cor.brier.mct.plot
 *a. The correlation between both indicates that moral competency is a good predictor for forecasting accuracy. This supports our Hypothesis 1b. [The result is even significant / However, the result is not significant.].*
 *b. The correlation shows hardly any correlation between moral competency and forecasting accuracy score. Hence, the hypothesis is not supported by the data. There are different reason for this. First, there might be no connection between moral competency and forecasting skills. One might argue moral judgements and analytical decisions are different things, which have no relationship to each other. However, the moral competency measure explicitly includes the cognitive elements of moral thinking. [@Lind.2008] Second, moral competency might not measure the ability to separate moral from analytical judgements. This is a valid criticism, as the measure was developed in a different context and might not smoothly transfer to the discussion of forecasting skills. Third, the forecasting success  of the participants might be grounded rather in luck than their ability to separate moral from analytical judgements.*
 
-In Hypothesis 2 the role of decision-making time for forecasting accuracy was tested. 
+<!--  Hypothesis 2 -->
+In Hypothesis 2 the role of decision time for forecasting accuracy was tested. The median participants spend `r round(median(SPFT$Duration.min),1)` minutes for participating and `r round(median(SPFT$time.fq.sec, na.rm = TRUE),1)` minuted on answering the forecasting questions. As hypothesis assumes the marginal value of time to decrease for forecasting accuracy, the time spend on answering the forecasting question is logarithmized. The correlation between the logarithmized time and forecasting accuracy is: `r cor.brier.time`.^[Two extreme outliers were excluded as the participants rather interrupted their participation than spending several hours on answering the questions.] We can compare this to the correlation of the Brier scores with linear time to get an idea whether the marginal return n time hypothesis captures the relationship better: `r cor.brier.time.linear`.
 
+<!-- evaluation of the hypothesis--> 
+*The negative correlation does indicate that more time spend on answering the question is related to more forecasting accuracy as was postulated in Hypothesis 2. [Moreover, the relationship is significant / However, the relationship is not significant].*
+*The positive correlation is contrary to the time hypothesis. This might [again] be an indicator that forecasting success in this forecasting tournament is rather due to luck than to other factors. It can also mean that other aspects, e.g. prior political knowledge, offset the effects of time for forecasting. This could only be investigated in further research.*
 
+```{r echo = FALSE, fig.pos='H', fig.cap= "Forecasting time - Brier score scatterplot"}
+cor.brier.time.plot
+```
 
-<!--
-a)	Dispositional
-▫	
-b)	Situational 
-	Team work
-▫	Percentages of individuals working in teams
-▫	Correlation with brier score
--	T-test
-▫	Selection bias in my research bias
-	Time
-▫	Problem: extreme outliers (2 cases)
--	Reason: people did other things / got distracted
--	Excluded for the evaluation of this hypotheses as it is also not coherent with the self-reported time used for the survey
-▫	Time != information collection
--	(Haran et al. 2013) found that information acquisition is connected to active open minded ness. Hence, time does not necessarily reflect information gathered.
-c)	Invention
-	Minimal intervention
-▫	Percentage of respondents
-▫	Correlation with brier score?
--->
+<!-- Hypothesis 3 -->
+Finally, hypothesis 3 was postulating about the effect of an intervention. The participants were randomly assigned to a treatment (n = `r plyr::count(SPFT$Group[SPFT$Group == "Treatment"])`) or control group (n = `r plyr::count(SPFT$Group[SPFT$Group == "Control"])`). The treatment group was presented with a analytic guide, while the control group was not. To test, whether the analytic guide had any impact on the forecasting accuracy the mean Brier scores of both groups are compared. The mean Brier score of the treatment group is `r t.test.intervention[[5]][1]` and of the control group`r t.test.intervention[[5]][2]`. *a. The differences between die groups indicates that the intervention had an impact on forecasting accuracy in line with hypothesis 3. [The difference is significant, which is *
+*b. There is hardly any difference between the two groups. From this we can take that the intervention did not lead to its intended impact and we cannot support the intervention hypothesis*
 
 # Discussion
 <!--	General findings -->

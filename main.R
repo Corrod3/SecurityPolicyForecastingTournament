@@ -288,7 +288,8 @@ ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
                            part.group != "all"),
              aes(xintercept=mean,  colour=part.group), 
              linetype="dashed", size=1.5) + # group average
-  labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+  labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
+                      paste, collapse="\n" ),
        x = "What is the probability of this event to happen?",
        y = "Number of estimates") # labels
 }
@@ -305,7 +306,8 @@ ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
                            part.group != "all"),
              aes(xintercept=mean,  colour=part.group), 
              linetype="dashed", size=1.5) + # group average
-  labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+  labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
+                      paste, collapse="\n" ),
        x = "What is the probability of this event to happen?",
        y = "Distribution of estimates") + # labels
   expand_limits(x=c(0,1)) + # set range of x-axis
@@ -316,14 +318,16 @@ ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
 
 # density plot for html presentation  
 response.hertie <- function(q){
-  ggplot(filter(FO.plot, part.group == "hertie"), aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  ggplot(filter(FO.plot, part.group == "hertie"), 
+         aes(x=eval(parse(text = fq[q])), fill=part.group)) +
     geom_density(alpha=.3) +
     geom_vline(data=filter(FO.plot2, 
                            fq.id == paste("fq",as.character(q), sep = "") & 
                              part.group == "hertie"),
                aes(xintercept=mean,  colour=part.group), 
                linetype="dashed", size=1.5) + # group average
-    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
+                        paste, collapse="\n" ),
          x = "What is the probability of this event to happen?",
          y = "Distribution of estimates") + # labels
     guides(fill=guide_legend(title="Participants")) + # legend title
@@ -335,14 +339,16 @@ response.hertie <- function(q){
 # response.hertie(2)
 
 response.hertie2 <- function(q){
-  ggplot(filter(FO.plot, part.group == "hertie"), aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+  ggplot(filter(FO.plot, part.group == "hertie"), 
+         aes(x=eval(parse(text = fq[q])), fill=part.group)) +
     geom_histogram(binwidth=.10, position="dodge") + # bar type
     geom_vline(data=filter(FO.plot2, 
                            fq.id == paste("fq",as.character(q), sep = "") & 
                              part.group == "hertie"),
                aes(xintercept=mean,  colour=part.group), 
                linetype="dashed", size=1.5) + # group average
-    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE), paste, collapse="\n" ),
+    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
+                        paste, collapse="\n" ),
          x = "What is the probability of this event to happen?",
          y = "# of estimates") + # labels
     expand_limits(x=c(0,1)) + # set range of x-axis
@@ -799,7 +805,9 @@ corstarsl <- function(x){
   p <- rcorr(x)$P
   
   ## define notions for significance levels; spacing is important.
-  mystars <- ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "* ", " ")))
+  mystars <- ifelse(p < .001, "***", 
+                    ifelse(p < .01, "** ", 
+                           ifelse(p < .05, "* ", " ")))
   
   ## trunctuate the matrix that holds the correlations to two decimal
   R <- format(round(cbind(rep(-1.11, ncol(x)), R), 2))[,-1]
@@ -835,8 +843,10 @@ cor(SPFT$brier.avg, SPFT$bnt.s)*
 
 # T test for Hyppthesis 1a
 t.test.brier.bnt <- paste("t(", cor.test(SPFT$brier.avg, SPFT$bnt.s)[[2]],
-                          ") = ", round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[1]], 2),
-                          ", p = ", round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[3]], 3),
+                          ") = ", 
+                          round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[1]], 2),
+                          ", p = ", 
+                          round(cor.test(SPFT$brier.avg, SPFT$bnt.s)[[3]], 3),
                           sep = "")
 # Correlation between Brier score and BNT score
 cor.brier.bnt <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$bnt.s),2), ", ",
@@ -846,12 +856,16 @@ cor.brier.bnt <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$bnt.s),2), ", ",
 
 # T test for Hyppthesis 1a
 t.test.brier.mct <- paste("t(", cor.test(SPFT$brier.avg, SPFT$mct.c)[[2]],
-                          ") = ", round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[1]], 2),
-                          ", p = ", round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[3]], 3),
+                          ") = ", 
+                          round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[1]], 2),
+                          ", p = ",
+                          round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[3]], 3),
                           sep = "")
 # Correlation between Brier score and BNT score
-cor.brier.mct <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$mct.c, use="complete.obs"),2), ", ",
-                       t.test.brier.mct, sep = "")
+cor.brier.mct <- paste("r = ", 
+                       round(cor(SPFT$brier.avg, SPFT$mct.c, use="complete.obs"), 2),
+                       ", ", t.test.brier.mct,
+                       sep = "")
 
 # Scatterplot for Hypothesis
 
@@ -862,13 +876,62 @@ cor.brier.mct.plot <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.a
   labs(x = "Moral Competency Score",
        y = "Brier Score") # labels
 
+# Hypothesis 2 ################################################################
+
+SPFT$time.fq.sec.log <- log(SPFT$time.fq.sec)
+
+# T test for Hyppthesis 2
+t.test.brier.time <- paste("t(", 
+                           cor.test(SPFT$brier.avg, 
+                                    SPFT$time.fq.sec.log)[[2]],
+                          ") = ", 
+                          round(cor.test(SPFT$brier.avg,
+                                         SPFT$time.fq.sec.log)[[1]], 2),
+                          ", p = ",
+                          round(cor.test(SPFT$brier.avg,
+                                         SPFT$time.fq.sec.log)[[3]], 3),
+                          sep = "")
+# Correlation between Brier score and BNT score
+cor.brier.time <- paste("r = ",
+                        round(cor(SPFT$brier.avg, 
+                                  SPFT$time.fq.sec.log, use="complete.obs"),2),
+                        ", ",
+                        t.test.brier.time, 
+                        sep = "")
+
+#
+cor.brier.time.linear <- paste("r = ",
+                               round(cor(SPFT$brier.avg,
+                                         SPFT$time.fq.sec, use="complete.obs"),2)
+                               , sep = "")
+
+# scatterplot with non-linear regression line
+# Source: http://stackoverflow.com/questions/37329074/geom-smooth-and-exponential-fits
+log.model <- lm(brier.avg ~ log(time.fq.sec), SPFT)
+log.model.df <- data.frame(x = SPFT$time.fq.sec[!is.na(SPFT$time.fq.sec)],
+                           y = fitted(log.model))
+
+
+cor.brier.time.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
+                              aes(x=time.fq.sec, y=brier.avg)) +
+  geom_point(shape=1) +    # Use hollow circles
+  geom_smooth(method="lm",  linetype = 1) +
+  # geom_smooth(method=lm, color = "#C02F39") +   # Add linear regression line 
+  geom_line(data = log.model.df, 
+            aes(x, y, color = "Log Model"), 
+            size = 1, linetype = 2) + 
+  theme_bw() +
+  labs(x = "Time",
+       y = "Brier Score") # labels
 
 # Hypothesis 3 ################################################################
 
 # get rid of empthy factor levels
 SPFT$Group <- as.factor(as.character(SPFT$Group))
 
-t.test(x = select(filter(SPFT, Group == "Treatment"), brier.avg), 
+t.test.intervention <- t.test(x = select(filter(SPFT, Group == "Treatment"), brier.avg), 
        y = select(filter(SPFT, Group == "Control"), brier.avg), 
        alternative = "less", var.equal = T,
        conf.level = 0.95)
+
+
