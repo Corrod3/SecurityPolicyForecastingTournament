@@ -721,50 +721,26 @@ emp.plot <- ggplot(SPFT, aes(x = emp)) +
 
 # Skill vs. Luck ##############################################################
 
-# all possible combinations of 0,1 in a matrix
-# for 24 events there are more than 16 Mio: 2^24
- 
-# idea: take expected value of each question to calculate random distribution
-# brier score
-
-# score board for randum distributed events
-SB.R <- SPFT  %>% select(ResponseId,
-                       starts_with("fq")) 
-
-## calculate brier scores for each question/respondent
-
+# Compute expected Brier score for p = 0.5 for each question 
+# 1. Individual Brier score for each possible outcome (0 or 1) 
+# 2. Calculate average for each question
+# 3. Calculate average over all questions
+brier.exp.fq <- 0
 for(i in 1:q.num){
-  tmp <- paste("fq", i, sep = "")
-  # add expected value in new brier score column and compute Brier score
-  SB.R[,paste(tmp,"bs", sep = ".")] <- 2*(0.5 - select(SB.R, i+1))^2
-  rm(tmp)
-}
+  brier.exp.fq[i] <- mean(2*((select(SB, i+4))^2 + (1 - select(SB, i+4))^2 )/2)
+ }
 
-# Compute average brier score for each respondent
-SB.R[,"brier.avg"] <- rowMeans(select(SB.R, contains("bs")))
-
-# hist(SB.R$brier.avg)
-
-# Manual T-Statistik (root(n*m/(n+m)*(x_m-y_m)/sd(S)))
-# https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-(nrow(SB.R)*nrow(SPFT)/(nrow(SB.R)+nrow(SPFT)))^(1/2)*
-  (mean(SB.R$brier.avg) - mean(SPFT$brier.avg))/
-  ((((nrow(SPFT)-1)*sd(SPFT$brier.avg)^2 + (nrow(SB.R)-1)*
-       sd(SB.R$brier.avg)^2)/(nrow(SPFT)+nrow(SB.R)-2)))^(1/2)
-
-# T-Test one-sided: Whether bs.score for true is smaller than for random events
-# http://statistics.berkeley.edu/computing/r-t-tests
-# open questions? assume equal variance? and paired or non paired tesT?
-# should be paired!! -> same individuals, different draws 
-t.test.against.random  <- t.test(SPFT$brier.avg, y=SB.R$brier.avg, mu = 0, 
-                                 alternative = "less",  paired=T, 
-                                 conf.level=0.95, var.equal = T)
+# T-Test one-sided (Expected Brier score with p = 50%)
+t.test.against.random  <- t.test(SPFT$brier.avg, mu = mean(brier.exp.fq), 
+                                 alternative = "less", conf.level=0.95)
 
 # get text string for the paper
 t.test.against.random  <- paste("t(", t.test.against.random[[2]], ") = ",
                                 round(t.test.against.random[[1]],2),
-                                ", p < ", round(t.test.against.random[[3]],3) 
-                                , sep = "")
+                                ", p < ", 
+                                ifelse(round(t.test.against.random[[3]],4)< 0.001,
+                                       0.001,round(t.test.against.random[[3]],4)),
+                                sep = "")
 
 # alternative skills vs. luck test: correct side of 50% #######################
 
@@ -790,9 +766,11 @@ t.test.correct.side <- t.test(SB.CS$cs.avg, mu=0.5, alternative = "greater",
 
 # string for paper 
 t.test.correct.side  <- paste("t(", t.test.correct.side[[2]], ") = ",
-                                round(t.test.correct.side[[1]],2),
-                                ", p < ", round(t.test.correct.side[[3]],3) 
-                                , sep = "")
+                              round(t.test.correct.side[[1]],2),
+                              ", p < ",
+                              ifelse(round(t.test.correct.side[[3]],4)< 0.001,
+                                     0.001,round(t.test.correct.side[[3]],4)),   
+                              sep = "")
 
 # Hypotheses testing ##########################################################
 
