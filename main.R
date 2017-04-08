@@ -407,7 +407,7 @@ SB <- SB %>% arrange(brier.avg)
 brier.plot <- ggplot(SB, aes(x = brier.avg)) +
      geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
      theme_bw() +
-     labs(title = "Brier score distribution",
+     labs( # title = "Brier score distribution",
           x = "Brier score",
           y = "Frequency") # labels))
 
@@ -639,6 +639,9 @@ intu.anal.plot <- ggplot(SPFT, aes(x = intu.anal)) +
   labs(title = "Intuition vs. Analysis",
        x = "Approach",
        y = "# of respondents") # labels
+
+intu.share <- (as.data.frame(table(SPFT$intu.anal))[1,2] + 
+                 as.data.frame(table(SPFT$intu.anal))[2,2]) / nrow(SPFT) * 100
 
 # self-assessment ############################################################
 # order 
