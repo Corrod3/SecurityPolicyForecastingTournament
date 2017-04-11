@@ -14,6 +14,7 @@
 # 6. control variables
 # 7. demographics
 # 8. testing
+# 9. Aggregation of forecasts
 ###############################################################################
 
 ###############################################################################
@@ -117,8 +118,12 @@ names(SPFT)[names(SPFT)=="mct.w_1"] <- "mct.w"
 names(SPFT)[names(SPFT)=="mct.d_1"] <- "mct.d"
 
 # demographic variables to factor
-
 SPFT$sex <- as.factor(SPFT$sex)
+SPFT$selfassessment <- factor(SPFT$selfassessment, 
+                              levels =  c("Extremely bad", "Moderately bad",
+                                          "Slightly bad", "Neither good nor bad", 
+                                          "Slightly good", "Moderately good",
+                                          "Extremely good"))
 
 # Remove not needed data ######################################################
 
@@ -502,13 +507,16 @@ mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
 # summary(SPFT$mct.c)
 # str(filter(SPFT, part.group == "hertie"))
 
+# cleaning from interrim calculations 
+SPFT <- SPFT %>% select(-mct.ts, -mct.tss, -mct.sss, -mct.ss.m)
+
 # timeing #####################################################################
 
 # code to minutes
 SPFT$Duration.min <- SPFT$Duration..in.seconds./60
 SPFT$time.fq.sec <- SPFT$time.sec2_Page.Submit/60
 
-levels(as.factor(SPFT$time))
+# levels(as.factor(SPFT$time))
 SPFT$time.min <- as.numeric(mapvalues(SPFT$time,
                                       levels(as.factor(SPFT$time)),
                                       c(90,20,180,45,5)))
@@ -517,8 +525,8 @@ SPFT$time.min <- as.numeric(mapvalues(SPFT$time,
 # extreme outliers are eliminated
 # actual time one forecasting question should be used as 
 # full duration and self reported data captures time spend on other sections
-pairs(~Duration.min+time.fq.sec+time.min,data=filter(SPFT, time.fq.sec < 1000),
-      main="Simple Scatterplot Matrix")
+# pairs(~Duration.min+time.fq.sec+time.min,data=filter(SPFT, time.fq.sec < 1000),
+#      main="Simple Scatterplot Matrix")
 
 time.plot <- ggplot(filter(SPFT, time.fq.sec < 1000), 
                     aes(x = time.fq.sec, fill = part.group)) +
@@ -533,7 +541,7 @@ SPFT$time.fq.sec[SPFT$time.fq.sec > 1000] <- NA
 
 # team ########################################################################
 
-summary(SPFT$team)
+# summary(SPFT$team)
 
 team.plot <- ggplot(SPFT, aes(x = team)) +
                 geom_bar() +
@@ -583,7 +591,7 @@ source.plot <- ggplot(source.plot.data, aes(x = Var1)) +
 # SPFT.Demo.Plot <- SPFT %>% select(year, sex)
 
 # correct typos
-filter(SPFT, year < 1900 | year > 2017)
+filter(select(SPFT, year), year < 1900 | year > 2017)
 SPFT$year[SPFT$year=="19.061990"] <- 1990
 SPFT$year[SPFT$year=="23"] <- 1994
 SPFT$year[SPFT$year=="66"] <- 1966
@@ -645,13 +653,8 @@ intu.share <- (as.data.frame(table(SPFT$intu.anal))[1,2] +
 
 # self-assessment ############################################################
 # order 
-SPFT$selfassessment <- factor(SPFT$selfassessment, 
-                         levels =  c("Extremely bad", "Moderately bad",
-                                     "Slightly bad", "Neither good nor bad", 
-                                     "Slightly good", "Moderately good",
-                                     "Extremely good"))
 
-levels(as.factor(SPFT$selfassessment))
+# levels(as.factor(SPFT$selfassessment))
 
 selfassessment.plot <- ggplot(SPFT, aes(x = selfassessment)) +
   geom_bar() +
@@ -812,10 +815,28 @@ corstarsl <- function(x){
 # remove comment from xtable
 options(xtable.comment = FALSE)
 
-# correlation table with significant test
-cor.plot <- xtable(corstarsl(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec)), 
-                   caption = "Table with tested correlations")
+# compute log(time)
+SPFT$time.fq.sec.log <- log(SPFT$time.fq.sec)
 
+# correlation table with significant test
+cor.table <- corstarsl(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec.log))
+names(cor.table) <- c("Brier score", "BNT score", "MCT score")
+rownames(cor.table) <- c("Brier score", "BNT score", "MCT score", "log(time)")
+
+# table to Latex format
+cor.plot <- xtable(cor.table, caption = "Correlation Table")
+
+# complete correlation table for data mining
+# SPFT$selfassessment.num <- as.numeric(SPFT$selfassessment)
+# cor.plot2 <- xtable(corstarsl(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec,
+#                                     time.fq.sec.log, time.min, source.var, age, selfassessment.num)), 
+#                   caption = "Correlation Table")
+
+# testing only for subgroups
+
+SPFT.Time <- SPFT %>% select(brier.avg, bnt.s, mct.c, time.fq.sec, Group) %>% filter(time.fq.sec > 6)
+
+SPFT.Anal <- SPFT %>% select(brier.avg, bnt.s, mct.c, time.fq.sec, Group) %>% filter(time.fq.sec > 6)
 # Hypothesis 1a ################################################################
 
 # t test manual
@@ -833,9 +854,24 @@ t.test.brier.bnt <- paste("t(", cor.test(SPFT$brier.avg, SPFT$bnt.s)[[2]],
 cor.brier.bnt <- paste("r = ", round(cor(SPFT$brier.avg, SPFT$bnt.s),2), ", ",
                        t.test.brier.bnt, sep = "")
 
+# Test with only long decision time
+# T test for Hyppthesis 1a
+t.test.brier.bnt.time <- paste("t(", cor.test(SPFT.Time$brier.avg, SPFT.Time$bnt.s)[[2]],
+                          ") = ", 
+                          round(cor.test(SPFT.Time$brier.avg, SPFT.Time$bnt.s)[[1]], 2),
+                          ", p = ", 
+                          round(cor.test(SPFT.Time$brier.avg, SPFT.Time$bnt.s)[[3]], 3),
+                          sep = "")
+# Correlation between Brier score and BNT score
+cor.brier.bnt.time <- paste("r = ", round(cor(SPFT.Time$brier.avg, SPFT.Time$bnt.s),2), ", ",
+                       t.test.brier.bnt.time, sep = "")
+
+
+
+
 # Hypothesis 1b ###############################################################
 
-# T test for Hyppthesis 1a
+# T test for Hyppthesis 1b
 t.test.brier.mct <- paste("t(", cor.test(SPFT$brier.avg, SPFT$mct.c)[[2]],
                           ") = ", 
                           round(cor.test(SPFT$brier.avg, SPFT$mct.c)[[1]], 2),
@@ -857,11 +893,25 @@ cor.brier.mct.plot <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.a
   labs(x = "Moral Competency Score",
        y = "Brier Score") # labels
 
+# with minium Forecasting time: T test for Hyppthesis 1b
+t.test.brier.mct.time <- paste("t(", cor.test(SPFT.Time$brier.avg, SPFT.Time$mct.c)[[2]],
+                          ") = ", 
+                          round(cor.test(SPFT.Time$brier.avg, SPFT.Time$mct.c)[[1]], 2),
+                          ", p = ",
+                          round(cor.test(SPFT.Time$brier.avg, SPFT.Time$mct.c)[[3]], 3),
+                          sep = "")
+# Correlation between Brier score and BNT score
+cor.brier.mct.time <- paste("r = ", 
+                       round(cor(SPFT.Time$brier.avg, SPFT.Time$mct.c, use="complete.obs"), 2),
+                       ", ", t.test.brier.mct.time,
+                       sep = "")
+
+
+
+
 # Hypothesis 2 ################################################################
 
-SPFT$time.fq.sec.log <- log(SPFT$time.fq.sec)
-
-# T test for Hyppthesis 2
+# T test for Hypothesis 2
 t.test.brier.time <- paste("t(", 
                            cor.test(SPFT$brier.avg, 
                                     SPFT$time.fq.sec.log)[[2]],
@@ -896,14 +946,26 @@ log.model.df <- data.frame(x = SPFT$time.fq.sec[!is.na(SPFT$time.fq.sec)],
 cor.brier.time.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
                               aes(x=time.fq.sec, y=brier.avg)) +
   geom_point(shape=1) +    # Use hollow circles
-  geom_smooth(method="lm",  linetype = 1) +
+#  geom_smooth(method="lm",  linetype = 2, color = "#C02F39") +
   # geom_smooth(method=lm, color = "#C02F39") +   # Add linear regression line 
   geom_line(data = log.model.df, 
             aes(x, y, color = "Log Model"), 
-            size = 1, linetype = 2) + 
+            size = 2, linetype = 1, color = "#C02F39") + 
   theme_bw() +
-  labs(x = "Time",
-       y = "Brier Score") # labels
+  labs(x = "time",
+       y = "Brier score") # labels
+
+cor.brier.time.log.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
+                              aes(x=time.fq.sec.log, y=brier.avg)) +
+  geom_point(shape=1) +    # Use hollow circles
+#  geom_smooth(method="lm",  linetype = 1) +
+  geom_smooth(method=lm, color = "#C02F39", size = 2) +   # Add linear regression line 
+#  geom_line(data = log.model.df, 
+#            aes(x, y, color = "Log Model"), 
+#            size = 1, linetype = 2) + 
+  theme_bw() +
+  labs(x = "log(time)",
+       y = "Brier score") # labels
 
 # Hypothesis 3 ################################################################
 
@@ -916,3 +978,20 @@ t.test.intervention <- t.test(x = select(filter(SPFT, Group == "Treatment"), bri
        conf.level = 0.95)
 
 
+t.test.intervention.result <- paste("t(", t.test.intervention[[2]], ") = ",
+                             round(t.test.intervention[[1]],2),
+                             ", p < ",
+                             ifelse(round(t.test.intervention[[3]],4)< 0.001,
+                                    0.001,round(t.test.intervention[[3]],4)),   
+                             sep = "")
+
+###############################################################################
+# 9. Aggregating Forecasts
+###############################################################################
+
+# drop BNT score 0 and 25% lowest share of time spend on forecasting
+SPFT.Agg <- SPFT %>% filter(bnt.s != 0 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2])
+
+# weightening using time and BNT score
+
+# extremizing values

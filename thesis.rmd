@@ -18,7 +18,7 @@ output:
     toc: true
     number_sections: true
 fontfamily: mathpazo
-fontsize: 11pt
+fontsize: 12pt
 urlcolor: blue
 bibliography:
     -  literature.bib
@@ -187,7 +187,7 @@ In this regard moral competency has similarities to the active open-mindedness m
 **Hypotheses 1b: More moral competent individuals are more accurate forecasters**
 
 Moral competency can be measured with the moral competency test (MCT). The test confronts respondents with two moral dilemma situations. To each story the participants have to answer 12 questions on different justification for the described acts. The answers are used to compute a competency score for each respondent. The score is not based on correct and wrong answers, but reflects a ratio between different parts of the answers.
-\footnote{Based on the instructions of the test [@Lind.2008] I reengineered the underlying formula for the score: \begin{equation} c = \frac{\frac{1}{4}\sum^{6}_{i = 1}(\sum^{4}_{j=1}x_{ij})^2 - (\frac{1}{24}\sum^{6}_{i=6}\sum^{4}_{j=1}x_{ij})^2}{\sum^{6}_{i = 1}\sum^{4}_{j=1}x_{ij}^2 - (\frac{1}{24}\sum^{6}_{i=6}\sum^{4}_{j=1}x_{ij})^2}\cdot 100 \end{equation} where $i \in {1,...,6}$ stands for the stage and $j \in {1,...,4}$. for the section (pro-Worker, contra Worker, pro-Doctor, contra-Doctor). The score is between 0 and 100 and is sometimes categorized as follows: very low (1-9), low (10-19), medium (20-29), high (30-39), very high (40-49) and extraordinary high (above 50) [@Lind.2008, p. 200]. For further information check the \href{https://www.uni-konstanz.de/ag-moral/mut/mjt-engl.htm}{associated website}.}
+\footnote{Based on the instructions of the test (Lind, 2008) I reengineered the underlying formula for the score: \begin{equation} c = \frac{\frac{1}{4}\sum^{6}_{i = 1}(\sum^{4}_{j=1}x_{ij})^2 - (\frac{1}{24}\sum^{6}_{i=6}\sum^{4}_{j=1}x_{ij})^2}{\sum^{6}_{i = 1}\sum^{4}_{j=1}x_{ij}^2 - (\frac{1}{24}\sum^{6}_{i=6}\sum^{4}_{j=1}x_{ij})^2}\cdot 100 \end{equation} where $i \in {1,...,6}$ stands for the stage and $j \in {1,...,4}$. for the section (pro-Worker, contra Worker, pro-Doctor, contra-Doctor). The score is between 0 and 100 and is sometimes categorized as follows: very low (1-9), low (10-19), medium (20-29), high (30-39), very high (40-49) and extraordinary high (above 50) (Lind, 2008, p. 200). For further information check the \href{https://www.uni-konstanz.de/ag-moral/mut/mjt-engl.htm}{associated website}.}
 
 <!-- [Changing environment of decision making] -->
 Individual differences in forecasting accuracy are also determined by differences in the decision environment. Unlike early decision theory assumed, empirical research has shown that context matters [e.g. @Kahneman.1974]. The list of possible factors is long, ranging from the number of forecasters, the incentives to the opportunity of deliberative practice [@Arkes.2001; @Ericsson.1993; @Kahneman.2009]. In this paper only the simplest environmental factor will be tested: Time used for answering the forecasting questions.
@@ -196,6 +196,7 @@ Individual differences in forecasting accuracy are also determined by difference
 Time used for forecasting is ultimately a choice of the forecaster. It can, however, be influenced by explicitly making time slots available or freeing forecasters from other tasks. To justify such choices, it would be necessary to know the relationship between time and forecasting accuracy. There are good reasons to belief that more time will also lead to more accurate forecasts. First of all, time is necessary in order to go beyond intuitive thinking and to engage in analytical thinking about the question at hand. The two different ways of thinking are often described as ‘system 1’ and ‘system 2’, where system 1 stands for fast intuitive judgements and system 2 for slow reflective thinking [@Evans.2013; @Kahneman.2013]. There is also a second reason why more time might lead to more accurate forecasts: Spending time on a question does allow gathering more information. Hence, the use of time should indicate whether a decision was informed or not.
  
 However, there are two reasons why this might not be the case. First, the forecasters might use the time for other things. @Haran.2013, for example, have argued that acquiring new information depends on other characteristics like active open mindedness. But this is unlikely to be a problem in this forecasting tournament as participants would have no reason to spend more time on the questions and move on to the next section of the tournament. Second, the forecasters might have different levels of pre-knowledge. Hence, some participants might need more time to grasp the context of questions while others can rely on their extensive political pre-knowledge. As will be later described in more detail, this was counteracted by ensuring a wide span of questions. Moreover, going back to the first explanation for the link between time and accuracy: Even individuals with pre-knowledge will have to switch between the two mental modes, which should again be captured by the time spend on the questions.
+<!-- add: Forecasters might be overwelhmed by too much information (Armstrong 1985, 100-102.)  from Armstrong 2004 FAW forecasting-->
 
 But the relationship between time and accuracy is unlikely linear. From the view of a mental system shift, there is no theoretical reason why more time should increase accuracy once the shift of mental systems took place. From the informational point of view, over time the value of new information decreases as it will have less and less implications for the judgement and the costs of gathering will increase as it will be harder to find new additional information. For this reason, it is reasonable to assume that the marginal value of more time decreases: 
 
@@ -292,7 +293,7 @@ stargazer(select(SPFT, brier.avg, bnt.s, mct.c, time.fq.sec, Duration.min, age),
 <!--	[Desciptives for Hypothesis 1a] -->
 Having established the performance of the crowd, the focus can now turn to factors behind the forecasting success of individual forecasters. Starting with the first dispositional factor: intelligence. The forecasters mean score at the Berlin Numeracy Test (BNT) score was `r round(mean(SPFT$bnt.s),2) ` (at a range from 0 to 4), which is slightly above the 1.6 average score @Cokely.2012 found for Berlin university students.^[The forecasting tournament used the four item 'paper and pencil' version of the test. For this version there is no general population score for comparison available. However, in principle it would be possible by adjusting the score to the to the more commonly used adaptive test format. For further details see @Cokely.2012.] As the distribution of BNT scores illustrates (Figure \ref{fig:bnt}), the test is able to discriminates between the participants. It assigned the forecasters to five score levels, each of which is roughly equal in size.
 
-```{r echo = FALSE, fig.cap="\\label{fig:bnt} BNT score distribution", out.width=c('200px', '120px'), fig.align='center', fig.pos = 'H'}
+```{r echo = FALSE, fig.cap="\\label{fig:bnt} Berlin Numeracy Test score distribution", out.width=c('200px', '120px'), fig.align='center', fig.pos = 'H'}
 bnt.plot
 ```
 
@@ -309,7 +310,7 @@ As expected the correlation is negative, which implies that more intelligent ind
 cor.plot
 ```
 
-Having this in mind, I can now turn to the second dispositional factor under scrutiny: moral competency. The Moral Competency Test (MCT) resulted in scores ranging from `r round(min(SPFT$mct.c, na.rm = TRUE),2)` to `r round(max(SPFT$mct.c, na.rm = TRUE),2)`. Similar ranges were also found in other groups [@Lind.2008]. The moral competency score is not available for all participants since the completion of the moral competency test questions were not obligatory. However, the missing values are largely due to forgeting to answer a question than to categorical non-replies. ^[There is no procedure for calculating the MCT score with missing answers.] Hence, the scores should not have systematic non-resonse bias. In order to assess the hypothesis, the Pearson coefficient is used to evaluate the relationship between forecasting accuracy and moral competency: `r cor.brier.mct`.
+Having this in mind, I can now turn to the second dispositional factor under scrutiny: moral competency. The Moral Competency Test (MCT) resulted in scores ranging from `r round(min(SPFT$mct.c, na.rm = TRUE),2)` to `r round(max(SPFT$mct.c, na.rm = TRUE),2)`. Similar ranges were also found in other groups [@Lind.2008]. The moral competency score is not available for all participants since the completion of the moral competency test questions were not obligatory. However, the missing values are largely due to forgeting to answer a sub-question than to categorical non-replies. ^[There is no procedure for calculating the MCT score with missing answers.] Hence, the scores should not have systematic non-resonse bias. In order to assess the hypothesis, the Pearson coefficient is used to evaluate the relationship between forecasting accuracy and moral competency: `r cor.brier.mct`.
 
 ```{r echo=FALSE, fig.cap="Scatterplot Moral Competency and Brier Score", out.width=c('300px', '150px'), fig.align='center', fig.pos = 'H'}
 cor.brier.mct.plot
@@ -324,29 +325,75 @@ The correlation between moral competency and forecasting accuracy indicates that
 -->
 
 <!-- Descripitves  Hypothesis 2 -->
-In Hypothesis 2 the role of decision time for forecasting accuracy was tested. The median participants spend `r round(median(SPFT$Duration.min),1)` minutes for participating and `r round(median(SPFT$time.fq.sec, na.rm = TRUE),1)` minuted on answering the forecasting questions. Hence, a large share of the participants did not spend much time on the individual questions but relied on their intuitive judgement.^[Overall, `r round(intu.share,1)`% of the participants said they used only or mostly intuition to answer the questions.] But this is not true for all participants, as some spend a considerable amount of time on forecasting. hence, there is sufficient variance among the participants for the hypothesis. Since hypothesis 2 assumes the marginal benefit of time to decrease, the logarithmized time for answering the forecasting question is used instead of the actual time. The Pearson correlation between the logarithmized time and forecasting accuracy is: `r cor.brier.time`.^[Two extreme outliers were excluded as the recorded time was unplausibly high, likely as a result of interrupting the survey in order to do something else.] 
+In hypothesis 2 the role of decision time for forecasting accuracy was tested. The median participants spend `r round(median(SPFT$Duration.min),1)` minutes for participating in the survey and `r round(median(SPFT$time.fq.sec, na.rm = TRUE),1)` minuted on answering the forecasting questions. Hence, a large share of the participants did not spend much time on the individual questions but relied on their intuitive judgement.^[Overall, `r round(intu.share,1)`% of the participants said they used only or mostly intuition to answer the questions.] But this is not true for all participants, as some spend a considerable amount of time on forecasting. Hence, there is sufficient variance among the participants for the hypothesis. Since hypothesis 2 assumes the marginal benefit of time to decrease, the logarithmized time for answering the forecasting question is used instead of the actual time. The Pearson correlation between the logarithmized time and forecasting accuracy is: `r cor.brier.time`.^[Two extreme outliers were excluded as the recorded time was unplausibly high, likely as a result of interrupting the survey in order to do something else.] 
+<!-- Discussion of second methid to test the relevance of time: Divide participants into two groups depending on the time they spend in the questions and compare group means. The exact devision time is however arbitrary.-->
 
 <!-- evaluation of Hypothesis 2 --> 
-The negative correlation does indicate that more time spend on answering the question is related to more forecasting accuracy as it was postulated in Hypothesis 2. Moreover, the relationship is significant. <!-- / However, the relationship is not significant].-->
-We can compare this to the correlation of the Brier scores with linear time to get an idea whether the marginal return n time hypothesis captures the relationship better: `r cor.brier.time.linear`.
+The negative correlation indicates that more time spend on answering the question is related to more forecasting accuracy. Moreover, the logarithmized time has a higher Pearson correlation coefficient than the time (`r round(cor(SPFT$brier.avg, SPFT$time.fq.sec.log, use="complete.obs"),2) > cor.brier.time.linear`) supporting hypothesis 2. Therefore, forecasters using more time for forecasting perform better and the added value decreases with time. 
 
-*The positive correlation is contrary to the time hypothesis. This might [again] be an indicator that forecasting success in this forecasting tournament is rather due to luck than to other factors. It can also mean that other aspects, e.g. prior political knowledge, offset the effects of time for forecasting. This could only be investigated in further research.*
+<!-- ALTERNATIVE However, the relationship is not significant]
+*The positive correlation is contrary to the time hypothesis. This might [again] be an indicator that forecasting success in this forecasting tournament is rather due to luck than to other factors. It can also mean that other aspects, e.g. prior political knowledge, offset the effects of time for forecasting. This could only be investigated in further research.* -->
 
-```{r echo = FALSE, fig.pos='H', fig.cap= "Forecasting time - Brier score scatterplot", out.width=c('300px', '150px')}
+```{r echo = FALSE, fig.pos='H', fig.cap= "Forecasting time - Brier score scatterplot", out.width=c('240px', '120px'), fig.align='center'}
 cor.brier.time.plot
 ```
 
+```{r echo = FALSE, fig.pos='H', fig.cap= "Log (forecasting time) - Brier score scatterplot", out.width=c('240px', '120px'), fig.align='center'}
+cor.brier.time.log.plot
+```
 <!-- Hypothesis 3 -->
-Finally, hypothesis 3 was postulating about the effect of an intervention. The participants were randomly assigned to a treatment (n = `r plyr::count(SPFT$Group[SPFT$Group == "Treatment"])`) or control group (n = `r plyr::count(SPFT$Group[SPFT$Group == "Control"])`). The treatment group was presented with a analytic guide, while the control group was not. To test, whether the analytic guide had any impact on the forecasting accuracy the mean Brier scores of both groups are compared. The mean Brier score of the treatment group is `r t.test.intervention[[5]][1]` and of the control group`r t.test.intervention[[5]][2]`. *a. The differences between die groups indicates that the intervention had an impact on forecasting accuracy in line with hypothesis 3. [The difference is significant, which is *
-*b. There is hardly any difference between the two groups. From this we can take that the intervention did not lead to its intended impact and we cannot support the intervention hypothesis*
+Finally, hypothesis 3 was about the effect of an decision aid intervention. The participants were randomly assigned to a treatment (n = `r plyr::count(SPFT$Group[SPFT$Group == "Treatment"])[2]`) or control group (n = `r plyr::count(SPFT$Group[SPFT$Group == "Control"])[2]`). The treatment group was presented with a analytic guide, while the control group was not. To test whether the analytic guide had any impact on the forecasting accuracy the mean Brier scores of both groups is used. The mean Brier score of the treatment group is `r round(t.test.intervention[[5]][1],2)` and of the control group `r round(t.test.intervention[[5]][2],2)`. 
+
+<!-- evaluation hyptothesis 3 -->
+There is hardly any difference between the two groups (`r t.test.intervention.result`). From this we can take that the intervention did not lead to its intended impact and we cannot support the intervention hypothesis (3). Hence, a short decision guide is not an effective tool to improve forecasting accuracy. It can be added, just like list the hypothesis or map the evidence methodlogy [@Kretz.2015] to a list of decision aids with no to limited effect for analytical decisions. However, research on debiasing methods and decision aids still is in its infancy and no consensus has emerged yet in the literature. In this specific case the reason of failure are manifold:  First, the decision guide might have provided them with irrelevant information for their decision. If we believe in the research results by @Tetlock.2015 this should not be the case as so-called superforecasters used the approach descibed in the guide and fared rather well with it in the Good Judgement Project. Second, participants might have ignored the decision guide. This might in particular be true for forecasters who only spend a few minutes on answering the questions. The treatment included a check box where the respondents had to indicate whether they have read the guide in order to increase the attention to the treatment. However, applying decision methodologies requires cognitive effort of decision makers [@Kretz.2015, p. 68ff] and disrupts the train of thoughts <!-- quote Hernandez, I., & Preston, J. L. (2013). Disfluency disrupts the confirmation bias. Journal of Experimental Social Psychology, 49(1), 178-182. doi: http://dx.doi.org/10.1016/j.jesp.2012.08.010-->. When faced with difficult analytical tasks, like forecasting questions, decision makers are likely to use their mental capacities for information processing rather then to thing about their methodological approach.  
+
+
+<!-- Alternative: *a. The differences between die groups indicates that the intervention had an impact on forecasting accuracy in line with hypothesis 3. [The difference is significant, which is * -->
+
+<!-- refining the results: looking only at forecasters who spend sufficient time on answerin the questions
+First test: Improves result for hypothesis 1a slightly and worsens hypothesis 1b -->
+
+<!-- using a structural equation model to estimate the relationship between single factors -->
+
+<!-- agregating forecasts
+1. extremizing -> 80% to 95%, 20% to 5% 
+2. weighting responses by intelligence and time invested
+
+-->
+# Aggregation of crowd forecasts
+
+Initially, we defined the wisdom of the crowd with the mean forecast of the forecasting competition participants. But if we take the idea of individual differences in forecasting skill seriously, the crowd wisdom can be aggregated in a more effective way taking into account what we now about individual forecasting decisions. On the one hand, we can use individual predictors of forecasting success to weight the individual judgements appropiately. On the other hand, the individual forecasts can be recalibrated based on commonly exhibited decision making biases.
+
+<!-- weightening / dropping forecasts  -->
+Adjusting the forecasts with most promising predictors of forecasting success: Intelligence and time spend on forecasting.
+
+First, drop all forecasts with the lowest BNT score. These are participants who did not get a single question right in the BNT test. Second, use the remaining scores to weight the forecasts. Chossing the exact weights is slightly arbitrary.
+
+Similar proceedure: Drop one-quarter of forecasts with the lowest time spend on answering the questions. The exact share of dropped respondents is also arbitrary. The remaining respondents are weighted according to their logarithmized time. Using the logaritmized time instead of the actual time is consistent with the finding on hypothesis 2 and reduces the impact of outliers on the aggregated forecast.
+
+Other predictors available in the forecasting tournament data have not been supported sufficiently (moral competency, intervention). 
+
+<!-- debiasing / extremizing -->
+
+humans have problems with very low and very high probabilities. This problem is for example visible in the long-shot bias in prediction markets. It has also lead to a longstanding debate in behavioural economics (). 
+
+this knowledge can be used to fine-tune forecasting aggregation. The basic idea is to extremize individual responses if they are in the range of problematic forecasts. If forecasters assign a low probability score to events, they are assumed to still overestimate the likelihood of the event. Likewise, if forecasters choose a high probability for an event they are assumed to underestimate the actual probability and there is a reason to adjust their judgment to a higher probability value. More difficult, however, is decide how strongly probability judgements should be adjusted and what exactly the range of "problematic" probability is.
+
+Again, there are also other other biases one could correct for. For example, forecasting questions are subject are to a reference bias (Kahnemann/Tetlock?). This bias claims that forecasters make likelihood judgements independently of the time horizon under consideration. Hence, forecasters would assign the same probability to an event happening in the next 3 months as to the same event in the next 6 months if they are only presented with one of these questions. However, it is difficult to correct for this bias ex-post. Extremizing on contrast has already successfully been used to calibrate crowd aggregation and for the sake of simplicity only one bias will be corrected here.
+
+<!-- results of smart crowd aggregation -->
+
 
 # Discussion
 <!--	General findings -->
+To sum up, this reasearch has found the forecasting crowd to perform slightly better than random quessing but not as accurate as in other comparable forecasting competitions. The data provides indicative support that intelligence and moral competency are related to more forecasting accuracy, but findings are to weak to make a final conclusion on them. The forecasting tournament strongly supports the idea that more forecasting time leads to more forecasting accuracy, but with diminishing returns. Finally, there is no support that the mild decision guide used as intervention has any measurable effect on forecasting accuracy. 
 
 <!--	Limitations of the design -->
 - only a one-off event
 
 - participant number relatively small compared to other forecasting competitions in the field
+
+- intervention limited due to online format
 
 <!--	Policy relevance 
 [on moral competency]
