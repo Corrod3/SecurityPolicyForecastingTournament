@@ -538,6 +538,17 @@ mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
 # summary(SPFT$mct.c)
 # str(filter(SPFT, part.group == "hertie"))
 
+# moral competency distribution by group
+mct.plot2 <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c, fill = part.group)) +
+  geom_density(alpha=.3) +
+  # geom_histogram(binwidth=.05, position="dodge") + # bar type
+  labs(title = "Moral Competency Test (MCT)",
+       x = "MCT Score",
+       y = "# of respondents") + # labels
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
+  expand_limits(x=c(0,1)) # set range of x-axis
+
 # cleaning from interrim calculations 
 SPFT <- SPFT %>% select(-mct.ts, -mct.tss, -mct.sss, -mct.ss.m)
 
@@ -987,7 +998,7 @@ cor.brier.time.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)),
   theme_bw() +
   theme(axis.title = element_text(size=18), # Labels axis font size
         axis.text = element_text(size=14)) +  
-  labs(x = "time",
+  labs(x = "time in min (linear)",
        y = "Brier score") # labels
 
 cor.brier.time.log.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
@@ -1021,6 +1032,33 @@ t.test.intervention.result <- paste("t(", t.test.intervention[[2]], ") = ",
                              ifelse(round(t.test.intervention[[3]],4)< 0.001,
                                     0.001,round(t.test.intervention[[3]],4)),   
                              sep = "")
+# testing reasons for failure
+hypo3.time.plot <- ggplot(filter(SPFT, is.na(time.fq.sec.log) == FALSE),
+                          aes(x = time.fq.sec.log, fill = Group)) +
+  geom_density(alpha = 0.3) +
+  #geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
+  theme_bw() +
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
+  labs( x = "log(time)",
+        y = "Frequency") # labels))
+
+# t testing whether the treatment had any impact on the time spend on forecasting
+t.test.int.time <-  t.test(SPFT$time.fq.sec.log[SPFT$Group == "Treatment"],
+       SPFT$time.fq.sec.log[SPFT$Group == "Control"], 
+       alternative = "greater", var.equal = TRUE,
+       conf.level = 0.95)
+
+t.test.intervention.time <- paste(round(t.test.int.time[[5]][1],2),
+                                  " > ",
+                                  round(t.test.int.time[[5]][2],2),
+                                  ", t(", t.test.int.time[[2]], ") = ",
+                                    round(t.test.int.time[[1]],2),
+                                    ", p < ",
+                                    ifelse(round(t.test.int.time[[3]],4)< 0.001,
+                                           0.001,round(t.test.int.time[[3]],4)),   
+                                    sep = "")
+
 
 ###############################################################################
 # 9. Aggregating Forecasts
@@ -1032,3 +1070,23 @@ SPFT.Agg <- SPFT %>% filter(bnt.s != 0 & time.fq.sec.log > summary(SPFT$time.fq.
 # weightening using time and BNT score
 
 # extremizing values
+
+###############################################################################
+# 10. presentation forecasts
+###############################################################################
+
+# plot scores distributed by groups
+brierPlot <- function(x){ggplot(SPFT, aes(x = brier.avg, fill = x)) +
+  geom_density(alpha = 0.3) +
+  #geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
+  theme_bw() +
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
+  labs( title = paste("Brier score distribution by ", substring(deparse(substitute(x)), 6)),
+    x = "Brier score",
+    y = "Frequency") # labels))
+}
+
+# formulars for trying out
+# brierPlot(as.factor(SPFT$team))
+# summary(as.factor(SPFT$team))
