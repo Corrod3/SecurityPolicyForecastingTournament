@@ -412,6 +412,8 @@ SB <- SB %>% arrange(brier.avg)
 brier.plot <- ggplot(SB, aes(x = brier.avg)) +
      geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
      theme_bw() +
+     theme(axis.title = element_text(size=18), # Labels axis font size
+           axis.text = element_text(size=14)) +  
      labs( # title = "Brier score distribution",
           x = "Brier score",
           y = "Frequency") # labels))
@@ -458,8 +460,10 @@ abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red")
 # Distribution of bnt scores
 bnt.plot <- ggplot(SPFT, aes(x = bnt.s)) + 
   geom_bar(fill = "#C02F39") +
-  theme_bw() + 
-  labs(title = "Distribution of results Berlin Numeracy Test (BNT)",
+  theme_bw() +
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
+  labs(# title = "Distribution of results Berlin Numeracy Test (BNT)",
        x = "BNT Score (# of correct answers)",
        y = "# of respondents") # labels
 
@@ -475,6 +479,29 @@ bnt.plot <- ggplot(SPFT, aes(x = bnt.s)) +
 # checking number of missing values
 # sum(select(SPFT, contains("mct")) == "")
 
+# reorder the test items by stage (left new name) # for pro Doktor (aus FAQ)
+SPFT <- dplyr::rename(SPFT, mct.d.pro1 = mct.d.pro_3,mct.d.pro2 = mct.d.pro_4,
+                      mct.d.pro3 = mct.d.pro_6, mct.d.pro4 = mct.d.pro_5,
+                      mct.d.pro5 = mct.d.pro_2, mct.d.pro6 = mct.d.pro_1)
+
+# reorder the test items by stage (left new name) # for con Doktor (self)
+SPFT <- dplyr::rename(SPFT, mct.d.con1 = mct.d.con_4,mct.d.con2 = mct.d.con_5,
+                      mct.d.con3 = mct.d.con_1, mct.d.con4 = mct.d.con_6,
+                      mct.d.con5 = mct.d.con_2, mct.d.con6 = mct.d.con_3)
+
+# reorder the test items by stage (left new name) # for pro worker (self???)
+SPFT <- dplyr::rename(SPFT, mct.w.pro1 = mct.w.pro_6, mct.w.pro2 = mct.w.pro_5,
+                      mct.w.pro3 = mct.w.pro_3, mct.w.pro4 = mct.w.pro_2,
+                      mct.w.pro5 = mct.w.pro_4, mct.w.pro6 = mct.w.pro_1)
+
+# reorder the test items by stage (left new name) # for con worker (self)
+SPFT <- dplyr::rename(SPFT, mct.w.con1 = mct.w.con_3,mct.w.con2 = mct.w.con_6,
+                      mct.w.con3 = mct.w.con_5, mct.w.con4 = mct.w.con_4,
+                      mct.w.con5 = mct.w.con_1, mct.w.con6 = mct.w.con_2)
+
+# change column name string (keeps order intact)
+mct.col.pc <- gsub('_', '', mct.col.pc)
+
 # calculating total sum (3)
 SPFT$mct.ts <- rowSums(SPFT[, mct.col.pc])
 
@@ -487,10 +514,12 @@ SPFT$mct.tss <- rowSums((SPFT[, mct.col.pc])^2)
 # sums of stage squares (2)
 SPFT$mct.sss <- 0
 
+# i <- 1
+
 for(i in 1:6) {
 SPFT$mct.sss <- SPFT$mct.sss +  
-                rowSums(SPFT[, grep(paste("mct.*._",i,sep = ""), names(SPFT))]) *
-                rowSums(SPFT[, grep(paste("mct.*._",i,sep = ""), names(SPFT))])  
+                rowSums(SPFT[, grep(paste("mct.*.",i,sep = ""), names(SPFT))]) *
+                rowSums(SPFT[, grep(paste("mct.*.",i,sep = ""), names(SPFT))])  
 }
 
 # calculate competency score
@@ -502,6 +531,8 @@ mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
   labs(title = "Moral Competency Test (MCT)",
      x = "MCT Score",
      y = "# of respondents") + # labels
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
   expand_limits(x=c(0,1)) # set range of x-axis
 
 # summary(SPFT$mct.c)
@@ -510,7 +541,7 @@ mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
 # cleaning from interrim calculations 
 SPFT <- SPFT %>% select(-mct.ts, -mct.tss, -mct.sss, -mct.ss.m)
 
-# timeing #####################################################################
+# timing #####################################################################
 
 # code to minutes
 SPFT$Duration.min <- SPFT$Duration..in.seconds./60
@@ -890,6 +921,8 @@ cor.brier.mct.plot <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.a
   geom_point(shape=1) +    # Use hollow circles
   geom_smooth(method=lm, color = "#C02F39") +   # Add linear regression line 
   theme_bw() +
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
   labs(x = "Moral Competency Score",
        y = "Brier Score") # labels
 
@@ -952,6 +985,8 @@ cor.brier.time.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)),
             aes(x, y, color = "Log Model"), 
             size = 2, linetype = 1, color = "#C02F39") + 
   theme_bw() +
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
   labs(x = "time",
        y = "Brier score") # labels
 
@@ -964,6 +999,8 @@ cor.brier.time.log.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)),
 #            aes(x, y, color = "Log Model"), 
 #            size = 1, linetype = 2) + 
   theme_bw() +
+  theme(axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14)) +  
   labs(x = "log(time)",
        y = "Brier score") # labels
 
