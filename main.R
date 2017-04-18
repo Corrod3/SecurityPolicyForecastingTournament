@@ -45,6 +45,7 @@ packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales",
 # Hmisc: Correlation table 
 # xtable: create latex table
 
+
 # install packages if not installed before
 for (p in packages) {
   if (p %in% installed.packages()[,1]) {
@@ -373,41 +374,55 @@ FQ[,4] <- 0
 FQ[FQ[,3] == "yes", 4] <- 1
 colnames(FQ) <- c(colnames(FQ)[1:3], "out")
 
-# score board data
-SB <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
-                       starts_with("fq")) 
-
-# transform responses to percentages
-# SB[,-(1:4)] <- sapply(sapply(SB[,-(1:4)],as.character),as.numeric)
-# SB[,-(1:4)] <- SB[,-(1:4)]/100
-
 ## calculate brier scores for each question/respondent
-
-# number of questions
-q.num <- ncol(SB) -4
-
-#i <- 1
-for(i in 1:q.num){
-tmp <- paste("fq", i, sep = "")
-# add outcome in new brier score column (from question xlsx)
-SB[,paste(tmp,"bs", sep = ".")] <- as.numeric(FQ[FQ[,1] == tmp, 4])
-# compute difference outcome and quess 
-SB[,paste(tmp,"tmp1", sep = ".")] <- select(SB, i+4+q.num) - select(SB, i+4)
-# compute difference outcome  and counterfactual
-SB[,paste(tmp,"tmp2", sep = ".")] <- (1 - select(SB, i+4+q.num)) - (1- select(SB, i+4))
-# Square differences and sum them
-SB[,paste(tmp,"bs", sep = ".")] <- (SB[,paste(tmp,"tmp1", sep = ".")])^2 +
-                                   (SB[,paste(tmp,"tmp2", sep = ".")])^2 
-# delete unneccessary columns
-SB <- SB %>% select(-contains("tmp"))
-rm(tmp)
+# Brier Score functions
+brierSimple <- function(x, y) {
+  r = (x-y)^2
+  return(r)
 }
 
+brierScore <- function(x, y) {
+  r = (x-y)^2 + (y-x)^2
+  return(r)
+}
+
+# compute brier score for each question and individual
+for(i in 1:nrow(FQ)){
+  SPFT[,paste("bs.fq",i, sep = ".")] <- SPFT %>% 
+    dplyr::select(contains(paste("fq",i,"_1", sep = ""))) %>%
+    brierScore(as.numeric(FQ[i,4])) %>% as.vector()
+}
+
+#
+# number of questions
+# q.num <- ncol(SB) -4
+#
+#i <- 1
+# for(i in 1:q.num){
+# tmp <- paste("fq", i, sep = "")
+# add outcome in new brier score column (from question xlsx)
+# SB[,paste(tmp,"bs", sep = ".")] <- as.numeric(FQ[FQ[,1] == tmp, 4])
+# compute difference outcome and quess 
+# SB[,paste(tmp,"tmp1", sep = ".")] <- select(SB, i+4+q.num) - select(SB, i+4)
+# compute difference outcome  and counterfactual
+# SB[,paste(tmp,"tmp2", sep = ".")] <- (1 - select(SB, i+4+q.num)) - (1- select(SB, i+4))
+# Square differences and sum them
+# SB[,paste(tmp,"bs", sep = ".")] <- (SB[,paste(tmp,"tmp1", sep = ".")])^2 +
+#                                   (SB[,paste(tmp,"tmp2", sep = ".")])^2 
+# delete unneccessary columns
+# SB <- SB %>% select(-contains("tmp"))
+# rm(tmp)
+# }
+
 # Compute average brier score for each respondent
-SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
+# SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
+
+SPFT[,"brier.avg"] <- rowMeans(select(SPFT, contains("bs.fq")))
+
 
 # Sort by brier score 
-SB <- SB %>% arrange(brier.avg)
+SB <- SPFT %>% select(ResponseId, part.group, id.hertie, id.other, id.mturk, brier.avg) %>%
+   arrange(brier.avg)
 
 brier.plot <- ggplot(SB, aes(x = brier.avg)) +
      geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
@@ -419,7 +434,7 @@ brier.plot <- ggplot(SB, aes(x = brier.avg)) +
           y = "Frequency") # labels))
 
 # Hertie score board
-SB.Hertie <- SB %>% filter(!is.na(id.hertie) & id.hertie != "")
+SB.Hertie <- SB %>% filter(part.group == "hertie")
 
 # remove late replies from score board (for testing)
 SB <- SB[!SB$ResponseId %in% SPFT$ResponseId[SPFT$EndDate >= "2017-02-13"],]
@@ -430,9 +445,6 @@ SB <- SB[!SB$ResponseId %in% SPFT$ResponseId[SPFT$EndDate >= "2017-02-13"],]
 
 # remove late submissions
 SPFT <- SPFT %>% filter(EndDate < "2017-02-13")
-
-# merge brier scores in
-SPFT <- merge(SPFT, SB[, c("ResponseId", "brier.avg")], by = "ResponseId")
 
 # compute BNT score ###########################################################
 # add column for bnt score
@@ -774,8 +786,9 @@ emp.plot <- ggplot(SPFT, aes(x = emp)) +
 # 2. Calculate average for each question
 # 3. Calculate average over all questions
 brier.exp.fq <- 0
-for(i in 1:q.num){
-  brier.exp.fq[i] <- mean(2*((select(SB, i+4))^2 + (1 - select(SB, i+4))^2 )/2)
+for(i in 1:nrow(FQ)){
+  brier.exp.fq[i] <- mean(2*((select(SPFT, contains(paste("fq", i, "_1",sep = ""))))^2 +
+                              (1 - select(SPFT, contains(paste("fq", i, "_1",sep = ""))))^2 )/2)
  }
 
 # T-Test one-sided (Expected Brier score with p = 50%)
@@ -798,7 +811,7 @@ SB.CS <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
 
 ## calculate correct side scores for each question/respondent
 # i <- 1
- for(i in 1:q.num){
+ for(i in 1:nrow(FQ)){
   tmp <- paste("fq", i, sep = "")
   # add outcome with 1 of on correct side of 50% and 0 if not 
   SB.CS[,paste(tmp,"cs", sep = ".")] <- 
@@ -1064,13 +1077,104 @@ t.test.intervention.time <- paste(round(t.test.int.time[[5]][1],2),
 # 9. Aggregating Forecasts
 ###############################################################################
 
-# drop BNT score 0 and 25% lowest share of time spend on forecasting
-SPFT.Agg <- SPFT %>% filter(bnt.s != 0 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2])
+# 0. Subsample of (super)forecasters ##########################################
 
-# weightening using time and BNT score
+# drop BNT score 0,1 and 25% lowest share of time spend on forecasting
 
-# extremizing values
+bs.agg0 <- 0
+for(i in 1:nrow(FQ)){
+  bs.agg0[i] <- SPFT %>% 
+  filter(bnt.s > 1 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]) %>%
+  dplyr::select(contains(paste("fq",i,"_1", sep= ""))) %>%
+  brierScore(as.numeric(FQ[i,4])) %>% as.vector() %>% mean()
+}
 
+mean(bs.agg0)
+
+# 1. computing individual weights #############################################
+
+# weightening using only BNT score
+
+lm(brier.avg ~ bnt.s, data = SPFT)
+
+lm(brier.avg ~ time.fq.sec.log, data = SPFT)
+
+SPFT$d <-  0
+SPFT$d[SPFT$Group == "Treatment"] <- 1
+lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT)
+
+# w.bnt <- 
+
+# 2. extremizing values #######################################################
+
+# geometric means function
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+
+# prepare dataframe without p = 0 or 1 as they let the geom explod (replacement arbitary) 
+SPFT.agg2 <- SPFT %>% select(starts_with("fq"))
+SPFT.agg2[SPFT.agg2 == 0] <- 0.001
+SPFT.agg2[SPFT.agg2 == 1] <- 0.999
+
+q <- SPFT.agg2[,4]
+hist(log(q/(1-q)))
+# MLE estimator for probability of question q conditional on systematic bias a
+probMLE <- function(a, q) {
+  r <- gm_mean(q/(1-q))^a / (1 + gm_mean(q/(1-q)))^a
+  return(as.numeric(r))
+}
+# test
+# probMLE(1, SPFT.agg2$fq1_1)
+
+# estimated probability vector
+probMLE24 <- function(a) {
+  r <- replicate(24,-1)
+  for(i in 1:ncol(SPFT.agg2)){
+  r[i] <- probMLE(a, SPFT.agg2[,i])
+  }
+  return(r)
+}
+# test
+probMLE24(0.1)
+
+# Scoring function (Brier Score)
+brierFit <- function(a) {
+  mean(as.vector(brierScore(probMLE24(a), FQ[,4])))
+  }
+
+# test
+str(brierFit(2.25))
+
+# compute systematic bias estimate!
+bias <- optimize(brierFit, interval=c(0, 10))
+
+# 3. displaying aggregated forecasts #########################################
+
+agg.plot <- function(q) {
+ggplot(SPFT, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
+    geom_density(alpha=.3) +
+    geom_vline(data=SPFT,
+               aes(xintercept=mean(eval(parse(text = fq[q])))), 
+               linetype="dashed", size=1.5) + # group average
+  # vertical line for dropping case
+  geom_vline(data=filter(SPFT, bnt.s > 1 &
+                           time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]),
+             aes(xintercept=mean(eval(parse(text = fq[q])))), 
+             linetype="dashed", size=1.5, color = "blue") + # group average
+  #ä vertical line for extremized probability
+  geom_vline(data=SPFT.agg2,
+             aes(xintercept=probMLE(bias$minimum, eval(parse(text = fq[q])))), 
+             linetype="dashed", size=1.5, color = "orange") + # group average
+    labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
+                        paste, collapse="\n" ),
+         x = "What is the probability of this event to happen?",
+         y = "Distribution of estimates") + # labels
+    expand_limits(x=c(0,1)) + # set range of x-axis
+    scale_x_continuous(labels=percent) # percentages
+}
+
+agg.plot(20)
 ###############################################################################
 # 10. presentation forecasts
 ###############################################################################
