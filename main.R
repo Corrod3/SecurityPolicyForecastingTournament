@@ -1093,7 +1093,7 @@ mean(bs.agg0)
 
 # 1. computing individual weights #############################################
 
-# weightening using only BNT score
+
 
 lm(brier.avg ~ bnt.s, data = SPFT)
 
@@ -1103,10 +1103,28 @@ SPFT$d <-  0
 SPFT$d[SPFT$Group == "Treatment"] <- 1
 lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT)
 
-# w.bnt <- 
+
+# weightening using only BNT score
+# simplest version: weight = score
+SPFT$w.bnt <- SPFT$bnt.s
+mean(brierScore(unlist(lapply(select(SPFT, starts_with("fq")),
+                            weighted.mean, w = SPFT$bnt.s)), FQ[,4]))
+
+mean(brierScore(unlist(lapply(select(SPFT, starts_with("fq")),
+                              mean)), FQ[,4]))
+
+
+mean(SPFT$fq1_1)
+weighted.mean(SPFT$fq1_1, SPFT$bnt.s)
+apply(select(SPFT, starts_with("fq")), 2, FUN = mean)
+# apply(select(SPFT, starts_with("fq")), 2, FUN = weigthed.mean(SPFT$bnt.s))
+SPFT %>% select(starts_with("fq")) %>% colMeans
+
+# weighted average
+lapply(select(SPFT, starts_with("fq")), weighted.mean, w = SPFT$bnt.s)
 
 # 2. extremizing values #######################################################
-
+# like Satopaa et-al 2014
 # geometric means function
 gm_mean = function(x, na.rm=TRUE){
   exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
@@ -1148,6 +1166,38 @@ str(brierFit(2.25))
 
 # compute systematic bias estimate!
 bias <- optimize(brierFit, interval=c(0, 10))
+
+# second: transformation function for all forecasts
+
+SPFT.agg2b <- SPFT.agg2
+
+#compute log-odds for each cell
+SPFT.agg2b <- log(SPFT.agg2b/(1-SPFT.agg2b))
+
+SPFT.agg2b.fun <- function(x){x*SPFT.agg2b}
+
+SPFT.agg2b.ex <- exp(SPFT.agg2b.fun(1.2))/(1+exp(SPFT.agg2b.fun(1.2)))
+
+SPFT.agg2b.fun2 <- function(x){
+           exp(x*SPFT.agg2b)/(1+exp(x*SPFT.agg2b))
+}
+
+# test matrix function with extremized probabilities
+SPFT.agg2b.fun2(2.25)
+
+# check this one (doesn't work yet!!!!)
+SPFT.agg2b.bs <- -1
+# for(i in 1:nrow(FQ)){
+#  SPFT.agg2b.bs[i] <- SPFT.agg2b.fun2(2.25) %>% 
+#    dplyr::select(contains(paste("fq",i,"_1", sep = ""))) %>% 
+#    brierScore(., as.numeric(FQ[i,4])) %>% as.vector()
+# }
+mean(SPFT.agg2b.bs)
+# matrix with extremized probabilities
+SPFT.agg2b.test <- SPFT.agg2b.fun2(2.25)
+
+#CONTINUE HERE
+# SPFT.agg2b.test %>% colwise() %>% mutate(bs = brierScore(.,as.numeric(FQ[i,4])))
 
 # 3. displaying aggregated forecasts #########################################
 
