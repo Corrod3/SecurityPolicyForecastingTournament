@@ -803,6 +803,8 @@ t.test.against.random  <- paste("t(", t.test.against.random[[2]], ") = ",
                                        0.001,round(t.test.against.random[[3]],4)),
                                 sep = "")
 
+# alternative: Use average probability for each question to compute brier score
+
 # alternative skills vs. luck test: correct side of 50% #######################
 
 # score board for correct side
@@ -1077,9 +1079,17 @@ t.test.intervention.time <- paste(round(t.test.int.time[[5]][1],2),
 # 9. Aggregating Forecasts
 ###############################################################################
 
+# Mean Estimates for each question
+probs.mean <- SPFT %>% select(starts_with("fq")) %>% colMeans()
+
 # 0. Subsample of (super)forecasters ##########################################
 
 # drop BNT score 0,1 and 25% lowest share of time spend on forecasting
+probs.mean.agg0 <- SPFT %>% 
+  filter(bnt.s > 1 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]) %>% 
+  select(starts_with("fq")) %>% colMeans()
+
+bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),3)
 
 bs.agg0 <- 0
 for(i in 1:nrow(FQ)){
@@ -1089,142 +1099,141 @@ for(i in 1:nrow(FQ)){
   brierScore(as.numeric(FQ[i,4])) %>% as.vector() %>% mean()
 }
 
-mean(bs.agg0)
+# mean brier score of group smaller group
+bs.cutoff <- round(mean(bs.agg0),3)
+
+
+
+
 
 # 1. computing individual weights #############################################
 
+SPFT.agg1 <- SPFT %>% select(starts_with("fq"), bnt.s,mct.c, time.fq.sec.log,
+                             Group, brier.avg) %>%
+                      filter(!is.na(time.fq.sec.log))
+# precalculations to see correlations
+lm(brier.avg ~ bnt.s, data = SPFT.agg1)
+lm(brier.avg ~ time.fq.sec.log, data = SPFT.agg1)
+reg.brier.bnt.time <- lm(brier.avg ~ bnt.s + time.fq.sec.log, data = SPFT.agg1)
+SPFT.agg1$d <-  0
+SPFT.agg1$d[SPFT.agg1$Group == "Treatment"] <- 1
+lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT.agg1)
 
+# mean brier score for average probabilities (unweighted)
+bs.mean <- mean(brierScore(probs.mean, FQ[,4]))
 
-lm(brier.avg ~ bnt.s, data = SPFT)
+# testing average brier score vs. brier score of averaged forecasts
+t.test.bs.avg.mean <- t.test(SPFT$brier.avg, mu = bs.mean, alternative = "greater")
 
-lm(brier.avg ~ time.fq.sec.log, data = SPFT)
-
-SPFT$d <-  0
-SPFT$d[SPFT$Group == "Treatment"] <- 1
-lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT)
-
+# string for paper 
+t.test.bs.avg.mean  <- paste("t(", t.test.bs.avg.mean[[2]], ") = ",
+                              round(t.test.bs.avg.mean[[1]],2),
+                              ", p < ",
+                              ifelse(round(t.test.bs.avg.mean[[3]],4)< 0.001,
+                                     0.001,round(t.test.bs.avg.mean[[3]],4)),   
+                              sep = "")
 
 # weightening using only BNT score
 # simplest version: weight = score
-SPFT$w.bnt <- SPFT$bnt.s
-mean(brierScore(unlist(lapply(select(SPFT, starts_with("fq")),
-                            weighted.mean, w = SPFT$bnt.s)), FQ[,4]))
+# SPFT$w.bnt <- SPFT$bnt.s
+probs.mean.w.bnt <- apply(select(SPFT.agg1, starts_with("fq")), 2,
+      weighted.mean, w = SPFT.agg1$bnt.s)
 
-mean(brierScore(unlist(lapply(select(SPFT, starts_with("fq")),
-                              mean)), FQ[,4]))
+mean(brierScore(probs.mean.w.bnt, FQ[,4]))
 
+# weightening using only time.fq.sec.log score
+probs.mean.w.time <- apply(select(SPFT.agg1, starts_with("fq")), 2,
+                           weighted.mean, w = SPFT.agg1$time.fq.sec.log)
+mean(brierScore(probs.mean.w.time, FQ[,4]))
 
-mean(SPFT$fq1_1)
-weighted.mean(SPFT$fq1_1, SPFT$bnt.s)
-apply(select(SPFT, starts_with("fq")), 2, FUN = mean)
-# apply(select(SPFT, starts_with("fq")), 2, FUN = weigthed.mean(SPFT$bnt.s))
-SPFT %>% select(starts_with("fq")) %>% colMeans
+# weightening using bnt and time.fq.sec.log score
+# contruct weigts (other weights possible) 
+SPFT.agg1$w.bnt.time <- reg.brier.bnt.time[[1]][2]*SPFT.agg1$bnt.s *
+                        reg.brier.bnt.time[[1]][3]*SPFT.agg1$time.fq.sec.log
 
-# weighted average
-lapply(select(SPFT, starts_with("fq")), weighted.mean, w = SPFT$bnt.s)
+probs.mean.w.bnt.time <- apply(select(SPFT.agg1, starts_with("fq")),
+                               2, weighted.mean, w = SPFT.agg1$w.bnt.time)
+mean(brierScore(probs.mean.w.bnt.time, FQ[,4]))
 
-# 2. extremizing values #######################################################
-# like Satopaa et-al 2014
-# geometric means function
-gm_mean = function(x, na.rm=TRUE){
-  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
-}
+#identifying optimal relationship between weights (will be "overfitting")
 
-# prepare dataframe without p = 0 or 1 as they let the geom explod (replacement arbitary) 
-SPFT.agg2 <- SPFT %>% select(starts_with("fq"))
+# 2. extremizing  #############################################################
+# like Satopaa et al 2014
+
+#create data.frame for extremizing (remove 0 and 1 as logit will cause problems)
+SPFT.agg2 <- SPFT %>% select(starts_with("fq")) %>% as.matrix() 
 SPFT.agg2[SPFT.agg2 == 0] <- 0.001
 SPFT.agg2[SPFT.agg2 == 1] <- 0.999
 
-q <- SPFT.agg2[,4]
-hist(log(q/(1-q)))
-# MLE estimator for probability of question q conditional on systematic bias a
-probMLE <- function(a, q) {
-  r <- gm_mean(q/(1-q))^a / (1 + gm_mean(q/(1-q)))^a
-  return(as.numeric(r))
-}
-# test
-# probMLE(1, SPFT.agg2$fq1_1)
+# export values
+# write.csv(SPFT.agg2, "fqAnswers.csv", row.names=FALSE) 
+# write.csv(FQ[,4], "Answers.csv", row.names=FALSE) 
 
-# estimated probability vector
-probMLE24 <- function(a) {
-  r <- replicate(24,-1)
-  for(i in 1:ncol(SPFT.agg2)){
-  r[i] <- probMLE(a, SPFT.agg2[,i])
-  }
-  return(r)
-}
-# test
-probMLE24(0.1)
-
-# Scoring function (Brier Score)
-brierFit <- function(a) {
-  mean(as.vector(brierScore(probMLE24(a), FQ[,4])))
-  }
-
-# test
-str(brierFit(2.25))
-
-# compute systematic bias estimate!
-bias <- optimize(brierFit, interval=c(0, 10))
-
-# second: transformation function for all forecasts
-
-SPFT.agg2b <- SPFT.agg2
-
-#compute log-odds for each cell
-SPFT.agg2b <- log(SPFT.agg2b/(1-SPFT.agg2b))
-
-SPFT.agg2b.fun <- function(x){x*SPFT.agg2b}
-
-SPFT.agg2b.ex <- exp(SPFT.agg2b.fun(1.2))/(1+exp(SPFT.agg2b.fun(1.2)))
-
-SPFT.agg2b.fun2 <- function(x){
-           exp(x*SPFT.agg2b)/(1+exp(x*SPFT.agg2b))
+# function to create extremized means for each question
+# possible to include geometric weights (q^w) -> check theory
+probsLogitExtrem <-function(p,a){
+  q<-p/(1-p)
+  geo.mean<-prod(q^(1/length(q))) # every element to the power of N?
+  mod.prob<-(geo.mean^a)/(1+geo.mean^a)
+  return(mod.prob)
 }
 
-# test matrix function with extremized probabilities
-SPFT.agg2b.fun2(2.25)
+# true outcomes 
+Z<- as.vector(as.matrix(FQ[,4]))
 
-# check this one (doesn't work yet!!!!)
-SPFT.agg2b.bs <- -1
-# for(i in 1:nrow(FQ)){
-#  SPFT.agg2b.bs[i] <- SPFT.agg2b.fun2(2.25) %>% 
-#    dplyr::select(contains(paste("fq",i,"_1", sep = ""))) %>% 
-#    brierScore(., as.numeric(FQ[i,4])) %>% as.vector()
-# }
-mean(SPFT.agg2b.bs)
-# matrix with extremized probabilities
-SPFT.agg2b.test <- SPFT.agg2b.fun2(2.25)
+# brier score average 
+brierScoresAvg<-function(p,z){
+  return(sum((p-z)^2)/length(p) + sum((z-p)^2)/length(p))
+}
 
-#CONTINUE HERE
-# SPFT.agg2b.test %>% colwise() %>% mutate(bs = brierScore(.,as.numeric(FQ[i,4])))
+# optimize brier score average function to find minimizing a (bias correction)
+optimise(function(a) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a)),Z),
+         interval=c(0,10))
+
+# plot brierscore depending on bias correction
+a<-seq(-10,30,by=1)
+plot(a,sapply(a,function(l) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, l)),Z)))
+
+# compute aggregated probabilities
+probs.extrem<-apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a=1.58))
+
+# plot simple means against extremized values
+plot(probs.mean, probs.extrem, asp=1,ylim=c(0,1),xlim=c(0,1))
+abline(0,1,lty=2)
+points(Z,probs.mean,col=2,pch=16)
 
 # 3. displaying aggregated forecasts #########################################
 
+# plot with aggregated probabilties
+# add: labels for vlines
+# vlines at the wrong place, e.g. for 13 the extremized value is above .5
 agg.plot <- function(q) {
-ggplot(SPFT, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
-    geom_density(alpha=.3) +
+ggplot(SPFT, aes(x=eval(parse(text = fq[q])))) +
+    geom_density(alpha=.3, fill="#C02F39") +
     geom_vline(data=SPFT,
                aes(xintercept=mean(eval(parse(text = fq[q])))), 
                linetype="dashed", size=1.5) + # group average
-  # vertical line for dropping case
-  geom_vline(data=filter(SPFT, bnt.s > 1 &
+    # vertical line for dropping case
+    geom_vline(data=filter(SPFT, bnt.s > 1 &
                            time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]),
-             aes(xintercept=mean(eval(parse(text = fq[q])))), 
-             linetype="dashed", size=1.5, color = "blue") + # group average
-  #ä vertical line for extremized probability
-  geom_vline(data=SPFT.agg2,
-             aes(xintercept=probMLE(bias$minimum, eval(parse(text = fq[q])))), 
-             linetype="dashed", size=1.5, color = "orange") + # group average
+               aes(xintercept=mean(eval(parse(text = fq[q])))), 
+               linetype="dashed", size=1.5, color = "yellow") + # group average
+    # vertical line for weighted probabilities
+    geom_vline(aes(xintercept=probs.mean.w.bnt.time[q]), 
+               linetype="dashed", size=1.5, color = "orange") + # group average
+    # vertical line for extremized probability
+    geom_vline(aes(xintercept=probs.extrem[q]), 
+               linetype="dashed", size=1.5, color = "red") + # group average
     labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
                         paste, collapse="\n" ),
          x = "What is the probability of this event to happen?",
          y = "Distribution of estimates") + # labels
     expand_limits(x=c(0,1)) + # set range of x-axis
+    theme_bw() +
     scale_x_continuous(labels=percent) # percentages
 }
 
-agg.plot(20)
+agg.plot(13)
 ###############################################################################
 # 10. presentation forecasts
 ###############################################################################
