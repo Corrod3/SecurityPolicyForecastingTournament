@@ -1191,9 +1191,20 @@ optimise(function(a) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtr
          interval=c(0,10))
 
 # plot brierscore depending on bias correction
-a<-seq(-10,30,by=1)
-plot(a,sapply(a,function(l) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, l)),Z)))
+a<-seq(-2,8,by=0.1)
+plot(a,sapply(a,function(l) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, l)),Z)),
+     type = "l",lwd=2, col="#C02F39",
+     xlab="Systematic Bias a",
+     ylab="Brier score")
+brier.ext.plot <- recordPlot()
 
+
+
+# p <- ggplot(data = data.frame(a = 0), mapping = aes(x = a))
+# fun.1 <- function(a) a^2 + a
+# fun.2 <- function(l) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, l)),Z)
+# p + stat_function(fun = fun.1) + xlim(-5,5)
+# p + stat_function(fun = fun.2) + xlim(0,5)
 # compute aggregated probabilities
 probs.extrem<-apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a=1.58))
 
@@ -1249,6 +1260,7 @@ brierPlot <- function(x){ggplot(SPFT, aes(x = brier.avg, fill = x)) +
     x = "Brier score",
     y = "Frequency") # labels))
 }
+
 
 # formulars for trying out
 # brierPlot(as.factor(SPFT$team))

@@ -366,7 +366,7 @@ The intervention tried to account for this with a minimal preventative measure. 
 So what happened? To see whether the treatment lead to any behavioral change, we can check whether it had any effect on the time used for answering the forecasting questions. And this is the case, as the treatment group used `r round(mean(SPFT$time.fq.sec[SPFT$Group == "Treatment"], na.rm = TRUE),1)` min and the control group `r round(mean(SPFT$time.fq.sec[SPFT$Group == "Control"], na.rm = TRUE),1)` min. But these means might be the result of few extreme outliers. To compare whether the difference is more than a random occurence, the logarithmized times can be used.^[Eye-balling the data shows that time in minutes used by the forecasters clearly does not follow a Gaussian distribution, but the logarithmized distribution resembles the classical Gaussian curve.] Applying a t-test shows that the treatment group used more time if we use a significance level of 10%, but not for 5% (`r t.test.intervention.time`). Even though this is not a clear result, it does also not rule out a small behavioral change from the decision guide.
 
 ```{r echo = FALSE, fig.pos='H', fig.cap= "Distribution forecasting log(time) for treatment and control group ", out.width=c('240px', '120px'), fig.align='center'}
-hypo3.time.plot
+hypo3.time.plot + scale_fill_manual( values = c("gray","#C02F39"))
 ```
 <!-- check the written feedback -->
 
@@ -413,17 +413,25 @@ In order to implement the extremization I use the logit model proposed by @Satop
 
 1. 
 
+\begin{equation}
+ y_i = log\Big(\frac{p}{1-p}\Big)^{\frac{1}{a}} + \epsilon_i
+\end{equation}
 2.
 
-3.
+\begin{equation}
+ \hat p_E(a) = \frac{\big[\prod^N_{i = 1}(\frac{p_i}{1-p_i})^{\frac{1}{N}}\Big]^{a}}{1 + \Big[ \prod^N_{i = 1}(\frac{p_i}{1-p_i})^\frac{1}{N}\Big]^{a}}
+\end{equation}
 
+```{r echo = FALSE, fig.pos='H', fig.cap= "Distribution forecasting log(time) for treatment and control group ", out.width=c('300px', '200px'), fig.align='center'}
+brier.ext.plot
+```
 
 Again, there are also other other biases one could correct for. For example, forecasting questions are subject are to a reference bias (Kahnemann/Tetlock?). This bias claims that forecasters make likelihood judgements independently of the time horizon under consideration. Hence, forecasters would assign the same probability to an event happening in the next 3 months as to the same event in the next 6 months if they are only presented with one of these questions. However, it is difficult to correct for this bias ex-post. Extremizing on contrast has already successfully been used to calibrate crowd aggregation and for the sake of simplicity only one bias will be corrected here.
 
 <!-- results of smart crowd aggregation -->
 
 example question and illustration of aggregation.
-```{r echo = FALSE, fig.pos='H', fig.cap= "Distribution forecasting log(time) for treatment and control group ", out.width=c('240px', '120px'), fig.align='center'}
+```{r echo = FALSE, fig.pos='H', fig.cap= "Distribution forecasting log(time) for treatment and control group ", out.width=c('300px', '200px'), fig.align='center'}
 agg.plot(13)
 ```
 
