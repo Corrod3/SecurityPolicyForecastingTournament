@@ -392,15 +392,17 @@ First test: Improves result for hypothesis 1a slightly and worsens hypothesis 1b
 2. weighting responses by intelligence and time invested
 -->
 <!-- 1. simple mean probability forecast -->
-So far the focus of the paper was on the quality of individual forecasting decisions. However, having a group of forecasters does allow to use the wisdom of the crowd effect to generate forecasts. The simplest approach would be, like @Galton.1907 did in the case of predicting the weight of oxen, to use the average probability forecasts of the participants. Compared to the average Brier score among the participants (`r round(mean(SPFT$brier.avg),2)`) the  score from averaging the forecasts of each question is `r round(bs.mean,2)`.<!--check aggregated result --> Obviously, the crowd forecast performed significantly better than average participant in the tournament (`r t.test.bs.avg.mean`).
+So far the focus of the paper was on the quality of individual forecasting decisions. However, having a group of forecasters does allow to use the wisdom of the crowd effect to generate forecasts. The simplest approach would be, like @Galton.1907 did in the case of predicting the weight of oxen, to use the average probability forecasts of the participants. Compared to the average Brier score among the participants (`r round(mean(SPFT$brier.avg),2)`) the  score from averaging the forecasts of each question is `r bs.mean`.<!--check aggregated result --> Obviously, the crowd forecast performed significantly better than average participant in the tournament (`r t.test.bs.avg.mean`).
 
 <!-- 2. intro: smart aggregation -->
 But if we take into account what we know about individual forecasting decisions, the crowd wisdom can be aggregated in a more effective way. On the one hand, we can use individual predictors of forecasting success to weight the individual judgements appropriately. On the other hand, extremizing aggregated forecasts can correct decision making biases in forecasting.
 
 <!-- sub group aggregating-->
-The individual differences between forecasters can be exploited in different ways for combining forecasts. A simple approach is to use only a subgroup of individuals for aggregation. If only forecasts of individuals who are expected to perform well are combined, the aggregated result reflects both individual forecasting skills and the wisdom of the crowd effect. The subgroup can be selected based on the past performance of forecasters, as for example done by @Mellers.2014. Since in this case the past performance of forecasters is unknown, this is not an option. However, we can use the predictors of forecasting success to select a subgroup. Since the primary aim here is to illustrate the potential of aggregation, we can use the hypothesized and tested drivers of forecasting success to select the subgroup: The BNT score and the time spend with forecasting.  Where exactly we make the cutoff is arbitrary, but it seems plausible drop the lower quarter in order to make the sample not too small and drop the worst forecasters. In this case the average forecasts of the subgroup has a Brier score or `r bs.cutoff.mean` compared to `r round(bs.mean,2)` if the whole group is used.<!-- Evaluation subgroup aggregation --> The improvement is not large, but there is one. Theoretically we could determine the ideal cutoff point for the subgroup and improve the aggregated forecast even more, but then we will overfit the data. 
+The individual differences between forecasters can be exploited in different ways for combining forecasts. A simple approach is to use only a subgroup of individuals for aggregation. If only forecasts of individuals who are expected to perform well are combined, the aggregated result reflects both individual forecasting skills and the wisdom of the crowd effect. The subgroup can be selected based on the past performance of forecasters, as for example done by @Mellers.2014. Since in this case the past performance of forecasters is unknown, this is not an option. However, we can use the predictors of forecasting success to select a subgroup. Since the primary aim here is to illustrate the potential of aggregation, we can use the hypothesized and tested drivers of forecasting success to select the subgroup: The BNT score and the time spend with forecasting.  Where exactly we make the cutoff is arbitrary, but it seems plausible drop the lower 50% in order to make the sample not too small and to group with decent forecasting skills.^[In this case the subgroup consists of individuals which at least hat a BNT score of 3 and spend more time than the median forecaster on the questions. The other predictors available in the forecasting tournament data have not been supported sufficiently (moral competency, intervention).]
+In this case the average forecasts of the subgroup has a Brier score or `r bs.cutoff.mean` compared to `r bs.mean` if the whole group is used.<!-- Evaluation subgroup aggregation --> The improvement is not large, but there is one. Theoretically we could determine the ideal cutoff point for the subgroup and improve the aggregated forecast even more, but then we will overfit the data. 
 
-<!-- weighted forecasts --> 
+<!-- weighted forecasts --> Another approach is to weight the forecasts with the drivers of forecasting success. This approach has the advantage to avoid a cutoff. Against, since this is primarily for illustrative purposes, the weights are constructed by multiplying the BNT score and the logaritmized time ($w_i = bnt_i \cdot log(time_i)$). Like for the sub group aggregation, the weighted forecast performs slightly better (`r bs.mean.w.bnt.time`) than the simple average (`r bs.mean`).
+
 
 1. standard approach: averaging
 2. weighted average:
@@ -412,13 +414,7 @@ The individual differences between forecasters can be exploited in different way
     b. @Satopaa.2017 further use information about diversity of information sources
 
 <!-- weightening / dropping forecasts  -->
-Adjusting the forecasts with most promising predictors of forecasting success: Intelligence and time spend on forecasting.
 
-First, drop all forecasts with the lowest BNT score. These are participants who did not get a single question right in the BNT test. Second, use the remaining scores to weight the forecasts. Chossing the exact weights is slightly arbitrary.
-
-Similar proceedure: Drop one-quarter of forecasts with the lowest time spend on answering the questions. The exact share of dropped respondents is also arbitrary. The remaining respondents are weighted according to their logarithmized time. Using the logaritmized time instead of the actual time is consistent with the finding on hypothesis 2 and reduces the impact of outliers on the aggregated forecast.
-
-Other predictors available in the forecasting tournament data have not been supported sufficiently (moral competency, intervention). 
 
 <!-- debiasing / extremizing -->
 

@@ -1079,18 +1079,34 @@ t.test.intervention.time <- paste(round(t.test.int.time[[5]][1],2),
 # 9. Aggregating Forecasts
 ###############################################################################
 
-# Mean Estimates for each question
+# Mean Estimates for each question ############################################
 probs.mean <- SPFT %>% select(starts_with("fq")) %>% colMeans()
+
+# mean brier score for average probabilities (unweighted)
+bs.mean <- round(mean(brierScore(probs.mean, FQ[,4])),2)
+
+# testing average brier score vs. brier score of averaged forecasts
+t.test.bs.avg.mean <- t.test(SPFT$brier.avg, mu = bs.mean, alternative = "greater")
+
+# string for paper 
+t.test.bs.avg.mean  <- paste("t(", t.test.bs.avg.mean[[2]], ") = ",
+                             round(t.test.bs.avg.mean[[1]],2),
+                             ", p < ",
+                             ifelse(round(t.test.bs.avg.mean[[3]],4)< 0.001,
+                                    0.001,round(t.test.bs.avg.mean[[3]],4)),   
+                             sep = "")
 
 # 0. Subsample of (super)forecasters ##########################################
 
 # drop BNT score 0,1 and 25% lowest share of time spend on forecasting
 probs.mean.agg0 <- SPFT %>% 
-  filter(bnt.s > 1 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]) %>% 
+  filter(bnt.s > 2 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[3]) %>% 
   select(starts_with("fq")) %>% colMeans()
 
-bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),2)
+# brier score of the aggregated forecasts from the sub group.
+bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),3)
 
+# average brier score of the sub group
 bs.agg0 <- 0
 for(i in 1:nrow(FQ)){
   bs.agg0[i] <- SPFT %>% 
@@ -1102,36 +1118,18 @@ for(i in 1:nrow(FQ)){
 # mean brier score of group smaller group
 bs.cutoff <- round(mean(bs.agg0),3)
 
-
-
-
-
 # 1. computing individual weights #############################################
 
 SPFT.agg1 <- SPFT %>% select(starts_with("fq"), bnt.s,mct.c, time.fq.sec.log,
                              Group, brier.avg) %>%
                       filter(!is.na(time.fq.sec.log))
-# precalculations to see correlations
-lm(brier.avg ~ bnt.s, data = SPFT.agg1)
-lm(brier.avg ~ time.fq.sec.log, data = SPFT.agg1)
+# pre-calculations to see correlations
+# lm(brier.avg ~ bnt.s, data = SPFT.agg1)
+# lm(brier.avg ~ time.fq.sec.log, data = SPFT.agg1)
 reg.brier.bnt.time <- lm(brier.avg ~ bnt.s + time.fq.sec.log, data = SPFT.agg1)
-SPFT.agg1$d <-  0
-SPFT.agg1$d[SPFT.agg1$Group == "Treatment"] <- 1
-lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT.agg1)
-
-# mean brier score for average probabilities (unweighted)
-bs.mean <- mean(brierScore(probs.mean, FQ[,4]))
-
-# testing average brier score vs. brier score of averaged forecasts
-t.test.bs.avg.mean <- t.test(SPFT$brier.avg, mu = bs.mean, alternative = "greater")
-
-# string for paper 
-t.test.bs.avg.mean  <- paste("t(", t.test.bs.avg.mean[[2]], ") = ",
-                              round(t.test.bs.avg.mean[[1]],2),
-                              ", p < ",
-                              ifelse(round(t.test.bs.avg.mean[[3]],4)< 0.001,
-                                     0.001,round(t.test.bs.avg.mean[[3]],4)),   
-                              sep = "")
+# SPFT.agg1$d <-  0
+# SPFT.agg1$d[SPFT.agg1$Group == "Treatment"] <- 1
+# lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT.agg1)
 
 # weightening using only BNT score
 # simplest version: weight = score
@@ -1146,14 +1144,16 @@ probs.mean.w.time <- apply(select(SPFT.agg1, starts_with("fq")), 2,
                            weighted.mean, w = SPFT.agg1$time.fq.sec.log)
 mean(brierScore(probs.mean.w.time, FQ[,4]))
 
-# weightening using bnt and time.fq.sec.log score
+# weightening using bnt and time.fq.sec.log score #############################
 # contruct weigts (other weights possible) 
-SPFT.agg1$w.bnt.time <- reg.brier.bnt.time[[1]][2]*SPFT.agg1$bnt.s *
-                        reg.brier.bnt.time[[1]][3]*SPFT.agg1$time.fq.sec.log
+# SPFT.agg1$w.bnt.time <- reg.brier.bnt.time[[1]][2]*SPFT.agg1$bnt.s +
+#                        reg.brier.bnt.time[[1]][3]*SPFT.agg1$time.fq.sec.log
+
+SPFT.agg1$w.bnt.time <- SPFT.agg1$bnt.s *SPFT.agg1$time.fq.sec.log
 
 probs.mean.w.bnt.time <- apply(select(SPFT.agg1, starts_with("fq")),
                                2, weighted.mean, w = SPFT.agg1$w.bnt.time)
-mean(brierScore(probs.mean.w.bnt.time, FQ[,4]))
+bs.mean.w.bnt.time <- round(mean(brierScore(probs.mean.w.bnt.time, FQ[,4])),2)
 
 #identifying optimal relationship between weights (will be "overfitting")
 
