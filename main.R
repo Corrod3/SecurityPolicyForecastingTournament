@@ -68,7 +68,7 @@ SPFT.MTurk <- read.csv2("raw/SPFT_MTurk_20170210.csv", sep = ",")
 
 
 # Import realized outcomes
-FQ <- read_excel("raw/SPFT-questions-test.xlsx")
+FQ <- read_excel("raw/SPFT-questions-results.xlsx")
 
 # import MTurk batch results
 MTurk.batch <- read.csv2("raw/Batch_2677782_batch_results.csv", sep = ",")
