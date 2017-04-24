@@ -1089,7 +1089,7 @@ probs.mean.agg0 <- SPFT %>%
   filter(bnt.s > 1 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]) %>% 
   select(starts_with("fq")) %>% colMeans()
 
-bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),3)
+bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),2)
 
 bs.agg0 <- 0
 for(i in 1:nrow(FQ)){
