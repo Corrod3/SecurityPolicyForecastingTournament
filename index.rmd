@@ -30,47 +30,163 @@ Forecasting tournaments are a useful tool to better understand and improve forec
 The forecasting tournament took place between February 6th and 12th. During this time the participants were asked about the probability of 24 geopolitical events happening before April 24th, 2017. The results can be found below. The graphs illustrate how the different estimates of the 223 participants were distributed. The dashed lines indicates the average estimate.
 
 ```{r, fig.width = 4.5, fig.height = 3}
-response.web2(1)  
-response.web2(2)
-response.web2(3)
-response.web2(4)  
-response.web2(5)
-response.web2(6)
-response.web2(7)  
-response.web2(8)
-response.web2(9)
-response.web2(10)  
-response.web2(11)
-response.web2(12)
-response.web2(13)  
+response.web2(1) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(2) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 1: No
+
+There has been some technical adjustment of the [sanctions](https://www.state.gov/e/eb/tfs/spi/ukrainerussia/) against Russia during the time, but they are seen as a technical fix and not as a lifting or loosening (See e.g. [here](http://foxtrotalpha.jalopnik.com/the-american-sanctions-against-russia-explained-1791938454) or [here](http://www.cnbc.com/2017/02/02/us-treasury-eases-some-sanctions-against-russian-intelligence-service.html)).
+
+Answer 2: No
+
+A list of all Nuclear Weapon tests is available on [Wikipedia](https://en.wikipedia.org/wiki/List_of_nuclear_weapons_tests_of_North_Korea). In the time frame considered here, there was no test.
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(3) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(4) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)  
+```
+
+Answer 3: No
+
+During the time of the forecasting tournament the Vietnam government did not file a case against Bejing. Some general discussions on the issue can be found [here]( http://thediplomat.com/2016/08/will-vietnam-file-a-south-china-sea-case-against-china/) and  [here]](http://www.iris-france.org/wp-content/uploads/2017/02/Asia-Focus-16-South-China-Sea-Elie-Khoury-feb-2017.pdf).
+
+Answer 4: No
+
+There are no reports of a meeting between the U.S. President and Taiwan representatives for the time period 12.02.2017 to 24.04.2017. For some general discussions of the US-Taiwan relations since the begin of Trump's presidency see [here](http://thediplomat.com/2017/04/where-was-taiwan-in-the-trump-xi-meeting/).
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(5) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(6) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 5: No
+
+On February 13th there were fightings in Kashmir between militants and Indian security forces, but they where not operating out of Pakistan. (See [here](https://www.nytimes.com/2017/02/12/world/asia/kashmir-gunbattle-protests.html?ref=world&_r=1)). The [Council of Foreign Relations](http://www.cfr.org/global/global-conflict-tracker/p32137#!/conflict/conflict-between-india-and-pakistan) is tracking the conflict did not report any attack as described in the forecasting question.
+
+Answer 6: No
+
+There have been some  [minor changes](http://www.defensedaily.com/nato-section-agrees-bolster-u-s-eastern-europe-deployment/) to the NATO deployment, but the general commitment was not changed. The Trump administration apparently decided to stick to the commitments made by the Obama administration. 
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(7)  + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)  
+response.web2(8) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 7: No (disputable)
+
+The U.S. government stayed commited to the JCPOA agreement with Iran and did not reintroduce any sanctions lifted by the agreeement. This can be seen on the site of [U.S. treasury](https://www.treasury.gov/resource-center/sanctions/Programs/Pages/iran.aspx). However, the new U.S. administration [announced new sanctions](https://www.treasury.gov/resource-center/sanctions/OFAC-Enforcement/Pages/20170203.aspx) after a missile test on the 3rd of February 2017 (shortly before the forecasting tournament started). They are not regarded as applicable for the question because (1) the questions is explicitly related to the Nuclear deal sanctions, and (2) the event happened before the forecasting tournament.
+
+Answer 8: Yes
+
+On April 24th 2017 the Islamic State was still under full control of Ar-Raqqa according to most recent public available conflict maps from different sources (e.g. [Syria Live Map](https://syria.liveuamap.com/), [BBC](http://www.bbc.com/news/world-middle-east-27838034) or [Southfront](https://de.southfront.org/wp-content/uploads/2017/04/Die-Karte-zeigt-einen-allgemeinen-%C3%9Cberblick-%C3%BCber-die-milit%C3%A4rische-Lage-in-Syrien-am-19.-April-2017..jpg)).
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(9) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(10)  + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 9: No
+
+As of April 24th, 2017 IS still holds control of several districts in Mosul (for recent reports look [here](http://www.reuters.com/article/us-mideast-crisis-iraq-mosul-idUSKBN17O064)).
+
+Answer 10: Yes (Preliminary)
+
+In April 2015 the Afghan government controlled 72%, in August 2016 [63,4%](https://www.sigar.mil/pdf/spotlight/2017_High-Risk_List.pdf#page=17) and as of November 2016 the Afghan government controlled [57%](http://www.longwarjournal.org/archives/2017/02/afghan-government-has-lost-territory-to-the-insurgency.php) of the county according to SIGAR. Since, it has been losing several regions to the Taliban ([Sangin](http://www.longwarjournal.org/archives/2017/03/resolute-support-spins-loss-of-sangin-district-center-as-a-victory.php) and [Shorabak](http://www.longwarjournal.org/archives/2017/02/taliban-overruns-afghan-district-where-al-qaeda-ran-training-camps.php)) but gained some from IS.([see here](http://bigstory.ap.org/article/319dd9893aa84f168362e06a29ac547f/us-cites-progress-against-islamic-state-afghanistan)). Since SIGAR has not reported any new numbers in 2017 yet the available information is used and which indicates that the Afghan government has lost more territory during the considered time period. 
+
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(11) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(12) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 11: No
+
+As of April 24, 2017 there have been no reports of deadly attacks by former FARC units. However, paramilitary and criminal groups have been conducting attacks and social leaders have been killed. (See [here](http://www.csmonitor.com/World/Americas/2017/0301/Colombia-peace-accord-FARC-doubts-grow-as-demobilizing-zones-stumble-video) or [here](https://www.ft.com/content/21fa6540-f6ff-11e6-9516-2d969e0d3b65))
+
+
+Answer 12: No (Preliminary)
+<!-- Numbers might be updated due to recent events: http://www.conflictmap.org/conflict/kurds_turkey -->
+
+According to data from the [International Crisis Group](http://www.crisisgroup.be/interactives/turkey/) 89 individuals died between February 10 and April 23, 2017. 
+
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(13) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
 response.web2(14) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
 ```
-Answer 14: YES
+
+Answer 13: No
+
+International media reported of several hundert protesters, but not thousands ([here](https://www.nytimes.com/2017/03/26/world/asia/hong-kong-election-carrie-lam-chief-executive.html), [here](	http://www.zeit.de/politik/ausland/2017-03/hongkong-carrie-lam-wahl-peking-proteste))
+
+Answer 14: Yes
 
 On March 22, 2017, a SUV attacked pedestrians on Westerminster Bridge. The Islamic State [claimed responsibility](http://www.euronews.com/2017/03/23/amaq-news-agency-islamic-state-group-claims-responsibility-for-attack-on-parliament-in-london) for this attack. 
 
 ```{r, fig.width = 4.5, fig.height = 3}
-response.web2(15)
-response.web2(16)
-response.web2(17)  
-response.web2(18)
-response.web2(19)
-response.web2(20)  
+response.web2(15) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(16) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
+```
+Answer 15: No
+
+Boko Haram was responsible for several deadly  attacks, in particular in Nigeria. However, all events had less than 20 people killed (see [List of terror incidences](https://en.wikipedia.org/wiki/List_of_terrorist_incidents_in_2017)).
+
+Answer 16: Yes
+
+At least two bombing strikes killed more than 30 individuals. On March 15th, 2017, a market in Yemen was hit (see [here](http://www.cbc.ca/beta/news/world/saudi-arabia-weapons-1.3524599)) causing the dead of at least 119 people and on March 16th 42 Somali refugees were supposely killed by a Saudi helicooper strike (see [here](http://www.independent.co.uk/news/world/middle-east/saudi-arabia-led-coalition-blamed-somalia-deadly-attack-boat-refugees-fleeing-yemen-a7637456.html)).
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(17) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(18) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 17: No
+
+On 7th of April 2017 the U.S. government used missiles to strike Syria, but it did not annouce a no-flight zone at any time.
+
+Answer 18: No
+
+The parties never signed the agreement and it sign of ultimate failure was when the opposition decided no to attend further negotiations initiated by the Russians (see [here](https://www.usnews.com/news/world/articles/2017-03-14/syria-government-says-turkey-breaks-commitments-as-rebels-boycott-talks).
+
+```{r, fig.width = 4.5, fig.height = 3}
+response.web2(19) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(20) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+```
+
+Answer 19: No
+
+No document has been signed yet.
+
+Answer 20: No
+
+The U.S. increased its deployment in Syria by 400 troops, but the troop limit of about 5000-5200 troops remained unchanged for Iraq. However, the U.S. used temporal deployments during the time (see [here](www.military.com/daily-news/2017/03/29/new-details-surprise-deployment-more-soldiers-head-war.html)) as of end of March stopped disclosing troop deployments in the Iraq and Syria (see [here](http://www.latimes.com/politics/la-na-trump-deployment-20170330-story.html)). As the question asked for an annoucement, the question can be answered with no.
+
+```{r, fig.width = 4.5, fig.height = 3}
 response.web2(21) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
 response.web2(22) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
 ```
-Answer 21: NO
+Answer 21: No
 
 On March 15th, 2017, the OHCHR published its [report](http://www.ohchr.org/Documents/Countries/UA/UAReport17th_EN.pdf) stating that there were 130 civilian casualties in the respective time period.
 
-Answer 22: YES
+Answer 22: Yes
 
-On March 12th, 2017, Damascus was hit by a twin bombings causing the death of atleast 74 individuals as reported by [international media](https://www.theguardian.com/world/2017/mar/12/dead-damascus-bombings-syria-rights-monitor).
+Several events happened: On March 12th, 2017, Damascus was hit by a twin bombings causing the death of atleast 74 individuals as reported by [international media](https://www.theguardian.com/world/2017/mar/12/dead-damascus-bombings-syria-rights-monitor).
+On April 15th 2017, in [Aleppo a car bomb](https://en.wikipedia.org/wiki/2017_Aleppo_suicide_car_bombing) killed at least 126 people.
 
 ```{r, fig.width = 4.5, fig.height = 3}
-response.web2(23)
-response.web2(24)
+response.web2(23) + geom_vline(xintercept=0,  colour="red", linetype="dashed", size=1.5)
+response.web2(24) + geom_vline(xintercept=1,  colour="red", linetype="dashed", size=1.5)
 ```
+
+Answer 23: No
+
+The Islamic State has declared solidarity with the Muslim Rohingyas in Myanmar, but there have been not jihadism motivated attacks as of April 24, 2017. For some background see [here](https://jamestown.org/program/myanmars-muslim-insurgency-gaining-prominence-jihadist-groups/).
+
+Answer 24: Yes
+
+On 23. of February a suicide bombing happened [see [here](http://www.news24.com/Africa/News/boko-haram-suicide-bomber-kills-1-in-northern-cameroon-20170223)]. On March 20th, two would-be suicide bombers died. (see [here](http://cameroon-concord.com/headlines/7974-fighting-boko-haram-two-would-be-suicide-bombers-die-in-northern-cameroon)). On April 8th a suicide attack in Kolofata happened. See [here](http://punchng.com/breaking-suicide-bomber-hits-cameroon-one-dead-many-injured/). As there is no good information source for this, we can expect that also more attacks happened which have not been reported. 
 
 # Score Board
 
