@@ -403,6 +403,30 @@ In this case the average forecasts of the subgroup has a Brier score or `r bs.cu
 
 <!-- weighted forecasts --> Another approach is to weight the forecasts with the drivers of forecasting success. This approach has the advantage to avoid a cutoff. Against, since this is primarily for illustrative purposes, the weights are constructed by multiplying the BNT score and the logaritmized time ($w_i = bnt_i \cdot log(time_i)$). Like for the sub group aggregation, the weighted forecast performs slightly better (`r bs.mean.w.bnt.time`) than the simple average (`r bs.mean`).
 
+<!-- debiasing / extremizing -->
+Apart from the individual differences, known decision making biases can also be utilized for aggregration. For forecasting decision one bias is particular persistent: Overvaluing small probabilties and undervaluing high probabilities. This bias is basically the reason of the long-shot bias in forecasting markets<!-- and has been discussed in behavioral economics for some time-->. However, there is also another theoretical explanation of the bias. Lets assume, the "true" probability of an event is 0.9 and a rational decision maker wants to find this probability. At the begining the forecaster would have no information and start with 0.5 as prior. Then the forecaster begins to incorporate information and this information gives him/her good reason to adjust the probability slowly upwards. However, before the forecaster has included all information and reached 0.9 
+
+This knowledge can be used to fine-tune forecasting aggregation. The basic idea is to extremize individual responses if they are in the range of problematic forecasts. If forecasters assign a low probability score to events, they are assumed to still overestimate the likelihood of the event. Likewise, if forecasters choose a high probability for an event they are assumed to underestimate the actual probability and there is a reason to adjust their judgment to a higher probability value. More difficult, however, is decide how strongly probability judgements should be adjusted and what exactly the range of "problematic" probability is.
+
+<!-- how to extremize -->
+In order to implement the extremization I use the logit model proposed by @Satopaa.2014. 
+
+1. 
+
+2.
+
+3.
+
+
+Again, there are also other other biases one could correct for. For example, forecasting questions are subject are to a reference bias (Kahnemann/Tetlock?). This bias claims that forecasters make likelihood judgements independently of the time horizon under consideration. Hence, forecasters would assign the same probability to an event happening in the next 3 months as to the same event in the next 6 months if they are only presented with one of these questions. However, it is difficult to correct for this bias ex-post. Extremizing on contrast has already successfully been used to calibrate crowd aggregation and for the sake of simplicity only one bias will be corrected here.
+
+<!-- results of smart crowd aggregation -->
+
+example question and illustration of aggregation.
+```{r echo = FALSE, fig.pos='H', fig.cap= "Distribution forecasting log(time) for treatment and control group ", out.width=c('240px', '120px'), fig.align='center'}
+agg.plot(13)
+```
+
 
 1. standard approach: averaging
 2. weighted average:
@@ -412,20 +436,6 @@ In this case the average forecasts of the subgroup has a Brier score or `r bs.cu
 3. extremized weighted averages [@Satopaa.2015b]
     a. @Satopaa.2014 use a simple logit model
     b. @Satopaa.2017 further use information about diversity of information sources
-
-<!-- weightening / dropping forecasts  -->
-
-
-<!-- debiasing / extremizing -->
-
-humans have problems with very low and very high probabilities. This problem is for example visible in the long-shot bias in prediction markets. It has also lead to a longstanding debate in behavioral economics (). 
-
-this knowledge can be used to fine-tune forecasting aggregation. The basic idea is to extremize individual responses if they are in the range of problematic forecasts. If forecasters assign a low probability score to events, they are assumed to still overestimate the likelihood of the event. Likewise, if forecasters choose a high probability for an event they are assumed to underestimate the actual probability and there is a reason to adjust their judgment to a higher probability value. More difficult, however, is decide how strongly probability judgements should be adjusted and what exactly the range of "problematic" probability is.
-
-Again, there are also other other biases one could correct for. For example, forecasting questions are subject are to a reference bias (Kahnemann/Tetlock?). This bias claims that forecasters make likelihood judgements independently of the time horizon under consideration. Hence, forecasters would assign the same probability to an event happening in the next 3 months as to the same event in the next 6 months if they are only presented with one of these questions. However, it is difficult to correct for this bias ex-post. Extremizing on contrast has already successfully been used to calibrate crowd aggregation and for the sake of simplicity only one bias will be corrected here.
-
-<!-- results of smart crowd aggregation -->
-
 
 # Discussion
 <!--	General findings -->

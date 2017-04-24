@@ -496,20 +496,20 @@ SPFT <- dplyr::rename(SPFT, mct.d.pro1 = mct.d.pro_3,mct.d.pro2 = mct.d.pro_4,
                       mct.d.pro3 = mct.d.pro_6, mct.d.pro4 = mct.d.pro_5,
                       mct.d.pro5 = mct.d.pro_2, mct.d.pro6 = mct.d.pro_1)
 
-# reorder the test items by stage (left new name) # for con Doktor (self)
+# reorder the test items by stage (left new name) # for con Doktor (Aus Statista script)
 SPFT <- dplyr::rename(SPFT, mct.d.con1 = mct.d.con_4,mct.d.con2 = mct.d.con_5,
                       mct.d.con3 = mct.d.con_1, mct.d.con4 = mct.d.con_6,
                       mct.d.con5 = mct.d.con_2, mct.d.con6 = mct.d.con_3)
 
-# reorder the test items by stage (left new name) # for pro worker (self???)
-SPFT <- dplyr::rename(SPFT, mct.w.pro1 = mct.w.pro_6, mct.w.pro2 = mct.w.pro_5,
+# reorder the test items by stage (left new name) # for pro worker (Aus Statista script)
+SPFT <- dplyr::rename(SPFT, mct.w.pro1 = mct.w.pro_1, mct.w.pro2 = mct.w.pro_5,
                       mct.w.pro3 = mct.w.pro_3, mct.w.pro4 = mct.w.pro_2,
-                      mct.w.pro5 = mct.w.pro_4, mct.w.pro6 = mct.w.pro_1)
+                      mct.w.pro5 = mct.w.pro_6, mct.w.pro6 = mct.w.pro_4)
 
-# reorder the test items by stage (left new name) # for con worker (self)
-SPFT <- dplyr::rename(SPFT, mct.w.con1 = mct.w.con_3,mct.w.con2 = mct.w.con_6,
-                      mct.w.con3 = mct.w.con_5, mct.w.con4 = mct.w.con_4,
-                      mct.w.con5 = mct.w.con_1, mct.w.con6 = mct.w.con_2)
+# reorder the test items by stage (left new name) # for con worker (Aus Statista script)
+SPFT <- dplyr::rename(SPFT, mct.w.con1 = mct.w.con_6,mct.w.con2 = mct.w.con_3,
+                      mct.w.con3 = mct.w.con_5, mct.w.con4 = mct.w.con_1,
+                      mct.w.con5 = mct.w.con_4, mct.w.con6 = mct.w.con_2)
 
 # change column name string (keeps order intact)
 mct.col.pc <- gsub('_', '', mct.col.pc)
