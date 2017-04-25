@@ -1,8 +1,10 @@
 ---
-title: "Security Policy Forecasts"
-author: "SPFT"
-date: "24 Februar 2017"
-output: ioslides_presentation
+title: "Security Policy Forecasting Tournament"
+author: "Alexander Sacharow"
+date: "02 May 2017"
+output: 
+  ioslides_presentation:
+    css: general/tables.css
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +15,8 @@ rm(list=ls())
 
 ## Setting Working directory
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
+
+library(knitr)
 
 source("main.R")
 ```
@@ -124,6 +128,13 @@ response.hertie(23)
 response.hertie(24)
 ```
 
+## Scoreboard
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+SB.Hertie %>% select(id.hertie, brier.avg) %>% head(10) %>% mutate(rank = row_number()) %>% kable(format = "html")
+
+```
+
 ## Control Variables: H1
 
 Hypothesis 1a: More intelligent individuals are more accurate forecasters 
@@ -136,6 +147,7 @@ Idea: Moral thinking collides with analytical thinking (Tetlock, Gardner 2015, p
 bnt.plot
 mct.plot
 ```
+
 
 ## Control Variables: H2
 
