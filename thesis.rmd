@@ -422,18 +422,16 @@ To illustrate the potential of extremizing, we can look for the level of bias co
 
 # Discussion
 <!--	General findings -->
-To sum up, this reasearch has found the forecasting crowd to perform slightly better than random quessing but not as accurate as in other comparable forecasting competitions. The data provides indicative support that intelligence and moral competency are related to more forecasting accuracy, but findings are to weak to make a final conclusion on them. The forecasting tournament strongly supports the idea that more forecasting time leads to more forecasting accuracy, but with diminishing returns. Finally, there is no support that the mild decision guide used as intervention has any measurable effect on forecasting accuracy. 
+To sum up, this reasearch has found the forecasting crowd to perform slightly better than random quessing but not as accurate as in other comparable forecasting competitions. The forecasting tournament supports the idea that intelligence and forecasting time, if diminished returns are considered for the latter, are useful predictors for forecasting accuracy. Moreover, the data provides indicative support that moral competency is related to more forecasting accuracy, but findings are to weak to make a final conclusion on them. Finally, there is no support that the mild decision guide used as intervention has any measurable effect on forecasting accuracy. These insights are useful to aggregate forecasts more accurately by exploiting the individual differences between forecasters and using the wisdom of crowd effect.
 
 <!--	Limitations of the design -->
-- only a one-off event
-
-- participant number relatively small compared to other forecasting competitions in the field
-
-- intervention limited due to online format
-
-- small number of questions -> Measurement errors in the questions still have strong impact on the results. 
+These results should, however, be enjoyed with care. First, the size of the tournament was relatively small compared to other similar projects. With more questions and forecasters would make the results less sensitive to outliers and reduces the impact of single interpretation of the forecasting questions. For example, whether or not an event happened in some cases needed some consideration. With more questions the implications of a single consideration would likely balance out on average. Second, the research design only allows to make limited claims. As the overall performance of the crowd indicates did luck still play an important role. In a long-term setting it would be easier to identify forecasting skills as participants would learn (differently) from their performance. Additionally, except for the intervention the testing of the hypothesized relations could be more rigorous, e.g. in the case of the time hypothesis by assigning participants randomly to groups with different time allocations. However, many of such designs cannot be conducted in an online survey format. Third, to understand the relation between moral and analytical judgements in the context of forecasting the inquiry has to be supplmented with other measurement tools. All these remarks are fruitful avenues for future research. 
 
 <!--	Policy relevance 
+
+What can a practicioneer take from this
+
+
 [on moral competency]
 Other than prior mentioned dispositional factors this is and should not be a factor for selecting forecasters. One way to see it would be the institutional level: Moral judgements are constantly made by politicians and they are essential in the political discourse. If moral judgements however inflict with forecasting, there is a reason to separate forecasting from actual decision making. This could be either than by tasking different people with this and/or separate it institutionally. But the morality hypothesis could only be one indicator for this. 
 http://blog.oup.com/2015/08/policy-makers-moral-dilemmas/ -->

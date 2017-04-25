@@ -134,6 +134,12 @@ SPFT <- SPFT %>% filter(StartDate > "2017-02-05")
 # Drop empthy forecasts (Mainly MTurk failed attention check)
 SPFT <- SPFT %>% filter(time.sec2_First.Click != "")
 
+# export feedback, further info, 
+write.csv(select(SPFT, 
+                 part.group, id.hertie, id.mturk, id.other, feedback, 
+                 further.info, personal.report),
+          "personalData.csv", row.names=FALSE) 
+
 # delete unnecessary information
 SPFT <- SPFT %>% select(-Status, -Progress, -Finished,
                         -RecipientLastName, -RecipientFirstName, 
@@ -221,8 +227,7 @@ rm(IP.double, email.double, MTurk, MTurk.batch)
 hertie <- SPFT %>% filter(part.group == "hertie") %>% select(id.hertie)
 
 # export list
-# write.table(hertie, "D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament/hertiepart.txt", sep="\t") 
-write.csv(hertie, "hertiepart.csv", row.names=FALSE) 
+# write.csv(hertie, "hertiepart.csv", row.names=FALSE) 
 
 # Create data frame for aggregated forecasts
 FO <- FQ[,(1:2)]
@@ -668,7 +673,8 @@ SPFT.Demo.Plot <- SPFT %>% select(age.gr,sex) %>% group_by(age.gr, sex) %>%
 
 # plot population pyramid
 pop.plot <- ggplot(data = SPFT.Demo.Plot, aes(x = age.gr, y = n, fill = sex)) +
-                geom_bar(data = subset(SPFT.Demo.Plot, sex == "Female"), stat = "identity") +
+                geom_bar(data = subset(SPFT.Demo.Plot, sex == "Female"),
+                         stat = "identity") +
                 geom_bar(data = subset(SPFT.Demo.Plot, sex == "Male"),
                          stat = "identity",
                          position = "identity",
@@ -1184,12 +1190,19 @@ brierScoresAvg<-function(p,z){
 }
 
 # optimize brier score average function to find minimizing a (bias correction)
-bias.a <- optimise(function(a) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a)),Z),
-         interval=c(0,10))
+bias.a <- optimise(function(a) brierScoresAvg(apply(SPFT.agg2,
+                                                    2,
+                                                    function(z) probsLogitExtrem(z, a)),
+                                              Z),
+                   interval=c(0,10))
 
 # plot brierscore depending on bias correction
 a<-seq(-1,5,by=0.1)
-plot(a,sapply(a,function(l) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, l)),Z)),
+plot(a,sapply(a,
+              function(l) brierScoresAvg(apply(SPFT.agg2,
+                                               2,
+                                               function(z) probsLogitExtrem(z, l)),
+                                         Z)),
      type = "l",lwd=2, col="#C02F39",
      xlab="Systematic Bias a",
      ylab="Brier score")
