@@ -1187,7 +1187,7 @@ brierScoresAvg<-function(p,z){
 }
 
 # optimize brier score average function to find minimizing a (bias correction)
-optimise(function(a) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a)),Z),
+bias.a <- optimise(function(a) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a)),Z),
          interval=c(0,10))
 
 # plot brierscore depending on bias correction
