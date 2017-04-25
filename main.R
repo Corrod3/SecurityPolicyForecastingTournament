@@ -1104,7 +1104,7 @@ probs.mean.agg0 <- SPFT %>%
   select(starts_with("fq")) %>% colMeans()
 
 # brier score of the aggregated forecasts from the sub group.
-bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),3)
+bs.cutoff.mean <- round(mean(brierScore(probs.mean.agg0, FQ[,4])),2)
 
 # average brier score of the sub group
 bs.agg0 <- 0
@@ -1116,7 +1116,7 @@ for(i in 1:nrow(FQ)){
 }
 
 # mean brier score of group smaller group
-bs.cutoff <- round(mean(bs.agg0),3)
+bs.cutoff <- round(mean(bs.agg0),2)
 
 # 1. computing individual weights #############################################
 
@@ -1145,17 +1145,18 @@ probs.mean.w.time <- apply(select(SPFT.agg1, starts_with("fq")), 2,
 mean(brierScore(probs.mean.w.time, FQ[,4]))
 
 # weightening using bnt and time.fq.sec.log score #############################
-# contruct weigts (other weights possible) 
+
+# contruct weigts (other weights possible)
 # SPFT.agg1$w.bnt.time <- reg.brier.bnt.time[[1]][2]*SPFT.agg1$bnt.s +
 #                        reg.brier.bnt.time[[1]][3]*SPFT.agg1$time.fq.sec.log
 
-SPFT.agg1$w.bnt.time <- SPFT.agg1$bnt.s *SPFT.agg1$time.fq.sec.log
+SPFT.agg1$w.bnt.time <- SPFT.agg1$bnt.s * SPFT.agg1$time.fq.sec.log
 
+# weighted probabilties
 probs.mean.w.bnt.time <- apply(select(SPFT.agg1, starts_with("fq")),
                                2, weighted.mean, w = SPFT.agg1$w.bnt.time)
+# brier score of weigthed probabities
 bs.mean.w.bnt.time <- round(mean(brierScore(probs.mean.w.bnt.time, FQ[,4])),2)
-
-#identifying optimal relationship between weights (will be "overfitting")
 
 # 2. extremizing  #############################################################
 # like Satopaa et al 2014
@@ -1164,10 +1165,6 @@ bs.mean.w.bnt.time <- round(mean(brierScore(probs.mean.w.bnt.time, FQ[,4])),2)
 SPFT.agg2 <- SPFT %>% select(starts_with("fq")) %>% as.matrix() 
 SPFT.agg2[SPFT.agg2 == 0] <- 0.001
 SPFT.agg2[SPFT.agg2 == 1] <- 0.999
-
-# export values
-# write.csv(SPFT.agg2, "fqAnswers.csv", row.names=FALSE) 
-# write.csv(FQ[,4], "Answers.csv", row.names=FALSE) 
 
 # function to create extremized means for each question
 # possible to include geometric weights (q^w) -> check theory
@@ -1191,14 +1188,12 @@ bias.a <- optimise(function(a) brierScoresAvg(apply(SPFT.agg2,2,function(z) prob
          interval=c(0,10))
 
 # plot brierscore depending on bias correction
-a<-seq(-2,8,by=0.1)
+a<-seq(-1,5,by=0.1)
 plot(a,sapply(a,function(l) brierScoresAvg(apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, l)),Z)),
      type = "l",lwd=2, col="#C02F39",
      xlab="Systematic Bias a",
      ylab="Brier score")
 brier.ext.plot <- recordPlot()
-
-
 
 # p <- ggplot(data = data.frame(a = 0), mapping = aes(x = a))
 # fun.1 <- function(a) a^2 + a
@@ -1206,14 +1201,19 @@ brier.ext.plot <- recordPlot()
 # p + stat_function(fun = fun.1) + xlim(-5,5)
 # p + stat_function(fun = fun.2) + xlim(0,5)
 # compute aggregated probabilities
-probs.extrem<-apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a=1.58))
+probs.extrem<-apply(SPFT.agg2,2,function(z) probsLogitExtrem(z, a=bias.a$minimum))
 
 # plot simple means against extremized values
 plot(probs.mean, probs.extrem, asp=1,ylim=c(0,1),xlim=c(0,1))
 abline(0,1,lty=2)
-points(Z,probs.mean,col=2,pch=16)
+# points(Z,probs.mean,col=2,pch=16)
 
-# 3. displaying aggregated forecasts #########################################
+# 3. combining aggregation and weightening ###################################
+
+
+
+
+# 4. displaying aggregated forecasts #########################################
 
 # plot with aggregated probabilties
 # add: labels for vlines
