@@ -1129,10 +1129,12 @@ bs.cutoff <- round(mean(bs.agg0),2)
 SPFT.agg1 <- SPFT %>% select(starts_with("fq"), bnt.s,mct.c, time.fq.sec.log,
                              Group, brier.avg) %>%
                       filter(!is.na(time.fq.sec.log))
+
 # pre-calculations to see correlations
 # lm(brier.avg ~ bnt.s, data = SPFT.agg1)
 # lm(brier.avg ~ time.fq.sec.log, data = SPFT.agg1)
 reg.brier.bnt.time <- lm(brier.avg ~ bnt.s + time.fq.sec.log, data = SPFT.agg1)
+
 # SPFT.agg1$d <-  0
 # SPFT.agg1$d[SPFT.agg1$Group == "Treatment"] <- 1
 # lm(brier.avg ~ bnt.s + mct.c + time.fq.sec.log + d, data = SPFT.agg1)
@@ -1161,8 +1163,27 @@ SPFT.agg1$w.bnt.time <- SPFT.agg1$bnt.s * SPFT.agg1$time.fq.sec.log
 # weighted probabilties
 probs.mean.w.bnt.time <- apply(select(SPFT.agg1, starts_with("fq")),
                                2, weighted.mean, w = SPFT.agg1$w.bnt.time)
+
 # brier score of weigthed probabities
 bs.mean.w.bnt.time <- round(mean(brierScore(probs.mean.w.bnt.time, FQ[,4])),2)
+
+# 1.b BNT, MCT and time weightening ###########################################
+
+# data selection
+SPFT.agg1b <- SPFT %>% select(starts_with("fq"), bnt.s,mct.c, time.fq.sec.log,
+                              Group, brier.avg) %>% 
+  filter(!is.na(time.fq.sec.log) & !is.na(mct.c))
+
+# compute weight
+SPFT.agg1b$w.bnt.time.mct <- SPFT.agg1b$bnt.s * SPFT.agg1b$mct.c *SPFT.agg1b$time.fq.sec.log
+
+# weighted probabilities
+probs.mean.w.bnt.time.mct <- apply(select(SPFT.agg1b, starts_with("fq")),
+                                   2, weighted.mean, w = SPFT.agg1b$w.bnt.time.mct)
+
+# brier score
+bs.mean.w.bnt.time.mct <- round(mean(brierScore(probs.mean.w.bnt.time.mct, FQ[,4])),2)
+rm(SPFT.agg1b)
 
 # 2. extremizing  #############################################################
 # like Satopaa et al 2014
