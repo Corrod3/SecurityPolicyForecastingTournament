@@ -33,9 +33,9 @@ source("main.R")
 
 ## Different representations forecasts
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(1)
+response.uni(1)
 
-response.hertie2(1)
+response.uni2(1)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
@@ -47,92 +47,94 @@ response.all2(1)
 ## Question 1-4
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(1)
+response.uni(1)
 
-response.hertie(2)
+response.uni(2)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(3)
+response.uni(3)
 
-response.hertie(4)
+response.uni(4)
 ```
 
 ## Question 5-8
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(5)
+response.uni(5)
 
-response.hertie(6)
+response.uni(6)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(7)
+response.uni(7)
 
-response.hertie(8)
+response.uni(8)
 ```
 
 ## Question 9-12
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(9)
+response.uni(9)
 
-response.hertie(10)
+response.uni(10)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(11)
+response.uni(11)
 
-response.hertie(12)
+response.uni(12)
 ```
 
 ## Question 13-16
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(13)
+response.uni(13)
 
-response.hertie(14)
+response.uni(14)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(15)
+response.uni(15)
 
-response.hertie(16)
+response.uni(16)
 ```
 
 ## Question 17-20
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(17)
+response.uni(17)
 
-response.hertie(18)
+response.uni(18)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(19)
+response.uni(19)
 
-response.hertie(20)
+response.uni(20)
 ```
 
 ## Question 21-24
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(21)
+response.uni(21)
 
-response.hertie(22)
+response.uni(22)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.hertie(23)
+response.uni(23)
 
-response.hertie(24)
+response.uni(24)
 ```
 
 ## Scoreboard
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
-SB.Hertie %>% select(id.hertie, brier.avg) %>% head(10) %>% mutate(rank = row_number()) %>% kable(format = "html")
 
+SB %>% merge(read.csv("personalData.csv")[, c("ResponseId", "id.uni")], 
+                      by = "ResponseId") %>% filter(part.group == "uni") %>% arrange(brier.avg) %>% 
+     select(HertieID = id.uni, brier.avg) %>%  head(10) %>% mutate(rank = row_number()) %>% kable(format = "html")
 ```
 
 ## Control Variables: H1

@@ -1,121 +1,43 @@
 ###############################################################################
-## File for extracting data, cleaning and calculating scores
+## File for computing scores, testing and aggregating
 ## by: Alexander Sacharow
 ###############################################################################
 
 ###############################################################################
 # CONTENT
 # 0. Preparations
-# 1. Get Data
-# 2. Clean data
-# 3. MTurk
-# 4. Forecast summary
-# 5. Scoreboard
-# 6. control variables
-# 7. demographics
-# 8. testing
-# 9. Aggregation of forecasts
-###############################################################################
-
-###############################################################################
-# ToDo
-# 1.
+# 1. Get and prepare data
+# 2. Forecast summary
+# 3. Scoreboard
+# 4. control variables
+# 5. demographics
+# 6. testing
+# 7. Aggregation of forecasts
+# 8. presentation forecasts
 ###############################################################################
 
 ###############################################################################
 # 0. Preparations
 ###############################################################################
 
-# Clear Global environment
-rm(list=ls())
-
 ## Setting Working directory
 try(setwd("D:/Eigene Datein/Dokumente/Uni/Hertie/Materials/Master thesis/SecurityPolicyForecastingTournament"), silent = TRUE)
 
-# Collect packages/libraries we need:
-packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales", 
-              "stargazer", "Hmisc", "xtable")
-# package and why it is needed
-# readxl: import excel files
-# plyr: mapvalues function
-# dyplyr: data manipulation
-# ggplot: plots (e.g. density)
-# reshape2: melt function
-# scales: label transformation in ggplot
-# Hmisc: Correlation table 
-# xtable: create latex table
-
-# install packages if not installed before
-for (p in packages) {
-  if (p %in% installed.packages()[,1]) {
-    require(p, character.only=T)
-  }
-  else {
-    install.packages(p, repos="http://cran.rstudio.com", dependencies = TRUE)
-    require(p, character.only=T)
-  }
-}
-rm(p, packages)
+# load packages / clean environment
+source("prep.R")
 
 ###############################################################################
-# 1. Import Data
+# 1. Import and prepare data
 ###############################################################################
 
-# Import responses
-SPFT.Main <- read.csv2("raw/SPFT-20170217.csv", sep = ",")
-SPFT.MTurk <- read.csv2("raw/SPFT_MTurk_20170210.csv", sep = ",")
-
-
-# Import realized outcomes
-FQ <- read_excel("raw/SPFT-questions-results.xlsx")
-
-# import MTurk batch results
-MTurk.batch <- read.csv2("raw/Batch_2677782_batch_results.csv", sep = ",")
-MTurk.batch <- MTurk.batch %>% select(WorkerId, WorkTimeInSeconds, 
-                                      Answer.surveycode, Approve, Reject)
-
-###############################################################################
-# 2. Clean Data
-###############################################################################
-
-# Merge SPFT and SPFT Turk (identify Hertie later)
-SPFT <- dplyr::bind_rows(SPFT.Main[-(1:2),], SPFT.MTurk[-(1:2),], .id = "part.group")
-SPFT[SPFT$part.group == 1,]["part.group"] <- "other"
-SPFT[SPFT$part.group == 2,]["part.group"] <- "mturk"
-
-# Remove unfinished surveys
-SPFT <- SPFT %>% dplyr::filter(Finished == "True")
-
-# identify hertie students
-SPFT[!is.na(SPFT$id.hertie) & SPFT$id.hertie != "",][,"part.group"] <- "hertie"
-
-# Change variable types #######################################################
+# load clean data (created with clean.R)
+# source("clean.R") # requires non-anonymized raw data
+SPFT <- read.csv("raw/SPFT-clean.csv")
 
 # Dates + times
-SPFT$StartDate <- as.Date(as.character(SPFT$StartDate))
 SPFT$EndDate <- as.Date(as.character(SPFT$EndDate))
 SPFT$Duration..in.seconds. <- as.numeric(SPFT$Duration..in.seconds.)
 SPFT$time.sec2_Page.Submit <- as.numeric(SPFT$time.sec2_Page.Submit)
-
-# make estimates numeric
-fq <- colnames(select(SPFT, contains("fq")))
-SPFT[,fq] = apply(SPFT[,fq], 2, function(x) as.numeric(as.character(x)))
-
-# transform estimates to percentage
-SPFT[,fq] <- SPFT[,fq]/100
-
-# bnt responses to numeric
-bnt.col <- colnames(select(SPFT, contains("bnt")))
-SPFT[,bnt.col] = apply(SPFT[,bnt.col], 2, function(x) as.numeric(as.character(x)))
-
-# mct responses to numeric
-mct.col <- colnames(select(SPFT, contains("mct.")))
-SPFT[,mct.col] = apply(SPFT[,mct.col], 2, function(x) as.numeric(as.character(x)))
-
-# column names only pro + con arguments
-mct.col.pc <- mct.col[-c(1,14)]
-names(SPFT)[names(SPFT)=="mct.w_1"] <- "mct.w"
-names(SPFT)[names(SPFT)=="mct.d_1"] <- "mct.d"
 
 # demographic variables to factor
 SPFT$sex <- as.factor(SPFT$sex)
@@ -125,108 +47,28 @@ SPFT$selfassessment <- factor(SPFT$selfassessment,
                                           "Slightly good", "Moderately good",
                                           "Extremely good"))
 
-# Remove not needed data ######################################################
+# source to character
+SPFT$source <- as.character(SPFT$source)
 
-# Remove test surveys
-SPFT <- SPFT %>% filter(StartDate > "2017-02-05")
+# Import realized outcomes
+FQ <- read_excel("raw/SPFT-questions-results.xlsx")
 
-# Drop empthy forecasts (Mainly MTurk failed attention check)
-SPFT <- SPFT %>% filter(time.sec2_First.Click != "")
-
-# export feedback, further info, 
-write.csv(select(SPFT, 
-                 part.group, id.hertie, id.mturk, id.other, feedback, 
-                 further.info, personal.report),
-          "personalData.csv", row.names=FALSE) 
-
-# delete unnecessary information
-SPFT <- SPFT %>% select(-Status, -Progress, -Finished,
-                        -RecipientLastName, -RecipientFirstName, 
-                        -RecipientEmail, -LocationLatitude, -LocationLongitude,
-                        -DistributionChannel, -StartDate, -ExternalReference,
-                        -further.info...Topics, -contains("Click") )
 # clean FQ file
 FQ <- FQ %>% filter(!is.na(fq.id))
 
-# delete raw files
-rm(SPFT.Main, SPFT.MTurk)
+# create arrays
+# array with column names of forecasts
+fq <- colnames(select(SPFT, contains("fq")))
+
+# mct responses to numeric
+mct.col <- colnames(select(SPFT, contains("mct.")))
+
+# column names only pro + con arguments
+mct.col <- mct.col[-c(1,14)]
 
 ###############################################################################
-# 3. Identify problematic MTurk users & removing them
+# 2. Forecasting summaries
 ###############################################################################
-
-# only MTurk
-MTurk <- SPFT %>% filter(part.group == "mturk")
-
-# Criterion 1: Check failed attention checks
-MTurk$c1 <- 0
-MTurk[MTurk$att.check != 48,]$c1 <- 1
-
-# Criterion 2: All BNT questions wrong
-MTurk <- MTurk %>% 
-          mutate(c2 = ifelse(bnt1 != 30 & bnt2 != 25 & bnt3 != 20 & bnt4 != 50,
-                             1, 0))
-
-# Criterion 3: Short time
-# summary(MTurk$Duration..in.seconds.)
-MTurk <- MTurk %>% mutate(c3 = ifelse(Duration..in.seconds. < 600, 1, 0))
-
-# Criterion 4: Doublication in unique identifiers (IP, email, MTurk ID)
-MTurk$c4.ip <- 0
-MTurk$c4.email <- 0
-
-email.double <- data.frame(table(MTurk$personal.report))
-# email.double[email.double$Freq > 1,]
-MTurk[MTurk$personal.report %in% 
-        email.double$Var1[email.double$Freq > 1 & email.double$Freq < 10],][,"c4.email"] <- 1
-
-IP.double <- data.frame(table(MTurk$IPAddress))
-# IP.double[IP.double$Freq > 1,]
-MTurk[MTurk$IPAddress %in% IP.double$Var1[IP.double$Freq > 1],][,"c4.ip"] <- 1
-
-# merge dataframe by completion code
-MTurk <- merge(MTurk, MTurk.batch, by.x = "CompletionCode",
-               by.y = "Answer.surveycode", all = TRUE)
-
-# check WorkerID code
-MTurk$WorkerId <- trimws(as.character(MTurk$WorkerId))
-MTurk$id.mturk <- trimws(as.character(MTurk$id.mturk))
-MTurk$compWorkID <- ifelse(MTurk$WorkerId == MTurk$id.mturk, 1, 0)
-
-# compute total control fails
-MTurk$c.total <- MTurk$c1 + MTurk$c2 + MTurk$c3 + MTurk$c4.ip + MTurk$c4.email
-
-MTurk.batch <- merge(MTurk.batch, MTurk[,c("ResponseId", "id.mturk", 
-                                           "CompletionCode", "c1", "c2", "c3",
-                                           "c4.ip", "c4.email", "c.total")],
-                     by.x = "Answer.surveycode",
-                     by.y = "CompletionCode")
-
-# Reject if attention check fail and (indication for double user or 3 total control fails)
-MTurk.batch[MTurk.batch$c1 == 1 & MTurk.batch$c4.email == 1, "Reject"] <- TRUE
-MTurk.batch[MTurk.batch$c1 == 1 & MTurk.batch$c4.ip == 1, "Reject"] <- TRUE
-MTurk.batch[MTurk.batch$c1 == 1 & MTurk.batch$c.total > 2, "Reject"] <- TRUE
-
-# View rejected Mturk users
-# View(MTurk.batch %>% filter(Reject == T)) 
-
-# Removing rejected MTurks from sample
-SPFT <- merge(SPFT, MTurk.batch[,c("ResponseId","Reject")], by = "ResponseId",  
-              all.x = TRUE)
-SPFT <- SPFT %>% filter(is.na(Reject))
-
-# cleaning
-rm(IP.double, email.double, MTurk, MTurk.batch)
-
-###############################################################################
-# 4. Forecasting summaries
-###############################################################################
-
-# List of Hertie Students
-hertie <- SPFT %>% filter(part.group == "hertie") %>% select(id.hertie)
-
-# export list
-# write.csv(hertie, "hertiepart.csv", row.names=FALSE) 
 
 # Create data frame for aggregated forecasts
 FO <- FQ[,(1:2)]
@@ -327,13 +169,13 @@ ggplot(FO.plot, aes(x=eval(parse(text = fq[q])), fill=part.group)) +
 # response.all(6)
 
 # density plot for html presentation  
-response.hertie <- function(q){
-  ggplot(filter(FO.plot, part.group == "hertie"), 
+response.uni <- function(q){
+  ggplot(filter(FO.plot, part.group == "uni"), 
          aes(x=eval(parse(text = fq[q])), fill=part.group)) +
     geom_density(alpha=.3) +
     geom_vline(data=filter(FO.plot2, 
                            fq.id == paste("fq",as.character(q), sep = "") & 
-                             part.group == "hertie"),
+                             part.group == "uni"),
                aes(xintercept=mean,  colour=part.group), 
                linetype="dashed", size=1.5) + # group average
     labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
@@ -346,15 +188,15 @@ response.hertie <- function(q){
     scale_x_continuous(labels=percent) # percentages
 }
 # test plot
-# response.hertie(2)
+# response.uni(2)
 
-response.hertie2 <- function(q){
-  ggplot(filter(FO.plot, part.group == "hertie"), 
+response.uni2 <- function(q){
+  ggplot(filter(FO.plot, part.group == "uni"), 
          aes(x=eval(parse(text = fq[q])), fill=part.group)) +
     geom_histogram(binwidth=.10, position="dodge") + # bar type
     geom_vline(data=filter(FO.plot2, 
                            fq.id == paste("fq",as.character(q), sep = "") & 
-                             part.group == "hertie"),
+                             part.group == "uni"),
                aes(xintercept=mean,  colour=part.group), 
                linetype="dashed", size=1.5) + # group average
     labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
@@ -367,10 +209,10 @@ response.hertie2 <- function(q){
     scale_x_continuous(labels=percent) # percentages
 }
 # test plot
-# response.hertie2(2)
+# response.uni2(2)
 
 ###############################################################################
-# 5. Score board
+# 3. Score board
 ###############################################################################
 
 # recode FQ to binary
@@ -397,36 +239,12 @@ for(i in 1:nrow(FQ)){
     brierScore(as.numeric(FQ[i,4])) %>% as.vector()
 }
 
-#
-# number of questions
-# q.num <- ncol(SB) -4
-#
-#i <- 1
-# for(i in 1:q.num){
-# tmp <- paste("fq", i, sep = "")
-# add outcome in new brier score column (from question xlsx)
-# SB[,paste(tmp,"bs", sep = ".")] <- as.numeric(FQ[FQ[,1] == tmp, 4])
-# compute difference outcome and quess 
-# SB[,paste(tmp,"tmp1", sep = ".")] <- select(SB, i+4+q.num) - select(SB, i+4)
-# compute difference outcome  and counterfactual
-# SB[,paste(tmp,"tmp2", sep = ".")] <- (1 - select(SB, i+4+q.num)) - (1- select(SB, i+4))
-# Square differences and sum them
-# SB[,paste(tmp,"bs", sep = ".")] <- (SB[,paste(tmp,"tmp1", sep = ".")])^2 +
-#                                   (SB[,paste(tmp,"tmp2", sep = ".")])^2 
-# delete unneccessary columns
-# SB <- SB %>% select(-contains("tmp"))
-# rm(tmp)
-# }
-
 # Compute average brier score for each respondent
-# SB[,"brier.avg"] <- rowMeans(select(SB, contains("bs")))
-
 SPFT[,"brier.avg"] <- rowMeans(select(SPFT, contains("bs.fq")))
 
-
 # Sort by brier score 
-SB <- SPFT %>% select(ResponseId, part.group, id.hertie, id.other, id.mturk, brier.avg) %>%
-   arrange(brier.avg)
+SB <- SPFT %>% select(ResponseId, part.group, brier.avg) %>%
+  arrange(brier.avg)
 
 brier.plot <- ggplot(SB, aes(x = brier.avg)) +
      geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
@@ -439,14 +257,11 @@ brier.plot <- ggplot(SB, aes(x = brier.avg)) +
           x = "Brier score",
           y = "Frequency") # labels))
 
-# Hertie score board
-SB.Hertie <- SB %>% filter(part.group == "hertie")
-
 # remove late replies from score board (for testing)
 SB <- SB[!SB$ResponseId %in% SPFT$ResponseId[SPFT$EndDate >= "2017-02-13"],]
 
 ###############################################################################
-# 6. Computing control variables and testing
+# 4. Computing control variables and testing
 ###############################################################################
 
 # remove late submissions
@@ -519,16 +334,16 @@ SPFT <- dplyr::rename(SPFT, mct.w.con1 = mct.w.con_6,mct.w.con2 = mct.w.con_3,
                       mct.w.con5 = mct.w.con_4, mct.w.con6 = mct.w.con_2)
 
 # change column name string (keeps order intact)
-mct.col.pc <- gsub('_', '', mct.col.pc)
+mct.col <- gsub('_', '', mct.col)
 
 # calculating total sum (3)
-SPFT$mct.ts <- rowSums(SPFT[, mct.col.pc])
+SPFT$mct.ts <- rowSums(SPFT[, mct.col])
 
 # calculate ss_m (6)
 SPFT$mct.ss.m <- SPFT$mct.ts*SPFT$mct.ts/24
 
 # calculate sums of squares (5)
-SPFT$mct.tss <- rowSums((SPFT[, mct.col.pc])^2)
+SPFT$mct.tss <- rowSums((SPFT[, mct.col])^2)
 
 # sums of stage squares (2)
 SPFT$mct.sss <- 0
@@ -557,7 +372,7 @@ mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
   expand_limits(x=c(0,1)) # set range of x-axis
 
 # summary(SPFT$mct.c)
-# str(filter(SPFT, part.group == "hertie"))
+# str(filter(SPFT, part.group == "uni"))
 
 # moral competency distribution by group
 mct.plot2 <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c, fill = part.group)) +
@@ -650,7 +465,7 @@ source.plot <- ggplot(source.plot.data, aes(x = Var1)) +
                        y = "# of respondents") # labels
 
 ###############################################################################
-# 7. demographic data - descriptives
+# 5. demographic data - descriptives
 ###############################################################################
 
 # SPFT.Demo.Plot <- SPFT %>% select(year, sex)
@@ -658,6 +473,7 @@ source.plot <- ggplot(source.plot.data, aes(x = Var1)) +
 # correct typos
 filter(select(SPFT, year), year < 1900 | year > 2017)
 SPFT$year[SPFT$year=="19.061990"] <- 1990
+SPFT$year[SPFT$year=="19.06199"] <- 1990
 SPFT$year[SPFT$year=="23"] <- 1994
 SPFT$year[SPFT$year=="66"] <- 1966
 
@@ -788,7 +604,7 @@ emp.plot <- ggplot(SPFT, aes(x = emp)) +
 #          type="html", out = "DescStat.html")
 
 ###############################################################################
-# 8. Testing
+# 6. Testing
 ###############################################################################
 
 # Skill vs. Luck ##############################################################
@@ -820,8 +636,8 @@ t.test.against.random  <- paste("t(", t.test.against.random[[2]], ") = ",
 # alternative skills vs. luck test: correct side of 50% #######################
 
 # score board for correct side
-SB.CS <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
-                       starts_with("fq")) 
+SB.CS <- SPFT  %>% select(ResponseId, 
+                          starts_with("fq")) 
 
 ## calculate correct side scores for each question/respondent
 # i <- 1
@@ -829,7 +645,7 @@ SB.CS <- SPFT  %>% select(ResponseId, id.hertie, id.other, id.mturk,
   tmp <- paste("fq", i, sep = "")
   # add outcome with 1 of on correct side of 50% and 0 if not 
   SB.CS[,paste(tmp,"cs", sep = ".")] <- 
-    ifelse(abs(as.numeric(FQ[FQ[,1] == tmp, 4]) - select(SB.CS, i+4)) > 0.5,0,1)
+    ifelse(abs(as.numeric(FQ[FQ[,1] == tmp, 4]) - select(SB.CS, i+1)) > 0.5,0,1)
   rm(tmp)
 }
 # individual share of being on the correct side with the forecast
@@ -1095,7 +911,7 @@ t.test.intervention.time <- paste(round(t.test.int.time[[5]][1],2),
 
 
 ###############################################################################
-# 9. Aggregating Forecasts
+# 7. Aggregating Forecasts
 ###############################################################################
 
 # Mean Estimates for each question ############################################
@@ -1293,7 +1109,7 @@ ggplot(SPFT, aes(x=eval(parse(text = fq[q])))) +
 
 agg.plot(13)
 ###############################################################################
-# 10. presentation forecasts
+# 8. presentation forecasts
 ###############################################################################
 
 # plot scores distributed by groups
