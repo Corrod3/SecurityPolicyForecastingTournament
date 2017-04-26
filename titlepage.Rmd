@@ -1,0 +1,48 @@
+---
+output: pdf_document
+header: 
+  - \pagestyle{fancy}
+fontfamily: mathpazo
+---
+
+\pagenumbering{gobble}
+
+\begin{centering}
+
+\vspace{6 cm}
+
+\Huge
+
+{\bf Improving Forecasting for Foreign Policy}
+
+\Large
+Identifying drivers of forecasting accuracy in a forecasting tournament
+
+\vspace{3 cm}
+
+\LARGE
+\textit{Alexander Sacharow}
+
+\large
+28. April 2017
+
+\vspace{3 cm}
+
+
+\Huge
+Master thesis
+
+
+\vspace{7 cm}
+
+\Large
+Thesis advisor: Prof. Mark Kayser
+
+
+\vspace{0.5 cm}
+\large
+Master of Public Policy \\
+Class of 2017 \\
+Hertie School of Governance, Berlin
+
+\end{centering}

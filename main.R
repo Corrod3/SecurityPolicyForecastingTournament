@@ -45,7 +45,6 @@ packages <- c("readxl", "plyr" ,"dplyr", "ggplot2", "reshape2", "scales",
 # Hmisc: Correlation table 
 # xtable: create latex table
 
-
 # install packages if not installed before
 for (p in packages) {
   if (p %in% installed.packages()[,1]) {
@@ -432,8 +431,10 @@ SB <- SPFT %>% select(ResponseId, part.group, id.hertie, id.other, id.mturk, bri
 brier.plot <- ggplot(SB, aes(x = brier.avg)) +
      geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
      theme_bw() +
-     theme(axis.title = element_text(size=18), # Labels axis font size
-           axis.text = element_text(size=14)) +  
+     theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+           axis.text = element_text(size=14, colour = "#696969"),
+           axis.line = element_line(colour = "#696969"), 
+           axis.ticks = element_line(colour = "#696969")) +  
      labs( # title = "Brier score distribution",
           x = "Brier score",
           y = "Frequency") # labels))
@@ -470,20 +471,21 @@ SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt3 == 20, bnt.s + 1, bnt.s))
 SPFT <- SPFT %>% mutate(bnt.s = ifelse(bnt4 == 50 | bnt4 == 0.5, bnt.s + 1, bnt.s))
 
 # plot scatterplot to illustrate correlation between bnt and brier scores
-plot(SPFT$bnt.s, SPFT$brier.avg, main="Scatterplot BNT Score & Brier Scores",
-     xlab="BNT Score", ylab="Brier Scores")
-abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red")
+# plot(SPFT$bnt.s, SPFT$brier.avg, main="Scatterplot BNT Score & Brier Scores",
+#     xlab="BNT Score", ylab="Brier Scores")
+# abline(lm(SPFT$brier.avg~SPFT$bnt.s), col="red")
 
 # Distribution of bnt scores
 bnt.plot <- ggplot(SPFT, aes(x = bnt.s)) + 
   geom_bar(fill = "#C02F39") +
   theme_bw() +
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) +  
   labs(# title = "Distribution of results Berlin Numeracy Test (BNT)",
        x = "BNT Score (# of correct answers)",
        y = "# of respondents") # labels
-
 
 # T Test
 # comparing means
@@ -544,12 +546,14 @@ SPFT$mct.c <- (SPFT$mct.sss/4 - SPFT$mct.ss.m)/(SPFT$mct.tss - SPFT$mct.ss.m)
 
 # Distribution of moral competency score
 mct.plot <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c)) +
-  geom_histogram(binwidth=.05, position="dodge") + # bar type
+  geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
   labs(title = "Moral Competency Test (MCT)",
      x = "MCT Score",
      y = "# of respondents") + # labels
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) +  
   expand_limits(x=c(0,1)) # set range of x-axis
 
 # summary(SPFT$mct.c)
@@ -562,8 +566,10 @@ mct.plot2 <- ggplot(filter(SPFT, is.na(mct.c) == F), aes(x = mct.c, fill = part.
   labs(title = "Moral Competency Test (MCT)",
        x = "MCT Score",
        y = "# of respondents") + # labels
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
   expand_limits(x=c(0,1)) # set range of x-axis
 
 # cleaning from interrim calculations 
@@ -953,8 +959,10 @@ cor.brier.mct.plot <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.a
   geom_point(shape=1) +    # Use hollow circles
   geom_smooth(method=lm, color = "#C02F39") +   # Add linear regression line 
   theme_bw() +
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
   labs(x = "Moral Competency Score",
        y = "Brier Score") # labels
 
@@ -1017,8 +1025,10 @@ cor.brier.time.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)),
             aes(x, y, color = "Log Model"), 
             size = 2, linetype = 1, color = "#C02F39") + 
   theme_bw() +
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(axis.title = element_text(size=20, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=16, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
   labs(x = "time in min (linear)",
        y = "Brier score") # labels
 
@@ -1027,12 +1037,11 @@ cor.brier.time.log.plot <- ggplot(filter(SPFT, !is.na(time.fq.sec)),
   geom_point(shape=1) +    # Use hollow circles
 #  geom_smooth(method="lm",  linetype = 1) +
   geom_smooth(method=lm, color = "#C02F39", size = 2) +   # Add linear regression line 
-#  geom_line(data = log.model.df, 
-#            aes(x, y, color = "Log Model"), 
-#            size = 1, linetype = 2) + 
   theme_bw() +
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(axis.title = element_text(size=20, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=16, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) +  
   labs(x = "log(time)",
        y = "Brier score") # labels
 
@@ -1056,11 +1065,15 @@ t.test.intervention.result <- paste("t(", t.test.intervention[[2]], ") = ",
 # testing reasons for failure
 hypo3.time.plot <- ggplot(filter(SPFT, is.na(time.fq.sec.log) == FALSE),
                           aes(x = time.fq.sec.log, fill = Group)) +
-  geom_density(alpha = 0.3) +
+  geom_density(alpha = 0.5) +
   #geom_histogram(binwidth=.05, position="dodge", fill = "#C02F39") + # bar type
   theme_bw() +
-  theme(axis.title = element_text(size=18), # Labels axis font size
-        axis.text = element_text(size=14)) +  
+  theme(text = element_text(colour = "#696969", family = "serif", size = 14),
+        axis.title = element_text(size=18), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
+  scale_fill_manual( values = c("gray","#C02F39")) + #color of fill
   labs( x = "log(time)",
         y = "Frequency") # labels))
 
