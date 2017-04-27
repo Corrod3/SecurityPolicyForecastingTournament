@@ -16,7 +16,7 @@ fontfamily: mathpazo
 {\bf Improving Forecasting for Foreign Policy}
 
 \Large
-Identifying drivers of forecasting accuracy in a forecasting tournament
+Identifying drivers of accuracy in a forecasting tournament
 
 \vspace{3 cm}
 
