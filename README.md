@@ -14,5 +14,8 @@ File      | Content
 ----------|------------------------------------------------------------------ 
 thesis    | thesis text (draft) 
 forecasts | presentation with plots of forcasts, control and demographic variables
-main      | script for data cleaning, plot generation and testing
+main.R    | script for calculating scores, testing and generating plots
+clean.R   | Script for cleaning, formating and annonymizing data
+prep.R    | Script for preparing .R
 literature| BibTex for references (Citavi Export)
+titlepage | Title page for the thesis
