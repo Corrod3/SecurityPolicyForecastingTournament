@@ -180,15 +180,39 @@ Example: [The Good Judgement Project](www.gjopen.com)
 ## Performance
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(9)
+response.uni(9) + geom_vline(xintercept=0,  colour="blue", linetype="dashed", size=1.5)
 
-response.uni(16)
+response.uni(16) + geom_vline(xintercept=1,  colour="blue", linetype="dashed", size=1.5)
 ```
 
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(13)
+response.uni(13) + geom_vline(xintercept=0,  colour="blue", linetype="dashed", size=1.5)
 
-response.uni(6)
+response.uni(6) + geom_vline(xintercept=0,  colour="blue", linetype="dashed", size=1.5)
+```
+
+## The research in die background
+
+**Hypothesis 2: The marginal added value of time spend on forecasting is positive and decreases over time**
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+cor.brier.time.log.plot
+```
+
+## Hertie Group compared to others
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+ggplot(SB, aes(x = brier.avg, fill = part.group)) +
+     geom_histogram(binwidth=.1, position="dodge") + # bar type
+     #geom_density(alpha=.3) +
+     theme_bw() +
+     theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+           axis.text = element_text(size=14, colour = "#696969"),
+           axis.line = element_line(colour = "#696969"), 
+           axis.ticks = element_line(colour = "#696969")) +  
+     labs( # title = "Brier score distribution",
+          x = "Brier score",
+          y = "Frequency") # labels))
 ```
 
 
@@ -206,19 +230,6 @@ response.all(1)
 response.all2(1)
 ```
 
-## Question 1-4
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(1)
-
-response.uni(2)
-```
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(3)
-
-response.uni(4)
-```
 
 -->
 ## Scoreboard
@@ -229,63 +240,4 @@ SB %>% merge(read.csv("personalData.csv")[, c("ResponseId", "id.uni")],
                       by = "ResponseId") %>% filter(part.group == "uni") %>% arrange(brier.avg) %>% 
      select(HertieID = id.uni, brier.avg) %>%  head(10) %>% mutate(rank = row_number()) %>% kable(format = "html")
 ```
-<!--
-## Control Variables: H1
 
-Hypothesis 1a: More intelligent individuals are more accurate forecasters 
-
-Hypothesis 1b: Higher moral competency does not improve the accuracy of forecasters
-
-Idea: Moral thinking collides with analytical thinking (Tetlock, Gardner 2015, p. 229)
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-bnt.plot
-mct.plot
-```
-
-
-## Control Variables: H2
-
-Hypothesis 2: The marginal added value of spending more time on forecasting decreases as more time is used for forecasting
-
-```{r, echo = FALSE, fig.width=7, fig.height=4, out.extra='style="float:left"'}
-time.plot
-```
-
-## Control Variables: H3
-
-Hypothesis 3:	Mild interventions encouraging the use of an analytical approach increase the accuracy of forecasting
-
-All participants are assigned randomly in about equal shares to a treatment or control group. The treatment group is provided with a short (150 words) information about the way many successful forecasters would approach the forecasting question. 
-
-```{r, echo = FALSE, fig.width=4, fig.height=3, out.extra='style="float:center"'}
-group.plot
-```
-
-## Backup Hypotheses HA
-
-Hypothesis: Forecasters using of a larger variety of information sources are more accurate.
-
-```{r, echo = FALSE, fig.width=4, fig.height=4, out.extra='style="float:center"'}
-source.plot
-source.var.plot
-```
-
-## Descriptive Statistics
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-emp.plot
-exp.plot
-pop.plot
-edu.plot
-```
-
-## Further Descriptive Stats
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-intu.anal.plot
-selfassessment.plot
-exp.sp.plot 
-team.plot
-```
--->
