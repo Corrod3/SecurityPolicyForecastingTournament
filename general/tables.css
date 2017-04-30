@@ -42,5 +42,65 @@ table tr:nth-child(2n+1) {
  /*  background: #EFEEDD; */
 }
 
+.text40 {
+    font-size: 40px;
+  }
 
+.blockHead {
+  background-color: #C02F39;
+  /*width: 150px; */
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+  position: relative;
+}
 
+.blockHead:after {
+  color: #C02F39;
+  border-left: 20px solid;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  content: '';
+  position: absolute;
+  right: -20px;
+  top:0
+  }
+  
+  .blockHeadLeft {
+  background-color: #C02F39;
+  /*width: 150px; */
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+  position: relative;
+}
+  
+.blockHeadLeft:before {
+  color: #C02F39;
+  border-left: 20px solid;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  content: '';
+  position: absolute;
+  right: -20px;
+  top:0
+  }
+  
+  
+.midcenter {
+    position: relative;
+    top: 50%;
+    left: 50%;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  color: #C02F39;
+  word-wrap: normal;
+  -moz-hyphens: none;
+}
+
+.h1 {
+	color: #C02F39;
+}

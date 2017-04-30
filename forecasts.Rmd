@@ -1,5 +1,6 @@
 ---
-title: "Security Policy Forecasting Tournament"
+title: "Forecasting in IR"
+subtitle: "Security Policy Forecasting Tournament"
 author: "Alexander Sacharow"
 date: "02 May 2017"
 output: 
@@ -21,16 +22,177 @@ library(knitr)
 source("main.R")
 ```
 
-## Security Policy Forecasting Tournament
+## Why Forecasting? {.text40}
 
-- 53 Hertie students participated
-(48 on time, 5 late)
+<div class="centered">
+What do we want to achieve with forecasting?
+</div>
 
-- 24 forecasting questions 
-
-- time horizon: February 12 to April 24, 2017
+## Why Forecasting?
 
 
+<div class="columns-2">
+
+<div style="color:#C02F39;">**Authors: Scientists, Analysts**</div>
+
+- to nail it
+
+    - value in itself?
+
+- test theories (Friedman, 1966; Ward, 2016)
+
+- Central function of science next to explanation
+
+    - how much can we know?
+
+<div style="color:#C02F39;">**Users: Policy makers etc.**</div>
+
+- basis of decision making
+
+    - influence future
+
+    - show alternatives
+
+- Early-Warning
+
+    - Make preparation possible
+</div>
+
+## Is Forecasting Possible?
+
+<div class="centered">
+
+<p style="font-size: 40px">
+Is successful forecasting in international politics possible at all?
+</p>
+
+</div>
+
+
+## Is Forecasting Possible?
+
+<div class="columns-2">
+
+<div style="color:#C02F39;">**The Skeptics**</div>
+
+- Politics are like *Clouds* (Almond et al., 1977)
+
+- Non-Linearity
+   
+    - limit to conclusions from the past
+   
+- *Black swan* (Taleb, 2007)
+   
+    - High impact events are often unexpected
+   
+    - e.g. discovery of America, Arab Spring
+
+<div style="color:#C02F39;">**The Optimists**</div>
+
+- *The poets*
+   
+    - Yes, but without probabilities (Scenarios, Mega trends)
+  
+- *The mathematicians*
+
+    - Yes, with sufficient data (Chourci, 1974; Ward, 2016)
+  
+- With crowds
+  
+    - Groups, competitions, markets
+
+</div>
+
+## Forecasting methods - overview
+
+1. **Strategic Foresight**
+
+2. **Statistical models**
+
+3. **Forecasting competitions**
+
+4. Intuitive forecasts
+
+5. Expert forecasts
+
+6. Prediction markets
+
+7. Intelligence Estimates
+
+## Strategic Foresight
+
+Example: [European Union in the World 2025](http://www.dahrendorf-forum.eu/wp-content/uploads/2016/05/Dahrendorf_Analysis_EU_2025_15.pdf) by Dahrendorf Forum
+
+- Essentially: Scenario analysis
+
+- originated  and widely used in the corporate sector
+
+    - Shell Foresight 1960s (Pierre Wack)
+
+<div style="color:#C02F39;">**Advantage:**</div>
+
+- No content restrictions
+
+- consistency of scenarios as key quality criteria
+
+<div style="color:#C02F39;">**Disadvantage:**</div> 
+
+- No likelihood judgements (policy maker ask for it)
+
+- how can scenarios be verify?
+
+## Statistical Models
+
+Example: *World-Wide Integrated Crisis Early Warning System (W-ICEWS)* [(Preview)](http://nbviewer.jupyter.org/gist/dmasad/f79ce5abfd4fb61d253b)
+
+<div style="color:#C02F39;">**Advantage:**</div>
+
+- can be verified
+
+- less decision biases
+
+<div style="color:#C02F39;">**Disadvantage:**</div>
+
+- requires measureable events
+
+    - e.g. number of injured / death
+    
+- not applicable to many relevant questions
+
+    - e.g. International Court of Justice decision forecast
+    
+- data often not existing / too expensive
+
+## Forecasting Competitions
+
+Example: [The Good Judgement Project](www.gjopen.com)
+
+- for geopolitics relatively new (first in 2011)
+
+**Security Policy Forecasting Tournament**
+
+- 230 participants in total
+
+    - 53 Hertie students participated (48 on time, 5 late)
+
+- short-term: 2.5 months
+
+## Performance
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.uni(9)
+
+response.uni(16)
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+response.uni(13)
+
+response.uni(6)
+```
+
+
+<!--
 ## Different representations forecasts
 ```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
 response.uni(1)
@@ -58,76 +220,7 @@ response.uni(3)
 response.uni(4)
 ```
 
-## Question 5-8
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(5)
-
-response.uni(6)
-```
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(7)
-
-response.uni(8)
-```
-
-## Question 9-12
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(9)
-
-response.uni(10)
-```
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(11)
-
-response.uni(12)
-```
-
-## Question 13-16
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(13)
-
-response.uni(14)
-```
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(15)
-
-response.uni(16)
-```
-
-## Question 17-20
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(17)
-
-response.uni(18)
-```
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(19)
-
-response.uni(20)
-```
-
-## Question 21-24
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(21)
-
-response.uni(22)
-```
-
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(23)
-
-response.uni(24)
-```
-
+-->
 ## Scoreboard
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
@@ -136,7 +229,7 @@ SB %>% merge(read.csv("personalData.csv")[, c("ResponseId", "id.uni")],
                       by = "ResponseId") %>% filter(part.group == "uni") %>% arrange(brier.avg) %>% 
      select(HertieID = id.uni, brier.avg) %>%  head(10) %>% mutate(rank = row_number()) %>% kable(format = "html")
 ```
-
+<!--
 ## Control Variables: H1
 
 Hypothesis 1a: More intelligent individuals are more accurate forecasters 
@@ -195,3 +288,4 @@ selfassessment.plot
 exp.sp.plot 
 team.plot
 ```
+-->
