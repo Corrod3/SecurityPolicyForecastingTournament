@@ -30,12 +30,11 @@ What do we want to achieve with forecasting?
 
 ## Why Forecasting?
 
-
 <div class="columns-2">
 
 <div style="color:#C02F39;">**Authors: Scientists, Analysts**</div>
 
-- to nail it
+- to get it right
 
     - value in itself?
 
@@ -55,7 +54,7 @@ What do we want to achieve with forecasting?
 
 - Early-Warning
 
-    - Make preparation possible
+    - Basis for preparation
 </div>
 
 ## Is Forecasting Possible?
@@ -125,7 +124,7 @@ Example: [European Union in the World 2025](http://www.dahrendorf-forum.eu/wp-co
 
 - Essentially: Scenario analysis
 
-- originated  and widely used in the corporate sector
+- originated and widely used in the corporate sector
 
     - Shell Foresight 1960s (Pierre Wack)
 
@@ -155,7 +154,7 @@ Example: *World-Wide Integrated Crisis Early Warning System (W-ICEWS)* [(Preview
 
 - requires measureable events
 
-    - e.g. number of injured / death
+    - e.g. number of  protesters / injured / death
     
 - not applicable to many relevant questions
 
@@ -163,19 +162,37 @@ Example: *World-Wide Integrated Crisis Early Warning System (W-ICEWS)* [(Preview
     
 - data often not existing / too expensive
 
-## Forecasting Competitions
+## Forecasting competitions
 
 Example: [The Good Judgement Project](www.gjopen.com)
 
 - for geopolitics relatively new (first in 2011)
 
-**Security Policy Forecasting Tournament**
+- combine individual judgements and track record keeping of formal model
 
-- 230 participants in total
+- Researchers: Philip Tetlock and Barbara Mellers
+
+  <div align="center">
+ <img src="general/superforecasting.jpg" width=160 height=250>
+ </div>
+
+# Security Policy Forecasting Tournament
+
+## Security Policy Forecasting Tournament
+
+- 231 participants in total
 
     - 53 Hertie students participated (48 on time, 5 late)
 
 - short-term: 2.5 months
+
+    - other tournaments include question up to one / one and a half years
+
+- 24 questions
+
+    - restricted to topics of the Security Policy class
+    
+    - questions were externally reviewed before the tournament
 
 ## Performance
 
@@ -191,47 +208,44 @@ response.uni(13) + geom_vline(xintercept=0,  colour="blue", linetype="dashed", s
 response.uni(6) + geom_vline(xintercept=0,  colour="blue", linetype="dashed", size=1.5)
 ```
 
-## The research in die background
+## Score distribution
 
-**Hypothesis 2: The marginal added value of time spend on forecasting is positive and decreases over time**
+- Score: Brier score
 
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-cor.brier.time.log.plot
-```
+    - intuition: closeness to truth
+    
+    - mathematical: squared errors
 
-## Hertie Group compared to others
+- Hertie students compared to other participants
 
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
+
+```{r, echo = FALSE, fig.width=5, fig.height=3}
 ggplot(SB, aes(x = brier.avg, fill = part.group)) +
      geom_histogram(binwidth=.1, position="dodge") + # bar type
      #geom_density(alpha=.3) +
      theme_bw() +
-     theme(axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
+     theme(#legend.title=element_blank(),
+           axis.title = element_text(size=18, colour = "#696969", family = "serif"), # Labels axis font size
            axis.text = element_text(size=14, colour = "#696969"),
            axis.line = element_line(colour = "#696969"), 
            axis.ticks = element_line(colour = "#696969")) +  
      labs( # title = "Brier score distribution",
+          fill = "Participant group",
           x = "Brier score",
           y = "Frequency") # labels))
 ```
 
 
-<!--
-## Different representations forecasts
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.uni(1)
+## The research in the background
 
-response.uni2(1)
+data used for testing, e.g.
+
+- **Hypothesis 2: The marginal added value of time spend on forecasting is positive and decreases over time**
+
+```{r, echo = FALSE, fig.width=5, fig.height=3.5, out.extra='style="float:center"'}
+cor.brier.time.log.plot
 ```
 
-```{r, echo = FALSE, fig.width=4, fig.height=2.6, out.extra='style="float:left"'}
-response.all(1)
-
-response.all2(1)
-```
-
-
--->
 ## Scoreboard
 
 ```{r, echo = FALSE, message=FALSE, warning=FALSE}
@@ -240,4 +254,8 @@ SB %>% merge(read.csv("personalData.csv")[, c("ResponseId", "id.uni")],
                       by = "ResponseId") %>% filter(part.group == "uni") %>% arrange(brier.avg) %>% 
      select(HertieID = id.uni, brier.avg) %>%  head(10) %>% mutate(rank = row_number()) %>% kable(format = "html")
 ```
+## Questions {.text40}
 
+<div class="centered" style="top:35%; position: fixed;">
+Thank you for your attention
+</div>

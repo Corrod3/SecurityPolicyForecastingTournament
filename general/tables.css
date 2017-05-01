@@ -44,6 +44,8 @@ table tr:nth-child(2n+1) {
 
 .text40 {
     font-size: 40px;
+	word-wrap: normal;
+        -moz-hyphens: none;
   }
 
 .blockHead {
@@ -97,10 +99,8 @@ table tr:nth-child(2n+1) {
 
 .reveal h1, .reveal h2, .reveal h3 {
   color: #C02F39;
-  word-wrap: normal;
-  -moz-hyphens: none;
 }
 
-.h1 {
+.h2 {
 	color: #C02F39;
 }
