@@ -6,13 +6,11 @@ If you have any questions, feel free to contact me at a.sacharow(at)mpp.hertie-s
 
 A summary of the forecasting tournament and its results are available on the [project website](https://corrod3.github.io/SecurityPolicyForecastingTournament/). Additional background information and methodlogical details can be access via the [online appendix](https://corrod3.github.io/SecurityPolicyForecastingTournament/appendix.html). For the raw data please contact the author.
 
-*General remark:* All calculations are currently based on random outcomes (the questions are iteratively answered yes/no) and the true results will only be known once the realized outcomes are entered after April 24th. 
-
 # Files
 
 File      | Content   
 ----------|------------------------------------------------------------------ 
-thesis    | thesis text (draft) 
+thesis    | thesis text
 forecasts | presentation with plots of forcasts, control and demographic variables
 main.R    | script for calculating scores, testing and generating plots
 clean.R   | Script for cleaning, formating and annonymizing data
