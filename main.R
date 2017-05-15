@@ -1082,22 +1082,34 @@ abline(0,1,lty=2)
 # add: labels for vlines
 # vlines at the wrong place, e.g. for 13 the extremized value is above .5
 agg.plot <- function(q) {
+# compute superforecast group mean  
+mean.super <- SPFT %>% filter(bnt.s > 1 & time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]) %>% 
+  select(contains(fq[q]))%>% unlist()  %>% mean()
+mean.all <- SPFT %>% select(contains(fq[q]))%>% unlist() %>% mean()
 ggplot(SPFT, aes(x=eval(parse(text = fq[q])))) +
     geom_density(alpha=.3, fill="#C02F39") +
     geom_vline(data=SPFT,
                aes(xintercept=mean(eval(parse(text = fq[q])))), 
                linetype="dashed", size=1.5) + # group average
+    annotate("text", x = mean.all, y = 0.5, angle = 90, label = "mean", 
+             vjust = 1.2, parse = TRUE, color = "black") + # label for vline
     # vertical line for dropping case
     geom_vline(data=filter(SPFT, bnt.s > 1 &
                            time.fq.sec.log > summary(SPFT$time.fq.sec.log)[2]),
                aes(xintercept=mean(eval(parse(text = fq[q])))), 
-               linetype="dashed", size=1.5, color = "yellow") + # group average
+               linetype="dashed", size=1.5, color = "#e41a1c") + # group average
+    annotate("text", x = mean.super, y = 0.5, angle = 90, label = "superforecasters", 
+             vjust = 1.2, parse = TRUE, color = "#e41a1c") + # label for vline
     # vertical line for weighted probabilities
     geom_vline(aes(xintercept=probs.mean.w.bnt.time[q]), 
-               linetype="dashed", size=1.5, color = "orange") + # group average
+               linetype="dashed", size=1.5, color = "#377eb8") + # group average
+    annotate("text", x = probs.mean.w.bnt.time[q], y = 0.5, angle = 90, label = "weighted", 
+             vjust = 1.2, parse = TRUE, color = "#377eb8") + # label for vline
     # vertical line for extremized probability
     geom_vline(aes(xintercept=probs.extrem[q]), 
-               linetype="dashed", size=1.5, color = "red") + # group average
+               linetype="dashed", size=1.5, color = "#4daf4a") + # group average
+    annotate("text", x = probs.extrem[q], y = 0.5, angle = 90, label = "extremized", 
+             vjust = 1.2, parse = TRUE, color = "#4daf4a") + # label for vline
     labs(title = sapply(strwrap(as.character(FQ[q,2]), 40, simplify=FALSE),
                         paste, collapse="\n" ),
          x = "What is the probability of this event to happen?",
@@ -1107,7 +1119,7 @@ ggplot(SPFT, aes(x=eval(parse(text = fq[q])))) +
     scale_x_continuous(labels=percent) # percentages
 }
 
-agg.plot(13)
+agg.plot(17)
 ###############################################################################
 # 8. presentation forecasts
 ###############################################################################

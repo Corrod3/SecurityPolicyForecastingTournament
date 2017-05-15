@@ -60,6 +60,8 @@ brier.plot2 <- ggplot(SB, aes(x = brier.avg)) +
 # save brier score distribution
 ggsave(filename="plots/brierPlot.pdf", plot=brier.plot2, device=cairo_pdf)
 
+# Aggregation plot
+ggsave(filename="plots/aggPlot.pdf", plot=agg.plot(17), device=cairo_pdf)
 
 ### Research section ##########################################################
 
@@ -84,11 +86,92 @@ ggsave(filename="plots/bntPlot.pdf", plot=bnt.plot2, device=cairo_pdf)
 # Correlation Mct-Brier Scores
 ggsave(filename="plots/corBrierMctPlot.pdf", plot=cor.brier.mct.plot, device=cairo_pdf)
 
+cor.brier.mct.plot2 <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.avg)) +
+  geom_point(shape=1) +    # Use hollow circles
+  theme_bw() +
+  theme(axis.title = element_text(size=18, colour = "#696969"), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
+  labs(x = "Moral Competency Score",
+       y = "Brier Score") # labels
+
+ggsave(filename="plots/corBrierMctPlot_noline.pdf", plot=cor.brier.mct.plot2, device=cairo_pdf)
+
+cor.brier.mct.plot3 <- ggplot(filter(SPFT, !is.na(mct.c)), aes(x=mct.c, y=brier.avg)) +
+  geom_point() +
+  theme_bw() +
+  theme(axis.title = element_text(size=18, colour = "#696969"), # Labels axis font size
+        axis.text = element_text(size=14, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
+  labs(x = "Moral Competency Score",
+       y = "Brier Score") # labels
+
+ggsave(filename="plots/corBrierMctPlot_noline2.pdf", plot=cor.brier.mct.plot3, device=cairo_pdf)
+
 # Correlation Brier log(time) correlation
 ggsave(filename="plots/corBrierTimeLogPlot.pdf", plot=cor.brier.time.log.plot, device=cairo_pdf)
 
+cor.brier.time.log.plot2 <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
+                                  aes(x=time.fq.sec.log, y=brier.avg)) +
+  geom_point(shape=1) +    # Use hollow circles
+  theme_bw() +
+  theme(axis.title = element_text(size=20, colour = "#696969"), # Labels axis font size
+        axis.text = element_text(size=16, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) +  
+  labs(x = "log(time)",
+       y = "Brier score") # labels
+
+ggsave(filename="plots/corBrierTimeLogPlot_noline.pdf", plot=cor.brier.time.log.plot2, device=cairo_pdf)
+
+cor.brier.time.log.plot3 <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
+                                   aes(x=time.fq.sec.log, y=brier.avg)) +
+  geom_point() +
+  theme_bw() +
+  theme(axis.title = element_text(size=20, colour = "#696969"), # Labels axis font size
+        axis.text = element_text(size=16, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) +  
+  labs(x = "log(time)",
+       y = "Brier score") # labels
+
+ggsave(filename="plots/corBrierTimeLogPlot_noline2.pdf", plot=cor.brier.time.log.plot3, device=cairo_pdf)
+
+
 # Correlation Brier linear time
 ggsave(filename="plots/corBrierTimePlot.pdf", plot=cor.brier.time.plot, device=cairo_pdf)
+
+cor.brier.time.plot2 <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
+                              aes(x=time.fq.sec, y=brier.avg)) +
+  geom_point(shape=1) +    # Use hollow circles
+#  geom_line(data = log.model.df, 
+#            aes(x, y, color = "Log Model"), 
+#            size = 2, linetype = 1, color = "#C02F39") + 
+  theme_bw() +
+  theme(axis.title = element_text(size=20, colour = "#696969", family = "serif"), # Labels axis font size
+        axis.text = element_text(size=16, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
+  labs(x = "time in min (linear)",
+       y = "Brier score") # labels
+
+ggsave(filename="plots/corBrierTimePlot_noline.pdf", plot=cor.brier.time.plot2, device=cairo_pdf)
+
+cor.brier.time.plot3 <- ggplot(filter(SPFT, !is.na(time.fq.sec)), 
+                               aes(x=time.fq.sec, y=brier.avg)) +
+  geom_point() +
+  theme_bw() +
+  theme(axis.title = element_text(size=20, colour = "#696969"), # Labels axis font size
+        axis.text = element_text(size=16, colour = "#696969"),
+        axis.line = element_line(colour = "#696969"), 
+        axis.ticks = element_line(colour = "#696969")) + 
+  labs(x = "time in min (linear)",
+       y = "Brier score") # labels
+
+ggsave(filename="plots/corBrierTimePlot_noline2.pdf", plot=cor.brier.time.plot3, device=cairo_pdf)
+
 
 # Hypothesis 3 time
 ggsave(filename="plots/hypo3TimePlot.pdf", plot=hypo3.time.plot, device=cairo_pdf)
